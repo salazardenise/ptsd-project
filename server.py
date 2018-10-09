@@ -22,17 +22,42 @@ def index():
 
     return render_template('homepage.html')
 
-@app.route('/signup', methods=["GET"])
+@app.route('/signup', methods=['GET'])
 def display_signup_form():
     """ Display sign Up page. """
 
     return render_template('signup.html')
 
-@app.route('/signup', methods=["POST"])
+@app.route('/signup', methods=['POST'])
 def signup():
     """ Sign up new user and then redirect to homepage. """
 
-    return "After signup"
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+    email = request.form.get('email')
+    phone = request.form.get('phone')
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    new_user = User(first_name=first_name,
+                    last_name=last_name,
+                    email=email,
+                    phone=phone,
+                    username=username,
+                    password=password)
+    db.session.add(new_user)
+    db.session.commit()
+
+    flash(f'{username} successfully signed up.')
+    return redirect('/')
+
+@app.route('/user_exists', methods=['GET'])
+def user_exists():
+    """ Determines if username given already exists in the database. """
+    username = request.args.get('username')
+    if User.query.filter_by(username=username).first() is not None:
+        return 'found'
+    return 'not found'
 
 if __name__ == '__main__':
     # debug must be set to True at the point that DebugToolbarExtension is invoked

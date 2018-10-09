@@ -6,16 +6,66 @@
 <h1>Sign Up</h1>
 <p>Signing up allows you to favorite different features of this site. Fill out the form to proceed.</p>
 <form id="signUpForm" action="/signup" method="POST">
-    First name: <input type="text" name="first_name"><br>
-    Last name: <input type="text" name="last_name"><br>
-    Email:<sup><b>*</b></sup> <input type="text" name="email" required><br>
-    Phone number: <input type="text" name="phone"><br>
-    Username:<sup><b>*</b></sup> <input type="text" name="username" required><br>
-    Password:<sup><b>*</b></sup> <input type="text" id="signUpPassword1" name="password1" required><br>
-    Re-enter password:<sup><b>*</b></sup> <input type="text" id = "signUpPassword2" name="password2" required><br>
-    <input type="submit" value="Submit Form">
+    <label>First name: 
+        <input type="text" 
+               id="signUpFirstName"
+               name="first_name">
+    </label>
+    <br>
+    <label>Last name: 
+        <input type="text" 
+               id="signUpLastName"
+               name="last_name">
+    </label>
+    <br>
+    <label>Email:<sup><b>*</b></sup> 
+        <input type="email" 
+               name="email"
+               id="signUpEmail"
+               required>
+    </label>
+    <br>
+    <label>Phone number: 
+        <input type="tel" 
+               pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" 
+               placeholder="000-000-0000" 
+               id="signUpPhone"
+               name="phone">
+    </label>
+    <br>
+    <sub>Username and Password must contain at least one number and one uppercase and lowercase letter, and at lease 8 or more characters.</sub>
+    <br>
+    <label>Username:<sup><b>*</b></sup> 
+        <input type="text" 
+               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+               title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" 
+               id="signUpUsername" 
+               name="username" 
+               required>
+    </label>
+    <br>
+    <label>Password:<sup><b>*</b></sup> 
+        <input type="text" 
+        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+        title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+        id="signUpPassword1" 
+        name="password1" 
+        required>
+    </label>
+    <br>
+    <label>Re-enter password:<sup><b>*</b></sup> 
+        <input type="text" 
+        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+        title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" 
+        id="signUpPassword2" 
+        name="password2" 
+        required>
+    </label>
+    <br>
+    <input type="submit" 
+           value="Submit Form">
 </form>
-<p id="signUpErrorMessage" style="display: none;">Error: Re-entered password does not match password. Please check this.</p>
+<p id="signUpErrorMessage" hidden></p>
 <p>Already signed up? Login <a href="/login">here.</a></p>
 <script src="/static/js/signup.js"></script>
 {% endblock %}
