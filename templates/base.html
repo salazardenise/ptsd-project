@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}PTSD Project{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h1>finding peace</h1>
+        <h2>a resource for people with PTSD</h2>
+        {% if 'loggedInOut' not in session %}
+        <a href="/signup">Sign Up</a> or
+        <a href="/login">Log In</a>
+        {% else %}
+        <a href="/logout">Log Out</a>
+        {% endif %}
+    </header>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+    Menu: 
+    <nav>
+        <a href="/">Home</a>
+        <a href="/programs">Find Programs</a>
+        <a href="/recordings">Self Care</a>
+        <a href="/messages">Message Templates</a>
+    </nav>
+    {% block content %}
+        CONTENT GOES HERE
+    {% endblock %}
+</body>
+</html>
