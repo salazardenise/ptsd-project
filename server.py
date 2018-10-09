@@ -18,9 +18,21 @@ app.jinja_env.undefined = StrictUndefined
 
 @app.route('/')
 def index():
-    """ Homepage. """
+    """ Display omepage. """
 
     return render_template('homepage.html')
+
+@app.route('/signup', methods=["GET"])
+def display_signup_form():
+    """ Display sign Up page. """
+
+    return render_template('signup.html')
+
+@app.route('/signup', methods=["POST"])
+def signup():
+    """ Sign up new user and then redirect to homepage. """
+
+    return "After signup"
 
 if __name__ == '__main__':
     # debug must be set to True at the point that DebugToolbarExtension is invoked

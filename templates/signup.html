@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<h1>Sign Up</h1>
+<p>Signing up allows you to favorite different features of this site. Fill out the form to proceed.</p>
+<form id="signUpForm" action="/signup" method="POST">
+    First name: <input type="text" name="first_name"><br>
+    Last name: <input type="text" name="last_name"><br>
+    Email:<sup><b>*</b></sup> <input type="text" name="email" required><br>
+    Phone number: <input type="text" name="phone"><br>
+    Username:<sup><b>*</b></sup> <input type="text" name="username" required><br>
+    Password:<sup><b>*</b></sup> <input type="text" id="signUpPassword1" name="password1" required><br>
+    Re-enter password:<sup><b>*</b></sup> <input type="text" id = "signUpPassword2" name="password2" required><br>
+    <input type="submit" value="Submit Form">
+</form>
+<p id="signUpErrorMessage" style="display: none;">Error: Re-entered password does not match password. Please check this.</p>
+<p>Already signed up? Login <a href="/login">here.</a></p>
+<script src="/static/js/signup.js"></script>
+{% endblock %}
