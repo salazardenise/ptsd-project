@@ -8,8 +8,9 @@ $('#signUpForm').on('submit', (evt) => {
     if (password1 != password2) {
         evt.preventDefault();
         $('#signUpErrorMessage').html("Error: Re-entered password does not match password. Please check this.")
-        $('#signUpErrorMessage').show();
-        setTimeout(() => $('#signUpErrorMessage').hide(), 5000)
+        $('#signUpErrorMessage').fadeIn(400, () => {
+            setTimeout(() => {$('#signUpErrorMessage').fadeOut(400,)}, 5000);
+        });
         return;
     }
 
@@ -19,8 +20,9 @@ $('#signUpForm').on('submit', (evt) => {
     $.get('/user_exists', {'username': username}, (result) => {
         if (result == 'found') {
             $('#signUpErrorMessage').html("Error: Username is already taken. Please enter a different one.")
-            $('#signUpErrorMessage').show();
-            setTimeout(() => $('#signUpErrorMessage').hide(), 5000)
+            $('#signUpErrorMessage').fadeIn(400, () => {
+                setTimeout(() => {$('#signUpErrorMessage').fadeOut(400,)}, 5000);
+            });
         } else {
             // resubmit form 
             $('#signUpForm').unbind('submit').submit();

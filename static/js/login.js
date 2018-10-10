@@ -9,8 +9,9 @@ $('#logInForm').on('submit', (evt) => {
     $.get('/user_exists', {'username': username}, (result) => {
         if (result != 'found') {
             $('#logInErrorMessage').html("Error: Username not recognized.")
-            $('#logInErrorMessage').show();
-            setTimeout(() => $('#logInErrorMessage').hide(), 5000)
+            $('#logInErrorMessage').fadeIn(400, () => {
+                setTimeout(() => {$('#logInErrorMessage').fadeOut(400,)}, 5000);
+            });
         } 
         else {
             $.post('/validate_login', 
@@ -18,8 +19,9 @@ $('#logInForm').on('submit', (evt) => {
                   (result) => {
                         if (result != 'valid') {
                             $('#logInErrorMessage').html("Error: Username and password do not match")
-                            $('#logInErrorMessage').show();
-                            setTimeout(() => $('#logInErrorMessage').hide(), 5000)
+                            $('#logInErrorMessage').fadeIn(400, () => {
+                                setTimeout(() => {$('#logInErrorMessage').fadeOut(400,)}, 5000);
+                            });
                         } else {
                             // resubmit form
                             $('#logInForm').unbind('submit').submit();
