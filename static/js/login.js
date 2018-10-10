@@ -21,10 +21,8 @@ $('#logInForm').on('submit', (evt) => {
                             $('#logInErrorMessage').show();
                             setTimeout(() => $('#logInErrorMessage').hide(), 5000)
                         } else {
-                            console.log(username)
-                            $.post('/login', 
-                                {'username': username},
-                                () => {window.location.replace("/");})
+                            // resubmit form
+                            $('#logInForm').unbind('submit').submit();
                         }
                   });
         }

@@ -37,7 +37,7 @@ def signup():
     email = request.form.get('email')
     phone = request.form.get('phone')
     username = request.form.get('username')
-    password = request.form.get('password')
+    password = request.form.get('password1')
 
     new_user = User(first_name=first_name,
                     last_name=last_name,
@@ -48,6 +48,7 @@ def signup():
     db.session.add(new_user)
     db.session.commit()
 
+    session['user_id'] = db.session.query(User.user_id).filter_by(username=username).one()[0]
     flash(f'{username} successfully signed up.')
     return redirect('/')
 
@@ -64,7 +65,6 @@ def login():
     username = request.form.get('username')
     session['user_id'] = db.session.query(User.user_id).filter_by(username=username).one()[0]
     flash(f'{username} successfully logged in.')
-
     return redirect('/')
 
 @app.route('/user_exists', methods=['GET'])
