@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Programs{% endblock %}
+
+{% block content %}
+    <h1>Programs</h1>
+    <p>Search for PTSD programs by program name, city, state, or zipcode.</p>
+    <form action="/search_programs" method="GET" id="programSearchForm">
+        <label>Search: 
+            <input type="text" name="search_text" id="search_text">
+            <select name="search_type" id="search_type">
+                <option value="program_name">name</option>
+                <option value="city">city</option>
+                <option value="state">state</option>
+                <option value="zipcode">zipcode</option>
+            </select>
+            </label>
+            <button type="submit" id="programSearchButton">
+                <i class="fas fa-search"></i>
+            </button>
+    </form>
+    <br>
+    <div id="programResults"></div>
+    <script src="/static/js/programs.js"></script>
+{% endblock %}

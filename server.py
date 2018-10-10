@@ -1,7 +1,7 @@
 """ PTSD Project """
 
 from jinja2 import StrictUndefined
-from flask import (Flask, render_template, redirect, request, flash, session)
+from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
 from flask_debugtoolbar import DebugToolbarExtension
 from model import (User, Program, Recording, Message)
 from model import (UserProgram, UserRecording, UserMessage)
@@ -97,6 +97,56 @@ def logout():
 
     return redirect('/')
 
+@app.route('/programs')
+def display_programs():
+    """ Displays progam search page. """
+
+    return render_template('programs.html')
+
+@app.route('/search_programs')
+def search_for_programs():
+
+    search_text = request.args.get('search_text')
+    search_type = request.args.get('search_type')
+
+    if search_type == 'program_name':
+        programs_lst_of_tups = db.session.query(Program.program_name, 
+                             Program.address, 
+                             Program.city, 
+                             Program.state, 
+                             Program.zipcode).filter(Program.program_name.like(f'%{search_text}%')).all()
+    elif search_type == 'city':
+        programs_lst_of_tups = db.session.query(Program.program_name, 
+                             Program.address, 
+                             Program.city, 
+                             Program.state, 
+                             Program.zipcode).filter(Program.city.like(f'%{search_text}%')).all()
+    elif search_type == 'state':
+        programs_lst_of_tups = db.session.query(Program.program_name, 
+                             Program.address, 
+                             Program.city, 
+                             Program.state, 
+                             Program.zipcode).filter(Program.state.like(f'%{search_text}%')).all()
+    elif search_type == 'zipcode':
+        programs_lst_of_tups = db.session.query(Program.program_name, 
+                             Program.address, 
+                             Program.city, 
+                             Program.state, 
+                             Program.zipcode).filter(Program.zipcode.like(f'%{search_text}%')).all()
+
+    programs_lst_of_dicts = []
+    for program in programs_lst_of_tups:
+        program_dict = {}
+
+        program_dict['program_name'] = program[0]
+        program_dict['address'] = program[1]
+        program_dict['city'] = program[2]
+        program_dict['state'] = program[3]
+        program_dict['zipcode'] = program[4]
+
+        programs_lst_of_dicts.append(program_dict)
+
+    return jsonify(programs_lst_of_dicts)
 
 if __name__ == '__main__':
     # debug must be set to True at the point that DebugToolbarExtension is invoked
