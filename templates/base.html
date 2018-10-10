@@ -8,7 +8,7 @@
     <header>
         <h1>finding peace</h1>
         <h2>a resource for people with PTSD</h2>
-        {% if 'loggedInOut' not in session %}
+        {% if 'user_id' not in session %}
         <a href="/signup">Sign Up</a> or
         <a href="/login">Log In</a>
         {% else %}

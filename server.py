@@ -51,6 +51,22 @@ def signup():
     flash(f'{username} successfully signed up.')
     return redirect('/')
 
+@app.route('/login', methods=['GET'])
+def display_login_form():
+    """ Display log in page. """
+
+    return render_template('login.html')
+
+@app.route('/login', methods=['POST'])
+def login():
+    """ Login the user. """
+
+    username = request.form.get('username')
+    session['user_id'] = db.session.query(User.user_id).filter_by(username=username).one()[0]
+    flash(f'{username} successfully logged in.')
+
+    return redirect('/')
+
 @app.route('/user_exists', methods=['GET'])
 def user_exists():
     """ Determines if username given already exists in the database. """
@@ -58,6 +74,29 @@ def user_exists():
     if User.query.filter_by(username=username).first() is not None:
         return 'found'
     return 'not found'
+
+@app.route('/validate_login', methods=['POST'])
+def validate_login_credentials():
+    """ Take username and password and validate them. """
+
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    if User.query.filter_by(username=username, password=password).first() is not None:
+        return 'valid'
+    return 'not valid'
+
+@app.route('/logout')
+def logout():
+    """ Logout the current logged in user. """
+
+    user_id = session['user_id']
+    username = db.session.query(User.username).filter_by(user_id=user_id).one()[0]
+    flash(f'{username} successfully logged out.')
+    del session['user_id']
+
+    return redirect('/')
+
 
 if __name__ == '__main__':
     # debug must be set to True at the point that DebugToolbarExtension is invoked

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Log In{% endblock %}
+
+{% block content %}
+<h1>Log In</h1>
+<form id="logInForm" action="/login" method="POST">
+    <label>Enter username: 
+        <input type="text" id="logInUsername" required>
+    </label>
+    <br>
+    <label>Enter password:
+        <input type="text" id="logInPassword" required>
+    </label>
+    <br>
+    <input type="submit" value="Log In">
+</form>
+<p id="logInErrorMessage" hidden></p>
+<p>Have not signed up yet? Sign up <a href="/signup">here</a>.</p>
+<script src="/static/js/login.js"></script>
+{% endblock %}
