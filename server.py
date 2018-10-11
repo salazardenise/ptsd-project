@@ -257,7 +257,6 @@ def toggle_favorite():
                                                  UserProgram.program_id==program_id).delete()
             db.session.commit()
             results['favorite'] = False
-            return 'unfavorite'
     else:
         results['user_logged_in'] = False
         results['favorite'] = None

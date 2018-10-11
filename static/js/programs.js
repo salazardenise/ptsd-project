@@ -18,30 +18,30 @@ $('#programSearchForm').on('submit', (evt) => {
         else {       
             // add table headers
             $('#programResults').append("<table>");
-            let table_heading = "<tr><th>Favorite</th><th>Program</th><th>Address</th><th>City</th><th>State</th><th>Zipcode</th></tr>"
+            let table_heading = "<tr><th>Favorite</th><th>Program</th><th>Address</th><th>City</th><th>State</th><th>Zipcode</th></tr>";
             $('#programResults').append(table_heading);
 
             // add each row for the table
             for (let i in results) {
                 let program_id = results[i].program_id;
-                let row = `<tr class='program-row' data-programid='${program_id}'>`
+                let row = '<tr>';
                 if (results[i].favorite == 1) {
                     // this is a favorite
-                    row += `<td><i id='program-id-${program_id}' class='fas fa-star'></i></td>`
+                    row += `<td><i class='program-star fas fa-star' data-programid='${program_id}'></i></td>`;
                 } else {
-                    row += `<td><i id='program-id-${program_id}' class='far fa-star'></i></td>`
+                    row += `<td><i class='program-star far fa-star' data-programid='${program_id}'></i></td>`;
                 }
-
                 let program_name = results[i].program_name;
-                row += `<td>${program_name}</td>`
+                row += `<td>${program_name}</td>`;
                 let address = results[i].address;
-                row += `<td>${address}</td>`
+                row += `<td>${address}</td>`;
                 let city = results[i].city;
-                row += `<td>${city}</td>`
+                row += `<td>${city}</td>`;
                 let state = results[i].state;
-                row += `<td>${state}</td>`
+                row += `<td>${state}</td>`;
                 let zipcode = results[i].zipcode;
-                row += `<td>${zipcode}</td></tr>`
+                row += `<td>${zipcode}</td>`;
+                row += '</tr>';
                 $('#programResults').append(row);
             }
             $('#programResults').append("</table>");
@@ -51,18 +51,19 @@ $('#programSearchForm').on('submit', (evt) => {
 
 });
 
-$(document).on('click', '.program-row', (evt) => {
-    let programRow = $(evt.target.parentElement);
-    let program_id = programRow.data('programid');
+$(document).on('click', '.program-star', (evt) => {
+    let programStar = $(evt.target);
+    let program_id = programStar.data('programid');
     $.get('/toggle_favorite', {'program_id': program_id}, (results) => {
+        console.log(results);
         if (results.user_logged_in == true) {
             // A user is logged in 
             if (results.favorite == true) {
                 // user favorited the program, toggle star to solid
-                $(`#program-id-${program_id}`).removeClass('far fa-star').addClass('fas fa-star');
+                programStar.removeClass('far').addClass('fas');
             } else {
                 // user unfavorited the program, toggle star to regular
-                $(`#program-id-${program_id}`).removeClass('fas fa-star').addClass('far fa-star');
+                programStar.removeClass('fas').addClass('far');
             }
         } else {
             // A user is not logged in, show error message
