@@ -3,6 +3,7 @@ from model import (UserProgram, UserRecording, UserMessage)
 from model import connect_to_db, db 
 from server import app
 from zeep import Client, helpers
+import os
 
 def load_dummy_data():
     print('User')
@@ -91,6 +92,10 @@ def load_programs():
     db.session.commit()
 
 def load_dummy_data_with_real_programs():
+        
+        print('Real Programs')
+        load_programs()
+
         print('User')
         denise = User(username='denisecodes', password='Python', 
                       first_name='Denise', last_name='Codes', email='denise@codes.com')
@@ -100,24 +105,19 @@ def load_dummy_data_with_real_programs():
                       first_name='Leo', last_name='Codes', email='leo@codes.com')
         turing = User(username='turingcodes', password='JavaScript',
                       first_name='Turing', last_name='Codes', email='turing@codes.com')
-        db.session.add_all([denise, roy, leo, turing])
-        db.session.commit()
-
-        print('Real Programs')
-        load_programs()
 
         print('UserProgram')
-        user_program_1 = UserProgram(user_id=1, program_id=1)
-        user_program_2 = UserProgram(user_id=1, program_id=2)
-        user_program_3 = UserProgram(user_id=1, program_id=3)
-        user_program_4 = UserProgram(user_id=2, program_id=2)
-        user_program_5 = UserProgram(user_id=3, program_id=3)
+        program_1 = db.session.query(Program).filter(Program.program_id==1).one()
+        program_2 = db.session.query(Program).filter(Program.program_id==1).one()
+        program_3 = db.session.query(Program).filter(Program.program_id==1).one()
 
-        db.session.add_all([user_program_1, 
-                            user_program_2, 
-                            user_program_3, 
-                            user_program_4, 
-                            user_program_5])
+        denise.programs.append(program_1)
+        denise.programs.append(program_2)
+        denise.programs.append(program_3)
+        roy.programs.append(program_2)
+        roy.programs.append(program_3)
+
+        db.session.add_all([denise, roy, leo, turing])
         db.session.commit()
 
         print('Recording')
@@ -154,5 +154,6 @@ if __name__ == '__main__':
     db.create_all()
 
     # import dummy data
-    load_dummy_data()
+    ###load_dummy_data()
+    load_dummy_data_with_real_programs()
 

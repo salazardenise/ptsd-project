@@ -51,7 +51,7 @@ class Program(db.Model):
     fac_name = db.Column(db.String(500), nullable=False)
     program_name = db.Column(db.String(500), nullable=False)
     state = db.Column(db.String(2), nullable=False)
-    zipcode = db.Column(db.Integer, nullable=False)
+    zipcode = db.Column(db.String(15), nullable=False)
 
     users = db.relationship('User', secondary='users_programs')
 
