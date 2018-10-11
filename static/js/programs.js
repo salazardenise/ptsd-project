@@ -1,16 +1,5 @@
 "use strict";
 
-function toggleFavorite(program_id) {
-    $.get('/toggle_favorite', {'program_id': program_id}, (result) => {
-        if (result == 'favorite') {
-            $(`#program-id-${program_id}`).removeClass('far fa-star').addClass('fas fa-star');
-        } else if (result == 'unfavorite') {
-            $(`#program-id-${program_id}`).removeClass('fas fa-star').addClass('far fa-star');
-        }   
-
-    });
-}
-
 $('#programSearchForm').on('submit', (evt) => {
     evt.preventDefault();
 
@@ -35,7 +24,7 @@ $('#programSearchForm').on('submit', (evt) => {
             // add each row for the table
             for (let i in results) {
                 let program_id = results[i].program_id;
-                let row = `<tr onclick='toggleFavorite(${program_id});'>`
+                let row = `<tr class='program-row' data-programid='${program_id}'>`
                 if (results[i].favorite == 1) {
                     // this is a favorite
                     row += `<td><i id='program-id-${program_id}' class='fas fa-star'></i></td>`
@@ -58,6 +47,28 @@ $('#programSearchForm').on('submit', (evt) => {
             $('#programResults').append("</table>");
         }
         
-    });
+    });  
 
+});
+
+$(document).on('click', '.program-row', (evt) => {
+    let programRow = $(evt.target.parentElement);
+    let program_id = programRow.data('programid');
+    $.get('/toggle_favorite', {'program_id': program_id}, (results) => {
+        if (results.user_logged_in == true) {
+            // A user is logged in 
+            if (results.favorite == true) {
+                // user favorited the program, toggle star to solid
+                $(`#program-id-${program_id}`).removeClass('far fa-star').addClass('fas fa-star');
+            } else {
+                // user unfavorited the program, toggle star to regular
+                $(`#program-id-${program_id}`).removeClass('fas fa-star').addClass('far fa-star');
+            }
+        } else {
+            // A user is not logged in, show error message
+            $('#programsErrorMessage').fadeIn(400, () => {
+                setTimeout(() => {$('#programsErrorMessage').fadeOut(400,)}, 5000);
+            });
+        }
+    });
 });

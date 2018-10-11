@@ -237,9 +237,11 @@ def search_for_programs():
 @app.route('/toggle_favorite') 
 def toggle_favorite():
     program_id = request.args.get('program_id')
+    results = {}
 
     if 'user_id' in session:
         user_id = session['user_id']
+        results['user_logged_in'] = True
         favorite_exists = db.session.query(Program).join(UserProgram).filter(UserProgram.user_id==user_id, 
                                                                              Program.program_id==program_id).first()
 
@@ -248,14 +250,19 @@ def toggle_favorite():
             user_program = UserProgram(user_id = user_id, program_id=program_id)
             db.session.add(user_program)
             db.session.commit()
-            return 'favorite'
+            results['favorite'] = True
         else:
             # let the user unfavorite the program
             db.session.query(UserProgram).filter(UserProgram.user_id==user_id, 
                                                  UserProgram.program_id==program_id).delete()
             db.session.commit()
+            results['favorite'] = False
             return 'unfavorite'
-    return 'no user logged in'
+    else:
+        results['user_logged_in'] = False
+        results['favorite'] = None
+    
+    return jsonify(results)
 
 
 if __name__ == '__main__':
