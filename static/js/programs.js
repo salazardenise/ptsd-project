@@ -1,5 +1,16 @@
 "use strict";
 
+function toggleFavorite(program_id) {
+    $.get('/toggle_favorite', {'program_id': program_id}, (result) => {
+        if (result == 'favorite') {
+            $(`#program-id-${program_id}`).removeClass('far fa-star').addClass('fas fa-star');
+        } else if (result == 'unfavorite') {
+            $(`#program-id-${program_id}`).removeClass('fas fa-star').addClass('far fa-star');
+        }   
+
+    });
+}
+
 $('#programSearchForm').on('submit', (evt) => {
     evt.preventDefault();
 
@@ -16,12 +27,22 @@ $('#programSearchForm').on('submit', (evt) => {
             $('#programResults').html("No results found. Try again with a different search."); 
         } 
         else {       
+            // add table headers
             $('#programResults').append("<table>");
             let table_heading = "<tr><th>Favorite</th><th>Program</th><th>Address</th><th>City</th><th>State</th><th>Zipcode</th></tr>"
             $('#programResults').append(table_heading);
 
+            // add each row for the table
             for (let i in results) {
-                let row = "<tr><td><i class='far fa-star'></i></td>"
+                let program_id = results[i].program_id;
+                let row = `<tr onclick='toggleFavorite(${program_id});'>`
+                if (results[i].favorite == 1) {
+                    // this is a favorite
+                    row += `<td><i id='program-id-${program_id}' class='fas fa-star'></i></td>`
+                } else {
+                    row += `<td><i id='program-id-${program_id}' class='far fa-star'></i></td>`
+                }
+
                 let program_name = results[i].program_name;
                 row += `<td>${program_name}</td>`
                 let address = results[i].address;
