@@ -17,8 +17,8 @@ $('#signUpForm').on('submit', (evt) => {
     evt.preventDefault();
 
     let username = $('#signUpUsername').val()
-    $.get('/user_exists', {'username': username}, (result) => {
-        if (result == 'found') {
+    $.get('/validate_signup', {'username': username}, (result) => {
+        if (result.username_found == true) {
             $('#signUpErrorMessage').html("Error: Username is already taken. Please enter a different one.")
             $('#signUpErrorMessage').fadeIn(400, () => {
                 setTimeout(() => {$('#signUpErrorMessage').fadeOut(400,)}, 5000);

@@ -67,13 +67,13 @@ def login():
     flash(f'{username} successfully logged in.')
     return redirect('/')
 
-@app.route('/user_exists', methods=['GET'])
+@app.route('/validate_signup', methods=['GET'])
 def user_exists():
     """ Determines if username given already exists in the database. """
     username = request.args.get('username')
     if User.query.filter_by(username=username).first() is not None:
-        return 'found'
-    return 'not found'
+        return jsonify({'username_found': True})
+    return jsonify({'username_found': False})
 
 @app.route('/validate_login', methods=['POST'])
 def validate_login_credentials():
@@ -82,9 +82,21 @@ def validate_login_credentials():
     username = request.form.get('username')
     password = request.form.get('password')
 
+    result = {}
+    # Does username exist?
+    if User.query.filter_by(username=username).first() is None:
+        result['username_found'] = False
+        result['valid_login'] = None
+        return jsonify(result)
+    
+    # If yes, does password match username?
+    result['username_found'] = True
     if User.query.filter_by(username=username, password=password).first() is not None:
-        return 'valid'
-    return 'not valid'
+        result['valid_login'] = True
+    else:
+        result['valid_login'] = False
+
+    return jsonify(result)
 
 @app.route('/logout')
 def logout():
