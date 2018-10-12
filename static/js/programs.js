@@ -54,7 +54,7 @@ $('#programSearchForm').on('submit', (evt) => {
 $(document).on('click', '.program-star', (evt) => {
     let programStar = $(evt.target);
     let program_id = programStar.data('programid');
-    $.get('/toggle_favorite', {'program_id': program_id}, (results) => {
+    $.get('/toggle_favorite_program', {'program_id': program_id}, (results) => {
         console.log(results);
         if (results.user_logged_in == true) {
             // A user is logged in 

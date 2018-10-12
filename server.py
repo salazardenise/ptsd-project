@@ -246,8 +246,8 @@ def search_for_programs():
 
     return jsonify(programs_lst_of_dicts)
 
-@app.route('/toggle_favorite') 
-def toggle_favorite():
+@app.route('/toggle_favorite_program') 
+def toggle_favorite_program():
     program_id = request.args.get('program_id')
     results = {}
 
@@ -275,11 +275,90 @@ def toggle_favorite():
     
     return jsonify(results)
 
+@app.route('/toggle_favorite_recording')
+def toggle_favorite_recording():
+
+    recording_id = request.args.get('recording_id')
+    results = {}
+
+    if 'user_id' in session:
+        user_id = session['user_id']
+        results['user_logged_in'] = True
+        favorite_exists = db.session.query(Recording).join(UserRecording).filter(UserRecording.user_id==user_id,
+                                                                                 Recording.recording_id==recording_id).first()
+
+        if favorite_exists is None:
+            # let the user favorite the recording
+            user_recording = UserRecording(user_id=user_id, recording_id=recording_id)
+            db.session.add(user_recording)
+            db.session.commit()
+            results['favorite'] = True
+        else:
+            # the the user unfavorite the recording
+            db.session.query(UserRecording).filter(UserRecording.user_id==user_id,
+                                                   UserRecording.recording_id==recording_id).delete()
+            db.session.commit()
+            results['favorite'] = False
+    else:
+        results['user_logged_in'] = False
+        results['favorite'] = None
+    
+    return jsonify(results)
+
 @app.route('/recordings')
 def display_recordings():
     """ Display recordings page. """
-    recordings = Recording.query.all()
-    return render_template('recordings.html', recordings=recordings)
+
+    favorite_recordings = []
+    # get user's favorite recordings
+    if 'user_id' in session:
+        user_id = session['user_id']
+        favorite_recordings = db.session.query(Recording.recording_id,
+                                               Recording.name,
+                                               Recording.description,
+                                               Recording.file_path).join(UserRecording).filter(UserRecording.user_id==user_id).all()
+    
+    # get all recordings
+    recordings = db.session.query(Recording.recording_id,
+                                  Recording.name,
+                                  Recording.description,
+                                  Recording.file_path).all()
+
+    # convert each to a set
+    favorite_recordings_set = set(favorite_recordings)
+    recordings_set = set(recordings)
+
+    # perform set subtraction to get recordings that are not favorited by the current user
+    recordings_not_fav_set = recordings_set - favorite_recordings_set
+
+    # create list of dictionaries that for each recording
+    recording_lst_of_dicts = []
+
+    # add favorites first and mark them as favorite
+    for recording in favorite_recordings_set:
+        recording_dict = {}
+
+        recording_dict['recording_id'] = recording[0]
+        recording_dict['name'] = recording[1]
+        recording_dict['description'] = recording[2]
+        recording_dict['file_path'] = recording[3]
+        recording_dict['favorite'] = 1
+
+        recording_lst_of_dicts.append(recording_dict)
+
+    # next add all the other programs that were not favorited
+    for recording in recordings_not_fav_set:
+        recording_dict = {}
+
+        recording_dict['recording_id'] = recording[0]
+        recording_dict['name'] = recording[1]
+        recording_dict['description'] = recording[2]
+        recording_dict['file_path'] = recording[3]
+        recording_dict['favorite'] = 0
+
+        recording_lst_of_dicts.append(recording_dict)
+
+    return render_template('recordings.html', recording_lst_of_dicts=recording_lst_of_dicts)
 
 
 if __name__ == '__main__':

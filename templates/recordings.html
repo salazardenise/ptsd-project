@@ -4,16 +4,27 @@
 
 {% block content %}
 <h1>Self-Care</h1>
-<p>Be kind to yourself and practice self-care. It's the little things we do to help ourselves that can make a difference. Take a walk, buy some flowers, meditate, listen to some relaxing recordings.</p>
+<p>Be kind to yourself and practice self-care. It's the little things we do to help ourselves that can make a difference. Take a walk, buy some flowers, meditate, listen to some relaxing recordings. Sound effects obtained from <a href="https://www.freetousesounds.com">https://www.freetousesounds.com</a></p>
 
 <h1>Recordings</h1>
-{% for recording in recordings %}
-    <div>
-        <h2><i class="far fa-star"></i> {{ recording.name }}</h2>
-        <p>{{ recording.description }}</p>
-        <audio controls>
-            <source src="">
-        </audio>
-    </div>
-{% endfor %}
+<p id="recordingsErrorMessage" hidden><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable favoriting programs.</small></p>
+
+    {% for recording in recording_lst_of_dicts %}
+        <div>
+            <h2>
+                {% if recording.favorite == 1 %}
+                    <i class="recording-star fas fa-star" data-recordingid="{{ recording.recording_id }}"></i>
+                {% else %}
+                    <i class="recording-star far fa-star" data-recordingid="{{ recording.recording_id }}"></i>
+                {% endif %}
+                {{ recording.name }}
+            </h2>
+            <p>{{ recording.description }}</p>
+            <audio controls>
+                <source src="{{ recording.file_path }}" type="audio/wav">
+            </audio>
+        </div>
+    {% endfor %}
+
+<script src="/static/js/recordings.js"></script>
 {% endblock %}
