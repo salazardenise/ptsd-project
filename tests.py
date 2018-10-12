@@ -94,25 +94,25 @@ class TestRoutesWithDatabase(unittest.TestCase):
         self.assertIn(b'<h2>You are not alone.</h2>', result.data)
         self.assertIn(b'denisecodes successfully logged in.', result.data)
 
-    def test_user_exists_found(self):
+    def test_validate_signup_username_found(self):
 
         username = 'denisecodes'
 
         data = {'username': username}
 
-        result = self.client.get('/user_exists', data=data, follow_redirects=True)
+        result = self.client.get('/validate_signup', data=data, follow_redirects=True)
         self.assertEqual(result.status_code, 200)
-        self.assertIn(b'found', result.data)
+        self.assertIn(b'"username_found":true', result.data)
 
-    def test_user_exists_not_found(self):
+    def test_validate_signup_username_not_found(self):
 
         username = 'fabiocodes'
 
         data = {'username': username}
 
-        result = self.client.get('/user_exists', data=data, follow_redirects=True)
+        result = self.client.get('/validate_signup', data=data, follow_redirects=True)
         self.assertEqual(result.status_code, 200)
-        self.assertIn(b'not found', result.data)
+        self.assertIn(b'"username_found":false', result.data)
 
     def test_validate_login_valid(self):
         
@@ -123,7 +123,8 @@ class TestRoutesWithDatabase(unittest.TestCase):
 
         result = self.client.post('/validate_login', data=data, follow_redirects=True)
         self.assertEqual(result.status_code, 200)
-        self.assertIn(b'valid', result.data)
+        self.assertIn(b'"username_found":true', result.data)
+        self.assertIn(b'"valid_login":true', result.data)
 
     def test_validate_login_not_valid(self):
         
@@ -134,7 +135,7 @@ class TestRoutesWithDatabase(unittest.TestCase):
 
         result = self.client.post('/validate_login', data=data, follow_redirects=True)
         self.assertEqual(result.status_code, 200)
-        self.assertIn(b'not valid', result.data)
+        self.assertIn(b'"username_found":false', result.data)
 
 if __name__ == '__main__':
     unittest.main()
