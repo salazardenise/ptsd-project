@@ -1,0 +1,8 @@
+.message-description {
+    height: 1em;
+    overflow: hidden;
+}
+
+.expand-cursor {
+    cursor: pointer;
+}

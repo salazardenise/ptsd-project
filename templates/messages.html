@@ -6,9 +6,23 @@
 <h1>Message Templates</h1>
 <p>Are you feeling anxiety having to message family, friends, and co-workers? Sometimes it is hard to reach out to others. Choose a template below to send a message if you need it.</p>
 <h1>Choose One</h1>
+<table>
 {% for message in messages %}
-    <div>
-        <h2><i class="far fa-star"></i> {{ message.message_type }}</h2>
-    </div>
+    <tr>
+        <td>
+            <h2><i class="far fa-star"></i> {{ message.message_type }}</h2>
+        <td>
+        <td>
+            <span class='message-description expand-cursor'>{{ message.message }}</span>
+        </td>
+        <td>
+            <button class="email-button">Email</button>
+        </td>
+        <td>
+            <button class="text-button">Text</button>
+        </td>
+    </tr>
 {% endfor %}
+</table>
+<script src="/static/js/messages.js"></script>
 {% endblock %}
