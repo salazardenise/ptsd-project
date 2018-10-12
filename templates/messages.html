@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+<h1>Message Templates</h1>
+<p>Are you feeling anxiety having to message family, friends, and co-workers? Sometimes it is hard to reach out to others. Choose a template below to send a message if you need it.</p>
+<h1>Choose One</h1>
+{% for message in messages %}
+    <div>
+        <h2><i class="far fa-star"></i> {{ message.message_type }}</h2>
+    </div>
+{% endfor %}
+{% endblock %}

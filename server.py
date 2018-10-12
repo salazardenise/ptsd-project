@@ -360,6 +360,14 @@ def display_recordings():
 
     return render_template('recordings.html', recording_lst_of_dicts=recording_lst_of_dicts)
 
+@app.route('/messages')
+def display_messages():
+    """ Display messages page. """
+
+    messages = Message.query.all()
+    
+    return render_template('messages.html', messages=messages)    
+
 
 if __name__ == '__main__':
     # debug must be set to True at the point that DebugToolbarExtension is invoked
