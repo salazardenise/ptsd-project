@@ -6,15 +6,18 @@
 <h1>Message Templates</h1>
 <p>Are you feeling anxiety having to message family, friends, and co-workers? Sometimes it is hard to reach out to others. Choose a template below to send a message if you need it.</p>
 <h1>Choose One</h1>
+
+<p id="messagesErrorMessage" hidden><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable favoriting recordings.</small></p>
+
 <table>
 {% for message in messages %}
     <tr>
         <td>
             <h2>
                 {% if message.favorite == 1 %}
-                <i class="fas fa-star"></i> 
+                <i class="message-star fas fa-star" data-messageid="{{ message.message_id }}"></i> 
                 {% else %}
-                <i class="far fa-star"></i>
+                <i class="message-star far fa-star" data-messageid="{{ message.message_id }}"></i>
                 {% endif %}
                 {{ message.message_type }}
             </h2>

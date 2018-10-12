@@ -305,6 +305,36 @@ def toggle_favorite_recording():
     
     return jsonify(results)
 
+@app.route('/toggle_favorite_message')
+def toggle_favorite_message():
+
+    message_id = request.args.get('message_id')
+    results = {}
+
+    if 'user_id' in session:
+        user_id = session['user_id']
+        results['user_logged_in'] = True
+        favorite_exists = db.session.query(Message).join(UserMessage).filter(UserMessage.user_id==user_id,
+                                                                             Message.message_id==message_id).first()
+
+        if favorite_exists is None:
+            # let the user favorite the message
+            user_message = UserMessage(user_id=user_id, message_id=message_id)
+            db.session.add(user_message)
+            db.session.commit()
+            results['favorite'] = True
+        else:
+            # the the user unfavorite the message
+            db.session.query(UserMessage).filter(UserMessage.user_id==user_id,
+                                                 UserMessage.message_id==message_id).delete()
+            db.session.commit()
+            results['favorite'] = False
+    else:
+        results['user_logged_in'] = False
+        results['favorite'] = None
+    
+    return jsonify(results)
+
 @app.route('/recordings')
 def display_recordings():
     """ Display recordings page. """
