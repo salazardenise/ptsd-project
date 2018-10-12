@@ -117,82 +117,59 @@ def display_programs():
 
 
 def search_all_programs(search_text, search_type):
-    programs_lst_of_tups = []
+    baseQuery = db.session.query(
+                             Program.program_id,
+                             Program.program_name, 
+                             Program.address, 
+                             Program.city, 
+                             Program.state, 
+                             Program.zipcode)
+
     if search_type == 'program_name':
-        programs_lst_of_tups = db.session.query(
-                             Program.program_id,
-                             Program.program_name, 
-                             Program.address, 
-                             Program.city, 
-                             Program.state, 
-                             Program.zipcode).filter(Program.program_name.like(f'%{search_text}%')).all()
+        base_with_filter = baseQuery.filter(Program.program_name.like(f'%{search_text}%'))
     elif search_type == 'city':
-        programs_lst_of_tups = db.session.query(
-                             Program.program_id,
-                             Program.program_name, 
-                             Program.address, 
-                             Program.city, 
-                             Program.state, 
-                             Program.zipcode).filter(Program.city.like(f'%{search_text}%')).all()
+        base_with_filter = baseQuery.filter(Program.city.like(f'%{search_text}%'))
     elif search_type == 'state':
-        programs_lst_of_tups = db.session.query(
-                             Program.program_id,
-                             Program.program_name, 
-                             Program.address, 
-                             Program.city, 
-                             Program.state, 
-                             Program.zipcode).filter(Program.state.like(f'%{search_text}%')).all()
+        base_with_filter = baseQuery.filter(Program.state.like(f'%{search_text}%'))
     elif search_type == 'zipcode':
-        programs_lst_of_tups = db.session.query(
-                             Program.program_id,
-                             Program.program_name, 
-                             Program.address, 
-                             Program.city, 
-                             Program.state, 
-                             Program.zipcode).filter(Program.zipcode.like(f'%{search_text}%')).all()
-    return programs_lst_of_tups
+        base_with_filter = baseQuery.filter(Program.zipcode.like(f'%{search_text}%'))
+    else:
+        return []
+
+    return base_with_filter.all()
 
 def search_for_user_favorite_programs(search_text, search_type):
-    fav_programs_lst_of_tups = []
     if 'user_id' in session:
+        
         user_id = session['user_id']
+
+        baseQuery = db.session.query(
+                                 Program.program_id,
+                                 Program.program_name, 
+                                 Program.address, 
+                                 Program.city, 
+                                 Program.state, 
+                                 Program.zipcode).join(UserProgram)
+
         if search_type == 'program_name':
-            fav_programs_lst_of_tups = db.session.query(
-                                 Program.program_id,
-                                 Program.program_name, 
-                                 Program.address, 
-                                 Program.city, 
-                                 Program.state, 
-                                 Program.zipcode).join(UserProgram).filter(Program.program_name.like(f'%{search_text}%'),
-                                                                           UserProgram.user_id == user_id).all()
+            base_with_filter = baseQuery.filter(Program.program_name.like(f'%{search_text}%'),
+                                                UserProgram.user_id == user_id)
         elif search_type == 'city':
-            fav_programs_lst_of_tups = db.session.query(
-                                 Program.program_id,
-                                 Program.program_name, 
-                                 Program.address, 
-                                 Program.city, 
-                                 Program.state, 
-                                 Program.zipcode).join(UserProgram).filter(Program.city.like(f'%{search_text}%'),
-                                                                           UserProgram.user_id == user_id).all()
+            base_with_filter = baseQuery.filter(Program.city.like(f'%{search_text}%'),
+                                                UserProgram.user_id == user_id)
         elif search_type == 'state':
-            fav_programs_lst_of_tups = db.session.query(
-                                 Program.program_id,
-                                 Program.program_name, 
-                                 Program.address, 
-                                 Program.city, 
-                                 Program.state, 
-                                 Program.zipcode).join(UserProgram).filter(Program.state.like(f'%{search_text}%'),
-                                                                           UserProgram.user_id == user_id).all()
+            base_with_filter = baseQuery.filter(Program.state.like(f'%{search_text}%'),
+                                                UserProgram.user_id == user_id)
         elif search_type == 'zipcode':
-            fav_programs_lst_of_tups = db.session.query(
-                                 Program.program_id,
-                                 Program.program_name, 
-                                 Program.address, 
-                                 Program.city, 
-                                 Program.state, 
-                                 Program.zipcode).join(UserProgram).filter(Program.zipcode.like(f'%{search_text}%'),
-                                                                           UserProgram.user_id == user_id).all()
-    return fav_programs_lst_of_tups
+            base_with_filter = baseQuery.filter(Program.zipcode.like(f'%{search_text}%'),
+                                                UserProgram.user_id == user_id)
+        else:
+            # no appropriate search type was chosen
+            return []
+    else:
+        # no user is logged in and therefore there are no favorites
+        return []
+    return base_with_filter.all()
 
 @app.route('/search_programs')
 def search_for_programs():
