@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Recordings{% endblock %}
+
+{% block content %}
+<h1>Self-Care</h1>
+<p>Be kind to yourself and practice self-care. It's the little things we do to help ourselves that can make a difference. Take a walk, buy some flowers, meditate, listen to some relaxing recordings.</p>
+
+<h1>Recordings</h1>
+{% for recording in recordings %}
+    <div>
+        <h2><i class="far fa-star"></i> {{ recording.name }}</h2>
+        <p>{{ recording.description }}</p>
+        <audio controls>
+            <source src="">
+        </audio>
+    </div>
+{% endfor %}
+{% endblock %}

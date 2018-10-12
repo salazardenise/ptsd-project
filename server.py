@@ -275,6 +275,12 @@ def toggle_favorite():
     
     return jsonify(results)
 
+@app.route('/recordings')
+def display_recordings():
+    """ Display recordings page. """
+    recordings = Recording.query.all()
+    return render_template('recordings.html', recordings=recordings)
+
 
 if __name__ == '__main__':
     # debug must be set to True at the point that DebugToolbarExtension is invoked
