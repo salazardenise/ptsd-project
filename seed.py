@@ -183,9 +183,6 @@ def load_dummy_users_with_rest_of_data():
     roy.recordings.append(park)
     roy.recordings.append(stream)
 
-    db.session.add_all([denise, roy, leo, turing])
-    db.session.commit()
-
     print('Message')
     load_messages()
 
@@ -200,7 +197,7 @@ def load_dummy_users_with_rest_of_data():
     roy.messages.append(family_2)
     roy.messages.append(friend_1)
 
-    db.session.add_all([family_1, family_2, friend_1])
+    db.session.add_all([denise, roy, leo, turing])
     db.session.commit()
 
 
