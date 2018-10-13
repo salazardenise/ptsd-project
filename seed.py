@@ -138,8 +138,6 @@ def load_messages():
                               personal illness. Please let me know if I can 
                               provide any further information. Thank you for 
                               understanding.""")
-    
-
     db.session.add_all([family_1, family_2, friend_1, friend_2, boss_1, boss_2, team])
     db.session.commit()
 
@@ -155,49 +153,49 @@ def load_dummy_users_with_rest_of_data():
     turing = User(username='turingcodes', password='JavaScript',
                   first_name='Turing', last_name='Codes', email='turing@codes.com')
 
+    db.session.add_all([denise, roy, leo, turing])
+    db.session.commit()
+
     print('Real Programs')
     load_programs()
 
     print('UserProgram')
-    program_1 = db.session.query(Program).filter(Program.program_id==1).one()
-    program_2 = db.session.query(Program).filter(Program.program_id==1).one()
-    program_3 = db.session.query(Program).filter(Program.program_id==1).one()
+    user_program_1 = UserProgram(user_id=1, program_id=1)
+    user_program_2 = UserProgram(user_id=1, program_id=2)
+    user_program_3 = UserProgram(user_id=1, program_id=3)
+    user_program_4 = UserProgram(user_id=2, program_id=2)
+    user_program_5 = UserProgram(user_id=2, program_id=3)
 
-    denise.programs.append(program_1)
-    denise.programs.append(program_2)
-    denise.programs.append(program_3)
-    roy.programs.append(program_2)
-    roy.programs.append(program_3)
+    db.session.add_all([user_program_1, user_program_2, user_program_3, 
+                        user_program_4, user_program_5])
+    db.session.commit()
 
     print('Recording')
     load_recordings()
 
     print('UserRecording')
-    ocean = db.session.query(Recording).filter(Recording.recording_id==1).one()
-    park = db.session.query(Recording).filter(Recording.recording_id==2).one()
-    stream = db.session.query(Recording).filter(Recording.recording_id==3).one()
+    user_recording_1 = UserRecording(user_id=1, recording_id=1)
+    user_recording_2 = UserRecording(user_id=1, recording_id=2)
+    user_recording_3 = UserRecording(user_id=1, recording_id=3)
+    user_recording_4 = UserRecording(user_id=2, recording_id=2)
+    user_recording_5 = UserRecording(user_id=2, recording_id=3)
 
-    denise.recordings.append(ocean)
-    denise.recordings.append(park)
-    denise.recordings.append(stream)
-    roy.recordings.append(park)
-    roy.recordings.append(stream)
+    db.session.add_all([user_recording_1, user_recording_2, user_recording_3, 
+                        user_recording_4, user_recording_5])
+    db.session.commit()
 
     print('Message')
     load_messages()
 
     print('UserMessage')
-    family_1 = db.session.query(Message).filter(Message.message_id==1).one()
-    family_2 = db.session.query(Message).filter(Message.message_id==2).one()
-    friend_1 = db.session.query(Message).filter(Message.message_id==3).one()
+    user_message_1 = UserMessage(user_id=1, message_id=1)
+    user_message_2 = UserMessage(user_id=1, message_id=2)
+    user_message_3 = UserMessage(user_id=1, message_id=3)
+    user_message_4 = UserMessage(user_id=2, message_id=2)
+    user_message_5 = UserMessage(user_id=2, message_id=3)
 
-    denise.messages.append(family_1)
-    denise.messages.append(family_2)
-    denise.messages.append(friend_1)
-    roy.messages.append(family_2)
-    roy.messages.append(friend_1)
-
-    db.session.add_all([denise, roy, leo, turing])
+    db.session.add_all([user_message_1, user_message_2, user_message_3, 
+                        user_message_4, user_message_5])
     db.session.commit()
 
 
