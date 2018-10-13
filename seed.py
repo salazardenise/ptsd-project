@@ -107,12 +107,44 @@ def load_recordings():
                      sound. Birds sing in the background while water flows.""", 
                      file_path='/static/audio/Bachlauf_Binaural_Biberach.mp3')
     db.session.add_all([ocean, park, stream])
+    db.session.commit()
 
-def load_dummy_data_with_real_programs_and_recordings():
+def load_messages():
+    family_1 = Message(message_type='Family 1',
+                       message="""I am taking some time for myself for my mental 
+                                  health. I will reach out to you when I am 
+                                  feeling better.""")
+    family_2 = Message(message_type='Family 2', 
+                     message="""I am not feeling well 
+                                right now. I will contact you when 
+                                I start feeling better.""")
+    friend_1 = Message(message_type='Friend 1',
+                       message="""I need to take some time for myself for my 
+                                  mental health. Let's reconnect soon.""")
+    friend_2 = Message(message_type='Friend 2', 
+                     message="""I cannot see you today because I am not feeling
+                                well. I really wanted to see you. I will get in 
+                                touch when I am feeling better.""")
+    boss_1 = Message(message_type='Boss 1', 
+                     message="""I'm taking today and tomorrow off to focus on my 
+                              mental health. Hopefully I'll be back next weekend 
+                              refreshed and back to 100%. Thank you for 
+                              understanding.""")
+    boss_2 = Message(message_type='Boss 2',
+                     message="""I’m not feeling well and I’ll have to take the 
+                                day off, but I’ll be back tomorrow""")
+    team = Message(message_type='Team', 
+                   message="""I will be unable to attend work today because of 
+                              personal illness. Please let me know if I can 
+                              provide any further information. Thank you for 
+                              understanding.""")
+    
+
+    db.session.add_all([family_1, family_2, friend_1, friend_2, boss_1, boss_2, team])
+    db.session.commit()
+
+def load_dummy_users_with_rest_of_data():
         
-    print('Real Programs')
-    load_programs()
-
     print('User')
     denise = User(username='denisecodes', password='Python', 
                   first_name='Denise', last_name='Codes', email='denise@codes.com')
@@ -122,6 +154,9 @@ def load_dummy_data_with_real_programs_and_recordings():
                   first_name='Leo', last_name='Codes', email='leo@codes.com')
     turing = User(username='turingcodes', password='JavaScript',
                   first_name='Turing', last_name='Codes', email='turing@codes.com')
+
+    print('Real Programs')
+    load_programs()
 
     print('UserProgram')
     program_1 = db.session.query(Program).filter(Program.program_id==1).one()
@@ -152,16 +187,20 @@ def load_dummy_data_with_real_programs_and_recordings():
     db.session.commit()
 
     print('Message')
-    family = Message(message_type='Family', message='I am not feeling well. I will contact you when I start feeling better.')
-    boss = Message(message_type='Co-worker', message='I am out sick today. Please message me if there are any immediate deliverables for today.')
-    friend = Message(message_type='Friend', message='I really wanted to see you but I cannot visit with you today. Will get in touch when I am feeling better.')
-    denise.messages.append(family)
-    denise.messages.append(boss)
-    denise.messages.append(friend)
-    roy.messages.append(boss)
-    roy.messages.append(friend)
+    load_messages()
 
-    db.session.add_all([family, boss, friend])
+    print('UserMessage')
+    family_1 = db.session.query(Message).filter(Message.message_id==1).one()
+    family_2 = db.session.query(Message).filter(Message.message_id==2).one()
+    friend_1 = db.session.query(Message).filter(Message.message_id==3).one()
+
+    denise.messages.append(family_1)
+    denise.messages.append(family_2)
+    denise.messages.append(friend_1)
+    roy.messages.append(family_2)
+    roy.messages.append(friend_1)
+
+    db.session.add_all([family_1, family_2, friend_1])
     db.session.commit()
 
 
@@ -173,5 +212,5 @@ if __name__ == '__main__':
 
     # import dummy data
     ###load_dummy_data()
-    load_dummy_data_with_real_programs_and_recordings()
+    load_dummy_users_with_rest_of_data()
 
