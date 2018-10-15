@@ -5,6 +5,7 @@ cached-property==1.5.1
 certifi==2018.8.24
 chardet==3.0.4
 Click==7.0
+coverage==4.5.1
 defusedxml==0.5.0
 Flask==1.0.2
 Flask-DebugToolbar==0.10.1
