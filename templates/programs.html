@@ -5,7 +5,7 @@
 {% block content %}
     <h1>Programs</h1>
     <p>Search for PTSD programs by program name, city, state, or zipcode.</p>
-    <form action="/search_programs" method="GET" id="programSearchForm">
+    <form action="/programs.json" method="GET" id="programSearchForm">
         <label>Search: 
             <input type="text" name="search_text" id="search_text">
             <select name="search_type" id="search_type">

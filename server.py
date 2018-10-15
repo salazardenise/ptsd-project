@@ -115,15 +115,15 @@ def display_programs():
 
     return render_template('programs.html')
 
+@app.route('/programs.json')
+def search_for_programs():
 
-def search_all_programs(search_text, search_type):
-    baseQuery = db.session.query(
-                             Program.program_id,
-                             Program.program_name, 
-                             Program.address, 
-                             Program.city, 
-                             Program.state, 
-                             Program.zipcode)
+    search_text = request.args.get('search_text')
+    search_type = request.args.get('search_type')
+
+    user_id = session.get('user_id', None)
+    sub = db.session.query(UserProgram).filter(UserProgram.user_id == user_id).subquery()
+    baseQuery = db.session.query(Program, sub.c.user_id).outerjoin(sub)
 
     if search_type == 'program_name':
         base_with_filter = baseQuery.filter(Program.program_name.like(f'%{search_text}%'))
@@ -136,92 +136,28 @@ def search_all_programs(search_text, search_type):
     else:
         return []
 
-    return base_with_filter.all()
+    programs = base_with_filter.order_by(sub.c.user_id, Program.program_id).all()
+    # programs is a list of tuples
+    # each program in programs is (<Program>, user_id)
+    
+    lst_of_programs = []
+    for program in programs:
+        program_dict = {}
 
-def search_for_user_favorite_programs(search_text, search_type):
-    if 'user_id' in session:
-        
-        user_id = session['user_id']
-
-        baseQuery = db.session.query(
-                                 Program.program_id,
-                                 Program.program_name, 
-                                 Program.address, 
-                                 Program.city, 
-                                 Program.state, 
-                                 Program.zipcode).join(UserProgram)
-
-        if search_type == 'program_name':
-            base_with_filter = baseQuery.filter(Program.program_name.like(f'%{search_text}%'),
-                                                UserProgram.user_id == user_id)
-        elif search_type == 'city':
-            base_with_filter = baseQuery.filter(Program.city.like(f'%{search_text}%'),
-                                                UserProgram.user_id == user_id)
-        elif search_type == 'state':
-            base_with_filter = baseQuery.filter(Program.state.like(f'%{search_text}%'),
-                                                UserProgram.user_id == user_id)
-        elif search_type == 'zipcode':
-            base_with_filter = baseQuery.filter(Program.zipcode.like(f'%{search_text}%'),
-                                                UserProgram.user_id == user_id)
+        program_dict['program_id'] = program[0].program_id
+        program_dict['program_name'] = program[0].program_name
+        program_dict['address'] = program[0].address
+        program_dict['city'] = program[0].city
+        program_dict['state'] = program[0].state
+        program_dict['zipcode'] = program[0].zipcode
+        if program[1] != None:
+            program_dict['favorite'] = 1
         else:
-            # no appropriate search type was chosen
-            return []
-    else:
-        # no user is logged in and therefore there are no favorites
-        return []
-    return base_with_filter.all()
+            program_dict['favorite'] = 0
 
-@app.route('/search_programs')
-def search_for_programs():
+        lst_of_programs.append(program_dict)
 
-    search_text = request.args.get('search_text')
-    search_type = request.args.get('search_type')
-
-    # obtain list of programs that match search
-    programs_lst_of_tups = search_all_programs(search_text, search_type)
-    # obtain list of all programs that match search and are the current user's favorites
-    # this returns an empty list if no user is logged in right now
-    fav_programs_lst_of_tups = search_for_user_favorite_programs(search_text, search_type)
-
-    # convert each to a set
-    programs_set = set(programs_lst_of_tups)
-    fav_programs_set = set(fav_programs_lst_of_tups)
-
-    # perform set subtraction to get programs that are not favorited by the current user
-    not_fav_programs_set = programs_set - fav_programs_set
-
-    # create list of dictionaries that will be sent to the frontend
-    programs_lst_of_dicts = []
-
-    # add favorites first and mark them as favorite
-    for program in fav_programs_set:
-        program_dict = {}
-
-        program_dict['program_id'] = program[0]
-        program_dict['program_name'] = program[1]
-        program_dict['address'] = program[2]
-        program_dict['city'] = program[3]
-        program_dict['state'] = program[4]
-        program_dict['zipcode'] = program[5]
-        program_dict['favorite'] = 1
-
-        programs_lst_of_dicts.append(program_dict)
-
-    # next add all the other programs that were not favorited
-    for program in not_fav_programs_set:
-        program_dict = {}
-
-        program_dict['program_id'] = program[0]
-        program_dict['program_name'] = program[1]
-        program_dict['address'] = program[2]
-        program_dict['city'] = program[3]
-        program_dict['state'] = program[4]
-        program_dict['zipcode'] = program[5]
-        program_dict['favorite'] = 0
-
-        programs_lst_of_dicts.append(program_dict)
-
-    return jsonify(programs_lst_of_dicts)
+    return jsonify(lst_of_programs)
 
 @app.route('/toggle_favorite_program') 
 def toggle_favorite_program():

@@ -7,7 +7,7 @@ $('#programSearchForm').on('submit', (evt) => {
     let search_type = $('#search_type').val();
 
     let data = {'search_text': search_text, 'search_type': search_type}
-    $.get('/search_programs', data, (results) => {
+    $.get('/programs.json', data, (results) => {
         // results is a JSON object with all the programs that match the search
 
         $('#programResults').empty(); 
