@@ -9,19 +9,19 @@
 <h1>Recordings</h1>
 <p id="recordingsErrorMessage" hidden><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable favoriting recordings.</small></p>
 
-    {% for recording in recording_lst_of_dicts %}
+    {% for recording in recordings %}
         <div>
             <h2>
-                {% if recording.favorite == 1 %}
-                    <i class="recording-star fas fa-star" data-recordingid="{{ recording.recording_id }}"></i>
+                {% if recording[1] != None %}
+                    <i class="recording-star fas fa-star" data-recordingid="{{ recording[0].recording_id }}"></i>
                 {% else %}
-                    <i class="recording-star far fa-star" data-recordingid="{{ recording.recording_id }}"></i>
+                    <i class="recording-star far fa-star" data-recordingid="{{ recording[0].recording_id }}"></i>
                 {% endif %}
-                {{ recording.name }}
+                {{ recording[0].name }}
             </h2>
-            <p>{{ recording.description }}</p>
+            <p>{{ recording[0].description }}</p>
             <audio controls>
-                <source src="{{ recording.file_path }}" type="audio/wav">
+                <source src="{{ recording[0].file_path }}" type="audio/wav">
             </audio>
         </div>
     {% endfor %}

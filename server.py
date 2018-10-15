@@ -316,56 +316,13 @@ def toggle_favorite_message():
 def display_recordings():
     """ Display recordings page. """
 
-    favorite_recordings = []
-    # get user's favorite recordings
-    if 'user_id' in session:
-        user_id = session['user_id']
-        favorite_recordings = db.session.query(Recording.recording_id,
-                                               Recording.name,
-                                               Recording.description,
-                                               Recording.file_path).join(UserRecording).filter(UserRecording.user_id==user_id).all()
-    
-    # get all recordings
-    recordings = db.session.query(Recording.recording_id,
-                                  Recording.name,
-                                  Recording.description,
-                                  Recording.file_path).all()
-
-    # convert each to a set
-    favorite_recordings_set = set(favorite_recordings)
-    recordings_set = set(recordings)
-
-    # perform set subtraction to get recordings that are not favorited by the current user
-    recordings_not_fav_set = recordings_set - favorite_recordings_set
-
-    # create list of dictionaries for each recording
-    recording_lst_of_dicts = []
-
-    # add favorites first and mark them as favorite
-    for recording in favorite_recordings_set:
-        recording_dict = {}
-
-        recording_dict['recording_id'] = recording[0]
-        recording_dict['name'] = recording[1]
-        recording_dict['description'] = recording[2]
-        recording_dict['file_path'] = recording[3]
-        recording_dict['favorite'] = 1
-
-        recording_lst_of_dicts.append(recording_dict)
-
-    # next add all the other programs that were not favorited
-    for recording in recordings_not_fav_set:
-        recording_dict = {}
-
-        recording_dict['recording_id'] = recording[0]
-        recording_dict['name'] = recording[1]
-        recording_dict['description'] = recording[2]
-        recording_dict['file_path'] = recording[3]
-        recording_dict['favorite'] = 0
-
-        recording_lst_of_dicts.append(recording_dict)
-
-    return render_template('recordings.html', recording_lst_of_dicts=recording_lst_of_dicts)
+    user_id = session.get('user_id', None)
+    sub = db.session.query(UserRecording).filter(UserRecording.user_id == user_id).subquery()
+    recordings = db.session.query(Recording, sub.c.user_id).outerjoin(sub).order_by(sub.c.user_id, Recording.recording_id).all()
+    # recordings is a list of tuples
+    # each recording in recordings is (<Recording>, user_id)
+        
+    return render_template('recordings.html', recordings=recordings)
 
 @app.route('/messages')
 def display_messages():
@@ -378,9 +335,6 @@ def display_messages():
     # each message in messages is (<Message>, user_id)
         
     return render_template('messages.html', messages=messages)
-
-
-
 
 if __name__ == '__main__':
     # debug must be set to True at the point that DebugToolbarExtension is invoked
