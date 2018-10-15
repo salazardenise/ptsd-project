@@ -26,10 +26,10 @@
             <div class='message-description expand-cursor'>{{ message[0].message }}</div>
         </td>
         <td>
-            <button class="email-button">Email</button>
+            <a href="/email_message?message_id={{ message[0].message_id }}"><button class="email-button">Email</button></a>
         </td>
         <td>
-            <button class="text-button">Text</button>
+            <a href="/text_message?message_id={{ message[0].message_id }}"><button class="text-button">Text</button></a>
         </td>
     </tr>
 {% endfor %}

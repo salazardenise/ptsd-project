@@ -272,6 +272,14 @@ def display_messages():
         
     return render_template('messages.html', messages=messages)
 
+@app.route('/email_message')
+def display_email_message():
+    return "email message page"
+
+@app.route('/text_message')
+def display_text_message():
+    return "text message page"
+
 if __name__ == '__main__':
     # debug must be set to True at the point that DebugToolbarExtension is invoked
     app.debug = True
