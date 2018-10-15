@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Text Message{% endblock %}
+
+{% block content %}
+<h1>Text Message</h1>
+<form id="textMessageForm" method="POST">
+    Message:<br>
+    <textarea name="textMessage">{{ message.message }}</textarea>
+</form>
+{% endblock %}

@@ -278,7 +278,12 @@ def display_email_message():
 
 @app.route('/text_message')
 def display_text_message():
-    return "text message page"
+    """ Display text message page. """
+
+    message_id = request.args.get('message_id')
+    message = db.session.query(Message).filter(Message.message_id == message_id).one()
+
+    return render_template('text_message.html', message=message)
 
 if __name__ == '__main__':
     # debug must be set to True at the point that DebugToolbarExtension is invoked
