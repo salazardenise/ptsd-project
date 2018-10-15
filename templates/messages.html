@@ -7,23 +7,23 @@
 <p>Are you feeling anxiety having to message family, friends, and co-workers? Sometimes it is hard to reach out to others. Choose a template below to send a message if you need it.</p>
 <h1>Choose One</h1>
 
-<p id="messagesErrorMessage" hidden><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable favoriting recordings.</small></p>
+<p id="messagesErrorMessage" hidden><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable favoriting messages.</small></p>
 
 <table>
 {% for message in messages %}
     <tr>
         <td>
             <h2>
-                {% if message.favorite == 1 %}
-                <i class="message-star fas fa-star" data-messageid="{{ message.message_id }}"></i> 
+                {% if message[1] != None %}
+                <i class="message-star fas fa-star" data-messageid="{{ message[0].message_id }}"></i> 
                 {% else %}
-                <i class="message-star far fa-star" data-messageid="{{ message.message_id }}"></i>
+                <i class="message-star far fa-star" data-messageid="{{ message[0].message_id }}"></i>
                 {% endif %}
-                {{ message.message_type }}
+                {{ message[0].message_type }}
             </h2>
         <td>
         <td>
-            <div class='message-description expand-cursor'>{{ message.message }}</div>
+            <div class='message-description expand-cursor'>{{ message[0].message }}</div>
         </td>
         <td>
             <button class="email-button">Email</button>

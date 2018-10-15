@@ -371,48 +371,19 @@ def display_recordings():
 def display_messages():
     """ Display messages page. """
 
-    favorite_messages = []
-    # get user's favorite messages
     if 'user_id' in session:
         user_id = session['user_id']
-        favorite_messages = db.session.query(Message).join(UserMessage).filter(UserMessage.user_id==user_id).all()
+    else:
+        user_id = None
 
-    # get all messages   
-    messages = Message.query.all()
+    sub = db.session.query(UserMessage).filter(UserMessage.user_id == user_id).subquery()
+    messages = db.session.query(Message, sub.c.user_id).outerjoin(sub).order_by(sub.c.user_id, Message.message_id).all()
+    # messages is a list of tuples
+    # each message in messages is (<Message>, user_id)
+        
+    return render_template('messages.html', messages=messages)
 
-    # convert each to a set
-    favorite_messages_set = set(favorite_messages)
-    messages_set = set(messages)
 
-    # perform set subtraction to get messages that are not favorited by the current user
-    messages_not_fav_set = messages_set - favorite_messages_set
-
-    # create list of dictionaries for each message
-    messages_lst_of_dicts = []
-
-    # add favorites first and mark them as favorite
-    for message in favorite_messages_set:
-        message_dict = {}
-
-        message_dict['message_id'] = message.message_id
-        message_dict['message_type'] = message.message_type
-        message_dict['message'] = message.message
-        message_dict['favorite'] = 1
-
-        messages_lst_of_dicts.append(message_dict)
-
-    # next add all the other messages that were not favorited
-    for message in messages_not_fav_set:
-        message_dict = {}
-
-        message_dict['message_id'] = message.message_id
-        message_dict['message_type'] = message.message_type
-        message_dict['message'] = message.message
-        message_dict['favorite'] = 0
-
-        messages_lst_of_dicts.append(message_dict)
-
-    return render_template('messages.html', messages=messages_lst_of_dicts)    
 
 
 if __name__ == '__main__':
