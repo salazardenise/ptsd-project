@@ -371,11 +371,7 @@ def display_recordings():
 def display_messages():
     """ Display messages page. """
 
-    if 'user_id' in session:
-        user_id = session['user_id']
-    else:
-        user_id = None
-
+    user_id = session.get('user_id', None)
     sub = db.session.query(UserMessage).filter(UserMessage.user_id == user_id).subquery()
     messages = db.session.query(Message, sub.c.user_id).outerjoin(sub).order_by(sub.c.user_id, Message.message_id).all()
     # messages is a list of tuples
