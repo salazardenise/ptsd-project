@@ -289,7 +289,7 @@ def display_text_message():
         user_id = session['user_id']
         first_name, last_name = db.session.query(User.first_name, User.last_name).filter(User.user_id == user_id).one()
     else:
-        first_name, last_name = '', ''
+        first_name, last_name = None, None
 
     return render_template('text_message.html', 
                            message=message,
@@ -300,19 +300,38 @@ def display_text_message():
 def send_text_message():
     """ Send a text message. """
 
-    account_sid = os.environ('TWILIO_ACCOUNT_SID') 
-    auth_token = os.environ('TWILIO_AUTH_TOKEN')
+    # Twilio credentials
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token) 
 
-    bodyMessage = request.form.get('')
+    # message info
+    from_first_name = request.form.get('from_first_name')
+    from_last_name = request.form.get('from_last_name')
+    to_name = request.form.get('to_name')
+    body_message = request.form.get('body_message')
+    phone_raw = request.form.get('phone')
+    phone_list = phone_raw.split('-')
+    phone = ''.join(phone_list)
+    print(phone)
 
+    # create message
+    content_message = 'Hi'
+    if len(to_name) != 0:
+        content_message += ' ' + to_name
+    content_message += ', \n\n'
+    content_message += body_message + '\n\n'
+    content_message += 'Best, ' + from_first_name + ' ' + from_last_name
+
+    # FOR DEMO PURPOSES, 
+    # TWILIO TRAIL ACCOUNT ALLOWS SENDING TEXTS ONLY TO MY PHONE NUMBER
     message = client.messages.create( 
                               from_=os.environ['TWILIO_FROM_NUMBER'],
-                              body=bodyMessage     
-                              to=os.environ['TWILIO_TO_NUMBER'] 
-                          )
+                              body=content_message,
+                              to=os.environ['TWILIO_TO_NUMBER'])
 
-    return "sending a text message..."
+    flash(f'message sent to {to_name}')
+    return redirect('/')
 
 if __name__ == '__main__':
     # debug must be set to True at the point that DebugToolbarExtension is invoked
