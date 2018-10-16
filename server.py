@@ -280,21 +280,25 @@ def display_email_message():
 
 @app.route('/text_message', methods=["GET"])
 def display_text_message():
-    """ Display text message page. """
+    """ Display text message page. 
+
+    This route should only be called when a user is logged in.
+    i.e. A user that is not logged in should not be able to send a text message.
+    """
 
     message_id = request.args.get('message_id')
-    message = db.session.query(Message).filter(Message.message_id == message_id).one()
+    message = Message.query.filter(Message.message_id == message_id).one()
 
     if 'user_id' in session:
         user_id = session['user_id']
-        first_name, last_name = db.session.query(User.first_name, User.last_name).filter(User.user_id == user_id).one()
-    else:
-        first_name, last_name = None, None
+        user = User.query.filter(User.user_id == user_id).one()
 
-    return render_template('text_message.html', 
-                           message=message,
-                           from_first_name=first_name,
-                           from_last_name=last_name)
+        return render_template('text_message.html', 
+                               message=message,
+                               user=user)
+    else:
+        flash('Sign Up or Log In to enable sending text message templates.')
+        return redirect('/')
 
 @app.route('/text_message', methods=["POST"])
 def send_text_message():

@@ -8,8 +8,8 @@
 {% if 'user_id' in session %}
 <div style="display: inline-block; width: 30%;">
 <form action="/text_message" id="textMessageForm" method="POST">
-    <input type="hidden" id="fromFirstName" name="from_first_name" value=" {{ from_first_name }}">
-    <input type="hidden" id="fromLastName" name="from_last_name" value=" {{ from_last_name }}">
+    <input type="hidden" id="fromFirstName" name="from_first_name" value=" {{ user.first_name }}">
+    <input type="hidden" id="fromLastName" name="from_last_name" value=" {{ user.last_name }}">
     <h3>To</h3>
     Name: <input type="text" name="to_name" id="toName">
     <br>
@@ -32,7 +32,7 @@
         <br><br>
         Best,
         <br>
-        {{ from_first_name }} {{ from_last_name }}
+        {{ user.first_name }} {{ user.last_name }}
     </div>
 </div>
 <script src="/static/js/text_message.js"></script>
