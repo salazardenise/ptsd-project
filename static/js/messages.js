@@ -8,8 +8,8 @@ $('.message-description').on('click', (evt) => {
 })
 
 $('.message-star').on('click', (evt) => {
-    messageStar = $(evt.target)
-    message_id = messageStar.data('messageid')
+    messageStar = $(evt.target);
+    message_id = messageStar.data('messageid');
     $.get('/toggle_favorite_message', {'message_id': message_id}, (results) => {
         if (results.user_logged_in == true) {
             // A user is logged in
@@ -24,6 +24,38 @@ $('.message-star').on('click', (evt) => {
             // A user is not logged in, show error message
             $('#messagesErrorMessage').fadeIn(400, () => {
                 setTimeout(() => {$('#messagesErrorMessage').fadeOut(400,)}, 5000);
+            });
+        }
+    });
+});
+
+$('.text-button').on('click', (evt) => {
+    textButton = $(evt.target);
+    message_id = textButton.data('messageid');
+    $.get('/validate_logged_in', (results) => {
+        if (results.user_logged_in == true) {
+            // A user is logged in, redirect to text_message page
+            window.location.href = '/text_message?message_id=' + message_id;
+        } else {
+            // A user is not logged in, show error message
+            $('#textMessageErrorMessage').fadeIn(400, () => {
+                setTimeout(() => {$('#textMessageErrorMessage').fadeOut(400,)}, 5000);
+            });
+        }
+    });
+});
+
+$('.email-button').on('click', (evt) => {
+    textButton = $(evt.target);
+    message_id = textButton.data('messageid');
+    $.get('/validate_logged_in', (results) => {
+        if (results.user_logged_in == true) {
+            // A user is logged in, redirect to email_message page
+            window.location.href = '/email_message?message_id=' + message_id;
+        } else {
+            // A user is not logged in, show error message
+            $('#emailMessageErrorMessage').fadeIn(400, () => {
+                setTimeout(() => {$('#emailMessageErrorMessage').fadeOut(400,)}, 5000);
             });
         }
     });

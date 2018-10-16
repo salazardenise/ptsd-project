@@ -300,6 +300,14 @@ def display_text_message():
         flash('Sign Up or Log In to enable sending text message templates.')
         return redirect('/')
 
+@app.route('/validate_logged_in')
+def validate_logged_in():
+    if 'user_id' in session:
+        results = {'user_logged_in': True}
+    else:
+        results = {'user_logged_in': False}
+    return jsonify(results)
+
 def send_text_message(from_, body, to):
     """ Send a text message. """
 

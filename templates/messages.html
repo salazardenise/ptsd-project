@@ -8,6 +8,8 @@
 <h1>Choose One</h1>
 
 <p id="messagesErrorMessage" hidden><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable favoriting messages.</small></p>
+<p id="textMessageErrorMessage" hidden><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable sending text message templates.</small></p>
+<p id="emailMessageErrorMessage" hidden><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable sending email message templates.</small></p>
 
 <table>
 {% for message in messages %}
@@ -26,10 +28,10 @@
             <div class='message-description expand-cursor'>{{ message[0].message }}</div>
         </td>
         <td>
-            <a href="/email_message?message_id={{ message[0].message_id }}"><button class="email-button">Email</button></a>
+            <button class="email-button" data-messageid="{{ message[0].message_id }}">Email</button>
         </td>
         <td>
-            <a href="/text_message?message_id={{ message[0].message_id }}"><button class="text-button">Text</button></a>
+            <button class="text-button" data-messageid="{{ message[0].message_id }}">Text</button>
         </td>
     </tr>
 {% endfor %}
