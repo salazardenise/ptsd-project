@@ -300,14 +300,22 @@ def display_text_message():
         flash('Sign Up or Log In to enable sending text message templates.')
         return redirect('/')
 
-@app.route('/text_message', methods=["POST"])
-def send_text_message():
+def send_text_message(from_, body, to):
     """ Send a text message. """
 
     # Twilio credentials
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token) 
+
+    message = client.messages.create( 
+                              from_=from_,
+                              body=body,
+                              to=to)
+
+@app.route('/text_message', methods=["POST"])
+def process_text_message():
+    """ Process sending a text message. """
 
     # message info
     from_first_name = request.form.get('from_first_name')
@@ -327,12 +335,12 @@ def send_text_message():
     content_message += body_message + '\n\n'
     content_message += 'Best, ' + from_first_name + ' ' + from_last_name
 
+    # phone numbers to use
     # FOR DEMO PURPOSES, 
     # TWILIO TRAIL ACCOUNT ALLOWS SENDING TEXTS ONLY TO MY PHONE NUMBER
-    message = client.messages.create( 
-                              from_=os.environ['TWILIO_FROM_NUMBER'],
-                              body=content_message,
-                              to=os.environ['TWILIO_TO_NUMBER'])
+    from_=os.environ['TWILIO_FROM_NUMBER']
+    to=os.environ['TWILIO_TO_NUMBER']
+    send_text_message(from_, content_message, to)
 
     flash(f'message sent to {to_name}')
     return redirect('/')
