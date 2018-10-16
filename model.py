@@ -153,7 +153,7 @@ def connect_to_db(app, db_uri="postgresql:///ptsd"):
 
     # Configure to use a PostgreSQL database
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
-    app.config['SQLALCHEMY_ECHO'] = True
+    app.config['SQLALCHEMY_ECHO'] = False
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
