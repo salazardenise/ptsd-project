@@ -6,6 +6,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 from model import (User, Program, Recording, Message)
 from model import (UserProgram, UserRecording, UserMessage)
 from model import connect_to_db, db
+from twilio.rest import Client
+import os
 
 app = Flask(__name__)
 
@@ -276,14 +278,41 @@ def display_messages():
 def display_email_message():
     return "email message page"
 
-@app.route('/text_message')
+@app.route('/text_message', methods=["GET"])
 def display_text_message():
     """ Display text message page. """
 
     message_id = request.args.get('message_id')
     message = db.session.query(Message).filter(Message.message_id == message_id).one()
 
-    return render_template('text_message.html', message=message)
+    if 'user_id' in session:
+        user_id = session['user_id']
+        first_name, last_name = db.session.query(User.first_name, User.last_name).filter(User.user_id == user_id).one()
+    else:
+        first_name, last_name = '', ''
+
+    return render_template('text_message.html', 
+                           message=message,
+                           from_first_name=first_name,
+                           from_last_name=last_name)
+
+@app.route('/text_message', methods=["POST"])
+def send_text_message():
+    """ Send a text message. """
+
+    account_sid = os.environ('TWILIO_ACCOUNT_SID') 
+    auth_token = os.environ('TWILIO_AUTH_TOKEN')
+    client = Client(account_sid, auth_token) 
+
+    bodyMessage = request.form.get('')
+
+    message = client.messages.create( 
+                              from_=os.environ['TWILIO_FROM_NUMBER'],
+                              body=bodyMessage     
+                              to=os.environ['TWILIO_TO_NUMBER'] 
+                          )
+
+    return "sending a text message..."
 
 if __name__ == '__main__':
     # debug must be set to True at the point that DebugToolbarExtension is invoked

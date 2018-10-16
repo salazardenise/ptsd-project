@@ -4,8 +4,35 @@
 
 {% block content %}
 <h1>Text Message</h1>
-<form id="textMessageForm" method="POST">
-    Message:<br>
-    <textarea name="textMessage">{{ message.message }}</textarea>
+<div id="textMessageFields">
+    <h3>From</h3>
+    First Name: <input type="text" id="fromFirstName" value="{{ from_first_name }}">
+    <br>
+    Last Name: <input type="text" id="fromLastName" value="{{ from_last_name }}"> 
+    <br>
+    <h3>To</h3>
+    First Name: <input type="text" id="toFirstName">
+    <br>
+    Last Name: <input type="text" id="toLastName">
+    <br>
+    Phone number: +1<input type="text" id="toPhoneNumber" placeholder="000-000-0000" pattern="\d{3}[\-]\d{3}[\-]\d{4}">*<sup>(US numbers only.)</sup>
+    <br>
+    <h3>Message Body</h3>
+    <textarea name="bodyMessage" id="bodyMessage"> {{ message.message }}</textarea>
+    <br>
+</div>
+<h3>Preview</h3>
+<div id="previewMessage">
+    Hi,
+    <br><br>
+    {{ message.message }}
+    <br><br>
+    Best,
+    <br>
+    {{ from_first_name }} {{ from_last_name }}
+</div>
+<form action="/text_message" id="sendTextMessageForm" post="POST">
+    <input type="submit" value="Send Text">
 </form>
+<script src="/static/js/text_message.js"></script>
 {% endblock %}
