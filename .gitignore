@@ -3,3 +3,4 @@ __pycache__/
 secrets.sh
 .DS_Store
 .coverage
+client_secret.json

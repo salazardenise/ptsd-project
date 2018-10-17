@@ -17,6 +17,16 @@ from email.mime.text import MIMEText
 import base64
 from apiclient import errors
 
+# This variable specifies the name of a file that contains the OAuth 2.0
+# information for this application, including its client_id and client_secret.
+CLIENT_SECRETS_FILE = "client_secret.json"
+
+# This OAuth 2.0 access scope allows for full read/write access to the
+# authenticated user's account and requires requests to use an SSL connection.
+SCOPES = ['https://www.googleapis.com/auth/gmail.send']
+API_SERVICE_NAME = 'gmail'
+API_VERSION = 'v1'
+
 app = Flask(__name__)
 
 # app.secret_key is required to use Flask sessions and the debug toolbar
