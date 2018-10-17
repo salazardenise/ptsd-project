@@ -276,7 +276,39 @@ def display_messages():
 
 @app.route('/email_message')
 def display_email_message():
-    return "email message page"
+    """ Display email message page. 
+
+    This route should only be called when a user is logged in.
+    i.e. A user that is not logged in should not be able to send an email message.
+    """
+
+    # Get message_id first
+    if 'message_id' in session: # user was rerouted here from google authorization
+        message_id = session['message_id']
+    else: # user already authorized this app and message_id should be in get request
+        message_id = request.args.get('message_id')
+
+    # check if user authorized app, if not, redirect to authorize route    
+    if 'credentials' not in session:
+        session['message_id'] = message_id
+        return redirect('authorize')
+
+    # get message and user from database
+    message = Message.query.filter(Message.message_id == message_id).one()
+    if 'user_id' in session:
+        user_id = session['user_id']
+        user = User.query.filter(User.user_id == user_id).one()
+
+        return render_template('email_message.html', 
+                                message=message,
+                                user=user)
+    else:
+        flash('Sign Up or Log In to enable sending email message templates.')
+        return redirect('/')
+
+@app.route('/authorize')
+def authorize():
+    return 'authorize page'
 
 @app.route('/text_message', methods=["GET"])
 def display_text_message():

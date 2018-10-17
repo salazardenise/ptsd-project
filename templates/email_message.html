@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Email Message{% endblock %}
+
+{% block content %}
+<h1>Email Message</h1>
+
+{% if 'user_id' in session %}
+blah
+{% else %}
+<p><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable sending email message templates.</p>
+{% endif %}
+{% endblock %}
