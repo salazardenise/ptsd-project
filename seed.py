@@ -15,6 +15,8 @@ def load_dummy_data():
                   first_name='Leo', last_name='Codes', email='leo@codes.com')
     turing = User(username='turingcodes', password='JavaScript',
                   first_name='Turing', last_name='Codes', email='turing@codes.com')
+    denisedenise = User(username='denisedenise', password='PythonPython',
+                        first_name='Denise', last_name='Denise', email='denise.salazar.1210@gmail.com')
 
     print('Program')
     angels = Program(address='100 A St', city='CityOfAngels', 
@@ -52,7 +54,7 @@ def load_dummy_data():
     roy.messages.append(boss)
     roy.messages.append(friend)
 
-    db.session.add_all([denise, roy, leo, turing])
+    db.session.add_all([denise, roy, leo, turing, denisedenise])
     db.session.commit()
 
 def load_programs():
@@ -133,8 +135,10 @@ def load_dummy_users_with_rest_of_data():
                   first_name='Leo', last_name='Codes', email='leo@codes.com')
     turing = User(username='turingcodes', password='JavaScript',
                   first_name='Turing', last_name='Codes', email='turing@codes.com')
+    denisedenise = User(username='denisedenise', password='PythonPython',
+                        first_name='Denise', last_name='Denise', email='denise.salazar.1210@gmail.com')
 
-    db.session.add_all([denise, roy, leo, turing])
+    db.session.add_all([denise, roy, leo, turing, denisedenise])
     db.session.commit()
 
     print('Real Programs')
