@@ -9,6 +9,14 @@ from model import connect_to_db, db
 from twilio.rest import Client
 import os
 
+# modules for google oauth
+import google.oauth2.credentials
+import google_auth_oauthlib.flow
+import googleapiclient.discovery
+from email.mime.text import MIMEText
+import base64
+from apiclient import errors
+
 app = Flask(__name__)
 
 # app.secret_key is required to use Flask sessions and the debug toolbar
