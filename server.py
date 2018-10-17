@@ -308,6 +308,28 @@ def validate_logged_in():
         results = {'user_logged_in': False}
     return jsonify(results)
 
+@app.route('/validate_logged_in_with_gmail')
+def validate_logged_in_with_gmail():
+
+    results = {}
+    if 'user_id' in session:
+        results['user_logged_in'] = True
+
+        user_id = session['user_id']
+        user = User.query.filter(User.user_id == user_id).one()
+        email = user.email
+        _, email_domain = email.split('@')
+        if email_domain == 'gmail.com':
+            results['has_gmail'] = True
+        else:
+            results['has_gmail'] = False
+
+    else:
+        results['user_logged_in'] = False
+        results['has_gmail'] = None
+
+    return jsonify(results)
+
 def send_text_message(from_, body, to):
     """ Send a text message. """
 
