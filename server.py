@@ -1,7 +1,8 @@
 """ PTSD Project """
 
 from jinja2 import StrictUndefined
-from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
+from flask import (Flask, render_template, redirect, request, flash, 
+                   session, jsonify, url_for)
 from flask_debugtoolbar import DebugToolbarExtension
 from model import (User, Program, Recording, Message)
 from model import (UserProgram, UserRecording, UserMessage)
@@ -292,7 +293,13 @@ def display_messages():
         
     return render_template('messages.html', messages=messages)
 
-@app.route('/email_message')
+@app.route('/store_message_id')
+def store_message_id():
+    message_id = request.args.get('message_id')
+    session['message_id'] = message_id
+    return redirect('/email_message')
+
+@app.route('/email_message', methods=['GET'])
 def display_email_message():
     """ Display email message page. 
 
@@ -300,33 +307,169 @@ def display_email_message():
     i.e. A user that is not logged in should not be able to send an email message.
     """
 
-    # Get message_id first
-    if 'message_id' in session: # user was rerouted here from google authorization
-        message_id = session['message_id']
-    else: # user already authorized this app and message_id should be in get request
-        message_id = request.args.get('message_id')
 
-    # check if user authorized app, if not, redirect to authorize route    
-    if 'credentials' not in session:
-        session['message_id'] = message_id
-        return redirect('authorize')
-
-    # get message and user from database
-    message = Message.query.filter(Message.message_id == message_id).one()
+    # check if user is logged in
     if 'user_id' in session:
+
+        # check if user authorized app, if not, redirect to authorize route  
+        if 'credentials' not in session:
+            return redirect('/authorize')
+
         user_id = session['user_id']
         user = User.query.filter(User.user_id == user_id).one()
 
+        message_id = session.get('message_id')
+        message = Message.query.filter(Message.message_id == message_id).one()
+        
         return render_template('email_message.html', 
                                 message=message,
                                 user=user)
     else:
         flash('Sign Up or Log In to enable sending email message templates.')
-        return redirect('/')
+    
+    return redirect('/')
+
+@app.route('/email_message', methods=['POST'])
+def process_email_message():
+    """ Process sending an email message. """
+
+    # message info
+    from_first_name = request.form.get('from_first_name')
+    from_last_name = request.form.get('from_last_name')
+    to_name = request.form.get('to_name')
+    to_email = request.form.get('to_email')
+    subject = request.form.get('subject')
+    body_message = request.form.get('body_message')
+    
+
+    # create content for message
+    content_message = 'Dear'
+    if len(to_name) != 0:
+        content_message += ' ' + to_name
+    content_message += ', \n\n'
+    content_message += body_message + '\n\n'
+    content_message += 'Best, ' + from_first_name + ' ' + from_last_name
+
+    # create message for sending
+    user_id = session['user_id']
+    user = User.query.filter(User.user_id == user_id).one()
+    message = create_message(user.email, to_email, subject, content_message)
+
+    # send message
+    message_status = load_message_and_send(message)
+    print('\n\n\n')
+    print(message_status)
+    print('\n\n\n')
+    flash('email message sent')
+    return redirect('/')
+
+def load_message_and_send(created_message):
+    # Load credentials from the session.
+  credentials = google.oauth2.credentials.Credentials(
+      **session['credentials'])
+
+  send_service = googleapiclient.discovery.build(
+      API_SERVICE_NAME, API_VERSION, credentials=credentials)
+
+  message_status = send_message(send_service, 'me', created_message)
+
+  # Save credentials back to session in case access token was refreshed.
+  # ACTION ITEM: In a production app, you likely want to save these
+  #              credentials in a persistent database instead.
+  session['credentials'] = credentials_to_dict(credentials)
+
+  return jsonify(message_status)
+
+def create_message(sender, to, subject, message_text):
+  """Create a message for an email.
+
+  Args:
+    sender: Email address of the sender.
+    to: Email address of the receiver.
+    subject: The subject of the email message.
+    message_text: The text of the email message.
+
+  Returns:
+    An object containing a base64url encoded email object.
+  """
+  message = MIMEText(message_text)
+  message['to'] = to
+  message['from'] = sender
+  message['subject'] = subject
+  raw = base64.urlsafe_b64encode(message.as_bytes())
+  raw = raw.decode()
+  return {'raw': raw}  
+
+def send_message(service, user_id, message):
+  """Send an email message.
+
+  Args:
+    service: Authorized Gmail API service instance.
+    user_id: User's email address. The special value "me"
+    can be used to indicate the authenticated user.
+    message: Message to be sent.
+
+  Returns:
+    Sent Message.
+  """
+  try:
+    message = (service.users().messages().send(userId=user_id, body=message)
+               .execute())
+    #print('Message Id: %s' % message['id'])
+    return message
+  # except googleapiclient.errors.HttpError as err:
+  except errors.HttpError as error:
+    print('An error occurred:')
 
 @app.route('/authorize')
 def authorize():
-    return 'authorize page'
+  # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
+  flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+      CLIENT_SECRETS_FILE, scopes=SCOPES)
+
+  flow.redirect_uri = url_for('oauth2callback', _external=True)
+
+  authorization_url, state = flow.authorization_url(
+      # Enable offline access so that you can refresh an access token without
+      # re-prompting the user for permission. Recommended for web server apps.
+      access_type='offline',
+      # Enable incremental authorization. Recommended as a best practice.
+      include_granted_scopes='true')
+
+  # Store the state so the callback can verify the auth server response.
+  session['state'] = state
+
+  return redirect(authorization_url)
+
+@app.route('/oauth2callback')
+def oauth2callback():
+  # Specify the state when creating the flow in the callback so that it can
+  # verified in the authorization server response.
+  state = session['state']
+
+  flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+      CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
+  flow.redirect_uri = url_for('oauth2callback', _external=True)
+
+  # Use the authorization server's response to fetch the OAuth 2.0 tokens.
+  authorization_response = request.url
+  flow.fetch_token(authorization_response=authorization_response)
+
+  # Store credentials in the session.
+  # ACTION ITEM: In a production app, you likely want to save these
+  #              credentials in a persistent database instead.
+  credentials = flow.credentials
+  session['credentials'] = credentials_to_dict(credentials)
+
+  return redirect(url_for('display_email_message'))
+
+def credentials_to_dict(credentials):
+  return {'token': credentials.token,
+          'refresh_token': credentials.refresh_token,
+          'token_uri': credentials.token_uri,
+          'client_id': credentials.client_id,
+          'client_secret': credentials.client_secret,
+          'scopes': credentials.scopes}
 
 @app.route('/text_message', methods=["GET"])
 def display_text_message():
@@ -432,4 +575,8 @@ if __name__ == '__main__':
     app.jinja_env.auto_reload = app.debug
     DebugToolbarExtension(app)
     connect_to_db(app)
+    # When running locally, disable OAuthlib's HTTPs verification.
+    # ACTION ITEM for developers:
+    #     When running in production *do not* leave this option enabled.
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     app.run(port=5000, host='0.0.0.0')

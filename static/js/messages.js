@@ -52,8 +52,11 @@ $('.email-button').on('click', (evt) => {
         if (results.user_logged_in == true) {
             // A user is logged in, check if they have a gmail email address
             if (results.has_gmail == true) {
-            // redirect to email_message page
-            window.location.href = '/email_message?message_id=' + message_id;
+                // redirect to email_message page
+                $.get('/store_message_id', {'message_id': message_id}, () => {
+                    //console.log(message_id); 
+                    window.location.href = '/email_message';
+                });
             } else {
                 $('#gmailMessageErrorMessage').fadeIn(400, () => {
                 setTimeout(() => {$('#gmailMessageErrorMessage').fadeOut(400,)}, 5000);
