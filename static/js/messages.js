@@ -48,20 +48,13 @@ $('.text-button').on('click', (evt) => {
 $('.email-button').on('click', (evt) => {
     textButton = $(evt.target);
     message_id = textButton.data('messageid');
-    $.get('/validate_logged_in_with_gmail', (results) => {
+    $.get('/validate_logged_in', (results) => {
         if (results.user_logged_in == true) {
-            // A user is logged in, check if they have a gmail email address
-            if (results.has_gmail == true) {
-                // redirect to email_message page
-                $.get('/store_message_id', {'message_id': message_id}, () => {
-                    //console.log(message_id); 
-                    window.location.href = '/email_message';
-                });
-            } else {
-                $('#gmailMessageErrorMessage').fadeIn(400, () => {
-                setTimeout(() => {$('#gmailMessageErrorMessage').fadeOut(400,)}, 5000);
+            // A user is logged in
+            $.get('/store_message_id', {'message_id': message_id}, () => {
+                //console.log(message_id); 
+                window.location.href = '/email_message';
             });
-            }
         } else {
             // A user is not logged in, show error message
             $('#emailMessageErrorMessage').fadeIn(400, () => {

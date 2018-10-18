@@ -413,13 +413,13 @@ def send_message(service, user_id, message):
     Sent Message.
     """
     try:
-    message = (service.users().messages().send(userId=user_id, body=message)
-               .execute())
-    #print('Message Id: %s' % message['id'])
-    return message
+        message = (service.users().messages().send(userId=user_id, body=message)
+                   .execute())
+        #print('Message Id: %s' % message['id'])
+        return message
     # except googleapiclient.errors.HttpError as err:
     except errors.HttpError as error:
-    print('An error occurred:')
+        print('An error occurred:')
 
 @app.route('/authorize')
 def authorize():
@@ -499,28 +499,6 @@ def validate_logged_in():
         results = {'user_logged_in': True}
     else:
         results = {'user_logged_in': False}
-    return jsonify(results)
-
-@app.route('/validate_logged_in_with_gmail')
-def validate_logged_in_with_gmail():
-
-    results = {}
-    if 'user_id' in session:
-        results['user_logged_in'] = True
-
-        user_id = session['user_id']
-        user = User.query.filter(User.user_id == user_id).one()
-        email = user.email
-        _, email_domain = email.split('@')
-        if email_domain == 'gmail.com':
-            results['has_gmail'] = True
-        else:
-            results['has_gmail'] = False
-
-    else:
-        results['user_logged_in'] = False
-        results['has_gmail'] = None
-
     return jsonify(results)
 
 def send_text_message(from_, body, to):
