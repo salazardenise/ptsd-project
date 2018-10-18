@@ -365,106 +365,106 @@ def process_email_message():
 
 def load_message_and_send(created_message):
     # Load credentials from the session.
-  credentials = google.oauth2.credentials.Credentials(
+    credentials = google.oauth2.credentials.Credentials(
       **session['credentials'])
 
-  send_service = googleapiclient.discovery.build(
+    send_service = googleapiclient.discovery.build(
       API_SERVICE_NAME, API_VERSION, credentials=credentials)
 
-  message_status = send_message(send_service, 'me', created_message)
+    message_status = send_message(send_service, 'me', created_message)
 
-  # Save credentials back to session in case access token was refreshed.
-  # ACTION ITEM: In a production app, you likely want to save these
-  #              credentials in a persistent database instead.
-  session['credentials'] = credentials_to_dict(credentials)
+    # Save credentials back to session in case access token was refreshed.
+    # ACTION ITEM: In a production app, you likely want to save these
+    #              credentials in a persistent database instead.
+    session['credentials'] = credentials_to_dict(credentials)
 
-  return jsonify(message_status)
+    return jsonify(message_status)
 
 def create_message(sender, to, subject, message_text):
-  """Create a message for an email.
+    """Create a message for an email.
 
-  Args:
+    Args:
     sender: Email address of the sender.
     to: Email address of the receiver.
     subject: The subject of the email message.
     message_text: The text of the email message.
 
-  Returns:
+    Returns:
     An object containing a base64url encoded email object.
-  """
-  message = MIMEText(message_text)
-  message['to'] = to
-  message['from'] = sender
-  message['subject'] = subject
-  raw = base64.urlsafe_b64encode(message.as_bytes())
-  raw = raw.decode()
-  return {'raw': raw}  
+    """
+    message = MIMEText(message_text)
+    message['to'] = to
+    message['from'] = sender
+    message['subject'] = subject
+    raw = base64.urlsafe_b64encode(message.as_bytes())
+    raw = raw.decode()
+    return {'raw': raw}  
 
 def send_message(service, user_id, message):
-  """Send an email message.
+    """Send an email message.
 
-  Args:
+    Args:
     service: Authorized Gmail API service instance.
     user_id: User's email address. The special value "me"
     can be used to indicate the authenticated user.
     message: Message to be sent.
 
-  Returns:
+    Returns:
     Sent Message.
-  """
-  try:
+    """
+    try:
     message = (service.users().messages().send(userId=user_id, body=message)
                .execute())
     #print('Message Id: %s' % message['id'])
     return message
-  # except googleapiclient.errors.HttpError as err:
-  except errors.HttpError as error:
+    # except googleapiclient.errors.HttpError as err:
+    except errors.HttpError as error:
     print('An error occurred:')
 
 @app.route('/authorize')
 def authorize():
-  # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
-  flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+    # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
       CLIENT_SECRETS_FILE, scopes=SCOPES)
 
-  flow.redirect_uri = url_for('oauth2callback', _external=True)
+    flow.redirect_uri = url_for('oauth2callback', _external=True)
 
-  authorization_url, state = flow.authorization_url(
+    authorization_url, state = flow.authorization_url(
       # Enable offline access so that you can refresh an access token without
       # re-prompting the user for permission. Recommended for web server apps.
       access_type='offline',
       # Enable incremental authorization. Recommended as a best practice.
       include_granted_scopes='true')
 
-  # Store the state so the callback can verify the auth server response.
-  session['state'] = state
+    # Store the state so the callback can verify the auth server response.
+    session['state'] = state
 
-  return redirect(authorization_url)
+    return redirect(authorization_url)
 
 @app.route('/oauth2callback')
 def oauth2callback():
-  # Specify the state when creating the flow in the callback so that it can
-  # verified in the authorization server response.
-  state = session['state']
+    # Specify the state when creating the flow in the callback so that it can
+    # verified in the authorization server response.
+    state = session['state']
 
-  flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
       CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
-  flow.redirect_uri = url_for('oauth2callback', _external=True)
+    flow.redirect_uri = url_for('oauth2callback', _external=True)
 
-  # Use the authorization server's response to fetch the OAuth 2.0 tokens.
-  authorization_response = request.url
-  flow.fetch_token(authorization_response=authorization_response)
+    # Use the authorization server's response to fetch the OAuth 2.0 tokens.
+    authorization_response = request.url
+    flow.fetch_token(authorization_response=authorization_response)
 
-  # Store credentials in the session.
-  # ACTION ITEM: In a production app, you likely want to save these
-  #              credentials in a persistent database instead.
-  credentials = flow.credentials
-  session['credentials'] = credentials_to_dict(credentials)
+    # Store credentials in the session.
+    # ACTION ITEM: In a production app, you likely want to save these
+    #              credentials in a persistent database instead.
+    credentials = flow.credentials
+    session['credentials'] = credentials_to_dict(credentials)
 
-  return redirect(url_for('display_email_message'))
+    return redirect(url_for('display_email_message'))
 
 def credentials_to_dict(credentials):
-  return {'token': credentials.token,
+    return {'token': credentials.token,
           'refresh_token': credentials.refresh_token,
           'token_uri': credentials.token_uri,
           'client_id': credentials.client_id,
