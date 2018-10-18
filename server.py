@@ -357,10 +357,11 @@ def process_email_message():
 
     # send message
     message_status = load_message_and_send(message)
-    print('\n\n\n')
-    print(message_status)
-    print('\n\n\n')
-    flash('email message sent')
+    # message_status['labelIds'] is a list of strings
+    if 'SENT' in message_status['labelIds']:
+        flash('email message was sent')
+    else:
+        flash('email message was not sent')
     return redirect('/')
 
 def load_message_and_send(created_message):
@@ -378,7 +379,7 @@ def load_message_and_send(created_message):
     #              credentials in a persistent database instead.
     session['credentials'] = credentials_to_dict(credentials)
 
-    return jsonify(message_status)
+    return message_status
 
 def create_message(sender, to, subject, message_text):
     """Create a message for an email.
@@ -415,11 +416,10 @@ def send_message(service, user_id, message):
     try:
         message = (service.users().messages().send(userId=user_id, body=message)
                    .execute())
-        #print('Message Id: %s' % message['id'])
         return message
     # except googleapiclient.errors.HttpError as err:
     except errors.HttpError as error:
-        print('An error occurred:')
+        print('\n\nAn error occurred:', error)
 
 @app.route('/authorize')
 def authorize():
