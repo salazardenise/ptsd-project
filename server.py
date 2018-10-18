@@ -91,6 +91,7 @@ def login():
 @app.route('/validate_signup', methods=['GET'])
 def user_exists():
     """ Determines if username given already exists in the database. """
+
     username = request.args.get('username')
     if User.query.filter_by(username=username).first() is not None:
         return jsonify({'username_found': True})
@@ -155,7 +156,7 @@ def search_for_programs():
     elif search_type == 'zipcode':
         base_with_filter = baseQuery.filter(Program.zipcode.like(f'%{search_text}%'))
     else:
-        return []
+        return jsonify([])
 
     programs = base_with_filter.order_by(sub.c.user_id, Program.program_id).all()
     # programs is a list of tuples

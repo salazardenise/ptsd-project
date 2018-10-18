@@ -4,3 +4,4 @@ secrets.sh
 .DS_Store
 .coverage
 client_secret.json
+htmlcov/
