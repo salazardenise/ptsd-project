@@ -4,6 +4,7 @@ from model import connect_to_db, db
 from server import app
 from zeep import Client, helpers
 import os
+import sys
 
 def load_dummy_data():
     print('User')
@@ -57,7 +58,7 @@ def load_dummy_data():
     db.session.add_all([denise, roy, leo, turing, denisedenise])
     db.session.commit()
 
-def load_programs():
+def load_programs_from_va():
     license = os.environ['VA_LICENSE']
 
     client = Client('https://www.va.gov/webservices/PTSD/ptsd.cfc?wsdl')
@@ -71,6 +72,8 @@ def load_programs():
     columns = output[0]['value']['columnList']
     data = output[0]['value']['data']
 
+    programs_set = set()
+
     for program_dict in data:
         row_data = program_dict['_value_1']
 
@@ -82,15 +85,48 @@ def load_programs():
         zipcode = row_data[5]['_value_1']
         program_name = row_data[6]['_value_1']
 
-        program = Program(fac_id=fac_id, 
-                          fac_name=fac_name, 
-                          address=address, 
-                          city=city, 
-                          state=state, 
-                          zipcode=zipcode, 
+        program_tup = (fac_id,
+                       fac_name,
+                       address,
+                       city,
+                       state,
+                       zipcode[:5],
+                       program_name)
+
+        programs_set.add(program_tup)
+
+    file = open('programs.txt', 'w')
+
+    for p in programs_set:
+
+        file.write(f'{p[0]}|{p[1]}|{p[2]}|{p[3]}|{p[4]}|{p[5]}|{p[6]}\n')
+        program = Program(fac_id=p[0], 
+                          fac_name=p[1], 
+                          address=p[2], 
+                          city=p[3], 
+                          state=p[4], 
+                          zipcode=p[5], 
+                          program_name=p[6])
+        db.session.add(program)
+    
+    file.close()
+    db.session.commit()
+
+def load_programs_from_file():
+
+    file = open('programs.txt', 'r')
+    for line in file:
+        fac_id, fac_name, address, city, state, zipcode, program_name = line.split('|')
+        program = Program(fac_id=fac_id,
+                          fac_name=fac_name,
+                          address=address,
+                          city=city,
+                          state=state,
+                          zipcode=zipcode,
                           program_name=program_name)
         db.session.add(program)
 
+    file.close()
     db.session.commit()
 
 def load_recordings():
@@ -124,7 +160,7 @@ def load_messages():
     db.session.add_all([family_1, family_2, friend_1, friend_2, boss_1, boss_2, team])
     db.session.commit()
 
-def load_dummy_users_with_rest_of_data():
+def load_dummy_users_with_rest_of_data(needsUpdate):
         
     print('User')
     denise = User(username='denisecodes', password='Python', 
@@ -142,7 +178,10 @@ def load_dummy_users_with_rest_of_data():
     db.session.commit()
 
     print('Real Programs')
-    load_programs()
+    if needsUpdate:
+        load_programs_from_va()
+    else:
+        load_programs_from_file()
 
     print('UserProgram')
     user_program_1 = UserProgram(user_id=1, program_id=1)
@@ -192,5 +231,8 @@ if __name__ == '__main__':
 
     # import dummy data
     ###load_dummy_data()
-    load_dummy_users_with_rest_of_data()
+    if len(sys.argv) == 2 and sys.argv[1] == 'update':
+        load_dummy_users_with_rest_of_data(True)
+    else:
+        load_dummy_users_with_rest_of_data(False)
 
