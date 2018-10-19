@@ -167,6 +167,7 @@ def search_for_programs():
         program_dict = {}
 
         program_dict['program_id'] = program[0].program_id
+        program_dict['fac_name'] = program[0].fac_name
         program_dict['program_name'] = program[0].program_name
         program_dict['address'] = program[0].address
         program_dict['city'] = program[0].city

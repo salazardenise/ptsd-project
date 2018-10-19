@@ -83,7 +83,7 @@ $('#programSearchForm').on('submit', (evt) => {
             // add table headers
             $('#programsResults').empty()
             $('#programsResults').append("<table>");
-            let table_heading = "<tr><th>Favorite</th><th>Program</th><th>Address</th><th>City</th><th>State</th><th>Zipcode</th></tr>";
+            let table_heading = "<tr><th>Favorite</th><th>Facility</th><th>Program</th><th>Address</th><th>City</th><th>State</th><th>Zipcode</th></tr>";
             $('#programsResults').append(table_heading);
 
             // add each row for the table
@@ -96,6 +96,8 @@ $('#programSearchForm').on('submit', (evt) => {
                 } else {
                     row += `<td><i class='program-star far fa-star' data-programid='${program_id}'></i></td>`;
                 }
+                let fac_name = results[i].fac_name;
+                row += `<td>${fac_name}</td>`
                 let program_name = results[i].program_name;
                 row += `<td>${program_name}</td>`;
                 let address = results[i].address;
