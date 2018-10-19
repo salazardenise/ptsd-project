@@ -158,7 +158,7 @@ def search_for_programs():
     else:
         return jsonify([])
 
-    programs = base_with_filter.order_by(sub.c.user_id, Program.program_id).all()
+    programs = base_with_filter.order_by(sub.c.user_id, Program.fac_name, Program.program_name).all()
     # programs is a list of tuples
     # each program in programs is (<Program>, user_id)
     
