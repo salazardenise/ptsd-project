@@ -1,5 +1,5 @@
-from model import (User, Program, Recording, Message)
-from model import (UserProgram, UserRecording, UserMessage)
+from model import (User, Facility, Program, Recording, Message)
+from model import (FacilityProgram, UserFacility, UserRecording, UserMessage)
 from model import connect_to_db, db 
 from server import app
 from zeep import Client, helpers
@@ -19,21 +19,28 @@ def load_dummy_data():
     denisedenise = User(username='denisedenise', password='PythonPython',
                         first_name='Denise', last_name='Denise', email='denise.salazar.1210@gmail.com')
 
+    print('Facility')
+    angels = Facility(address='100 A St', city='CityOfAngels', 
+                      fac_name='fac_name_1', state='CA', zipcode=10000)
+    devils = Facility(address='100 B St', city='CityOfDevils', 
+                      fac_name='fac_name_2', state='CA', zipcode=20000)
+    wizards = Facility(address='100 C St', city='CityOfWizards', 
+                       fac_name='fac_name_3', state='CA', zipcode=30000)
+    denise.facilities.append(angels)
+    denise.facilities.append(devils)
+    denise.facilities.append(wizards)
+    roy.facilities.append(devils)
+    roy.facilities.append(wizards)
+
     print('Program')
-    angels = Program(address='100 A St', city='CityOfAngels', 
-                        fac_id=1, fac_name='fac_name', program_name='angels',
-                        state='CA', zipcode=10000)
-    devils = Program(address='100 B St', city='CityOfDevils', 
-                        fac_id=1, fac_name='fac_name', program_name='devils',
-                        state='CA', zipcode=20000)
-    wizards = Program(address='100 C St', city='CityOfWizards', 
-                        fac_id=1, fac_name='fac_name', program_name='wizards',
-                        state='CA', zipcode=30000)
-    denise.programs.append(angels)
-    denise.programs.append(devils)
-    denise.programs.append(wizards)
-    roy.programs.append(devils)
-    roy.programs.append(wizards)
+    cake = Program(program_name='Cake')
+    pudding = Program(program_name='Pudding')
+    bread = Program(program_name='Bread')
+    angels.programs.append(cake)
+    angels.programs.append(pudding)
+    angels.programs.append(bread)
+    devils.programs.append(pudding)
+    devils.programs.append(bread)
 
     print('Recording')
     ocean = Recording(name='Ocean', description='Ocean sounds', file_path='/static/ocean')
@@ -58,7 +65,7 @@ def load_dummy_data():
     db.session.add_all([denise, roy, leo, turing, denisedenise])
     db.session.commit()
 
-def load_programs_from_va():
+def load_programs_from_va_into_file():
     license = os.environ['VA_LICENSE']
 
     client = Client('https://www.va.gov/webservices/PTSD/ptsd.cfc?wsdl')
@@ -72,7 +79,7 @@ def load_programs_from_va():
     columns = output[0]['value']['columnList']
     data = output[0]['value']['data']
 
-    programs_set = set()
+    file = open('programs.txt', 'w')
 
     for program_dict in data:
         row_data = program_dict['_value_1']
@@ -85,49 +92,90 @@ def load_programs_from_va():
         zipcode = row_data[5]['_value_1']
         program_name = row_data[6]['_value_1']
 
-        program_tup = (fac_id,
-                       fac_name,
-                       address,
-                       city,
-                       state,
-                       zipcode[:5],
-                       program_name)
-
-        programs_set.add(program_tup)
-
-    file = open('programs.txt', 'w')
-
-    for p in programs_set:
-
-        file.write(f'{p[0]}|{p[1]}|{p[2]}|{p[3]}|{p[4]}|{p[5]}|{p[6]}\n')
-        program = Program(fac_id=p[0], 
-                          fac_name=p[1], 
-                          address=p[2], 
-                          city=p[3], 
-                          state=p[4], 
-                          zipcode=p[5], 
-                          program_name=p[6])
-        db.session.add(program)
-    
-    file.close()
-    db.session.commit()
-
-def load_programs_from_file():
-
-    file = open('programs.txt', 'r')
-    for line in file:
-        fac_id, fac_name, address, city, state, zipcode, program_name = line.split('|')
-        program = Program(fac_id=fac_id,
-                          fac_name=fac_name,
-                          address=address,
-                          city=city,
-                          state=state,
-                          zipcode=zipcode,
-                          program_name=program_name)
-        db.session.add(program)
+        file.write(f'{fac_id} |{fac_name}|{address}|{city}|{state}|{zipcode}|{program_name}\n')
 
     file.close()
-    db.session.commit()
+
+def load_facilities_and_programs_from_file_and_remove_duplicates():
+  """ Load all rows from programs.txt file, remove duplicates, seed tables in database.
+
+
+  All rows from programs.txt goes into the programs_staging table. 
+  The data from the rows is then broken down into two tables: facilities and programs."""
+
+  file = open('programs.txt', 'r')
+
+  # remove diplicates
+  staging_set = set()
+  facility_set = set()
+  program_set = set()
+  facility_program_set = set()
+
+  for line in file:
+      fac_id, fac_name, address, city, state, zipcode, program_name = line.split('|')
+      staging_tup = (fac_id,
+                     fac_name,
+                     address,
+                     city,
+                     state,
+                     zipcode[:5],
+                     program_name)
+
+      facility_tup = (fac_id,
+                      fac_name,
+                      address,
+                      city,
+                      state,
+                      zipcode)
+
+      program_tup = (program_name,)
+
+      facility_program_tup = (fac_id, program_name)
+
+      staging_set.add(staging_tup)
+      facility_set.add(facility_tup)
+      program_set.add(program_tup)
+      facility_program_set.add(facility_program_tup)
+
+  file.close() 
+
+  # add items to programs_staging table
+  for item in staging_set:
+      program_staging = ProgramStaging(fac_id=item[0], 
+                                       fac_name=item[1], 
+                                       address=item[2], 
+                                       city=item[3], 
+                                       state=item[4], 
+                                       zipcode=item[5], 
+                                       program_name=item[6])
+      db.session.add(program_staging)
+  db.session.commit()
+
+  # add items to facilities table
+  for item in facility_set:
+      facility = Facility(fac_id=item[0], 
+                          fac_name=item[1], 
+                          address=item[2], 
+                          city=item[3], 
+                          state=item[4], 
+                          zipcode=item[5])
+      db.session.add(facility)
+  db.session.commit()
+
+  # add items to programs table
+  program_dict = {}
+  for item in program_set:
+      program = Program(program_name=item[0])
+      program_dict[program.program_name] = program.program_id
+      db.session.add(program)
+  db.session.commit()
+
+  # add items to facilities_programs table
+  for item in facility_program_set:
+      program_id = program_dict[item[1]]
+      facility_program = FacilityProgram(fac_id=item[0], program_id=program_id)
+      db.session.add(facility_program)
+  db.session.commit()
 
 def load_recordings():
     ocean = Recording(name='Ocean', 
@@ -177,21 +225,20 @@ def load_dummy_users_with_rest_of_data(needsUpdate):
     db.session.add_all([denise, roy, leo, turing, denisedenise])
     db.session.commit()
 
-    print('Real Programs')
+    print('Real Facilities and Programs')
     if needsUpdate:
-        load_programs_from_va()
-    else:
-        load_programs_from_file()
+        load_programs_from_va_into_file()
+    load_facilities_and_programs_from_file_and_remove_duplicates()
 
-    print('UserProgram')
-    user_program_1 = UserProgram(user_id=1, program_id=1)
-    user_program_2 = UserProgram(user_id=1, program_id=2)
-    user_program_3 = UserProgram(user_id=1, program_id=3)
-    user_program_4 = UserProgram(user_id=2, program_id=2)
-    user_program_5 = UserProgram(user_id=2, program_id=3)
+    print('UserFacility')
+    user_facility_1 = UserFacility(user_id=1, fac_id=1)
+    user_facility_2 = UserFacility(user_id=1, fac_id=2)
+    user_facility_3 = UserFacility(user_id=1, fac_id=3)
+    user_facility_4 = UserFacility(user_id=2, fac_id=2)
+    user_facility_5 = UserFacility(user_id=2, fac_id=3)
 
-    db.session.add_all([user_program_1, user_program_2, user_program_3, 
-                        user_program_4, user_program_5])
+    db.session.add_all([user_facility_1, user_facility_2, user_facility_3, 
+                        user_facility_4, user_facility_5])
     db.session.commit()
 
     print('Recording')
@@ -230,9 +277,9 @@ if __name__ == '__main__':
     db.create_all()
 
     # import dummy data
-    ###load_dummy_data()
-    if len(sys.argv) == 2 and sys.argv[1] == 'update':
-        load_dummy_users_with_rest_of_data(True)
-    else:
-        load_dummy_users_with_rest_of_data(False)
+    load_dummy_data()
+    # if len(sys.argv) == 2 and sys.argv[1] == 'update':
+    #     load_dummy_users_with_rest_of_data(True)
+    # else:
+    #     load_dummy_users_with_rest_of_data(False)
 

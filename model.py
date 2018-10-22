@@ -27,8 +27,8 @@ class User(db.Model):
     email = db.Column(db.String(100))
     phone = db.Column(db.String(100))
 
-    programs = db.relationship('Program',
-                                secondary='users_programs')
+    facilities = db.relationship('Facility',
+                                secondary='users_facilities')
     recordings = db.relationship('Recording',
                                  secondary='users_recordings')
     messages = db.relationship('Message',
@@ -37,12 +37,12 @@ class User(db.Model):
     def __repr__(self):
         return f'<User user_id:{self.user_id} username:{self.username}>'
 
-class Program(db.Model):
-    """ PTSD Program from VA Web service. """
+class ProgramStaging(db.Model):
+    """ PTSD Programs staging table from VA Web service. """
 
-    __tablename__ = 'programs'
+    __tablename__ = 'programs_staging'
 
-    program_id = db.Column(db.Integer,
+    programstaging_id = db.Column(db.Integer,
                    primary_key=True,
                    autoincrement=True)
     address = db.Column(db.String(100), nullable=False)
@@ -53,28 +53,79 @@ class Program(db.Model):
     state = db.Column(db.String(2), nullable=False)
     zipcode = db.Column(db.String(15), nullable=False)
 
-    users = db.relationship('User', secondary='users_programs')
+    def __repr__(self):
+        return f'<ProgramStaging fac_id:{self.fac_id} fac_name:{self.fac_name} program_id:{self.program_id} program_name:{self.program_name}>'
+
+class Facility(db.Model):
+    """ Facilities from VA Web Service. """
+
+    __tablename__ = 'facilities'
+
+    fac_id = db.Column(db.Integer, 
+                       primary_key=True,
+                       autoincrement=True)
+    fac_name = db.Column(db.String(500), nullable=False)
+    address = db.Column(db.String(100), nullable=False)
+    city = db.Column(db.String(100), nullable=False)
+    state = db.Column(db.String(2), nullable=False)
+    zipcode = db.Column(db.String(15), nullable=False)
+
+    users = db.relationship('User', secondary='users_facilities')
+    programs = db.relationship('Program', secondary='facilities_programs')
+
+    def __repr__(self):
+        return f'<Facility fac_id:{self.fac_id} fac_name:{self.fac_name} address:{self.address} city:{self.city} state:{self.state} zipcode:{self.zipcode}>'
+
+class Program(db.Model):
+    """ Programs from from VA Web services. """
+
+    __tablename__ = 'programs'
+
+    program_id = db.Column(db.Integer,
+                           primary_key=True,
+                           autoincrement=True)
+    program_name = db.Column(db.String(500), nullable=False)
+
+    facilites = db.relationship('Facility', secondary='facilities_programs')
 
     def __repr__(self):
         return f'<Program program_id:{self.program_id} program_name:{self.program_name}>'
 
-class UserProgram(db.Model):
-    """ Association table between User and Program tables. """
+class FacilityProgram(db.Model):
+    """ Association table between Facility and Program tables. """
 
-    __tablename__ = 'users_programs'
+    __tablename__ = 'facilities_programs'
 
-    userprogram_id = db.Column(db.Integer,
-                   primary_key=True,
-                   autoincrement=True)
-    user_id = db.Column(db.Integer,
-                        db.ForeignKey('users.user_id'),
-                        nullable=False)
+    facilityprogram_id = db.Column(db.Integer,
+                                   primary_key=True,
+                                   autoincrement=True)
+    fac_id = db.Column(db.Integer,
+                       db.ForeignKey('facilities.fac_id'),
+                       nullable=False) 
     program_id = db.Column(db.Integer,
                            db.ForeignKey('programs.program_id'),
                            nullable=False)
 
     def __repr__(self):
-        return f'<UserProgram userprogram_id:{self.userprogram_id} user_id:{self.user_id} program_id:{self.program_id}>'
+        return f'<FacilityProgram facilityprogram_id:{self.facilityprogram_id} fac_id:{self.fac_id} program_id:{self.program_id}'
+
+class UserFacility(db.Model):
+    """ Association table between User and Facility tables. """
+
+    __tablename__ = 'users_facilities'
+
+    userprogram_id = db.Column(db.Integer,
+                               primary_key=True,
+                               autoincrement=True)
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey('users.user_id'),
+                        nullable=False)
+    fac_id = db.Column(db.Integer,
+                       db.ForeignKey('facilities.fac_id'),
+                       nullable=False)
+
+    def __repr__(self):
+        return f'<UserProgram userprogram_id:{self.userprogram_id} user_id:{self.user_id} fac_id:{self.fac_id}>'
 
 class Recording(db.Model):
     """ Relaxing recording for Self Care page of PTSD Project website. """
