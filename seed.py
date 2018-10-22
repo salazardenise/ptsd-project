@@ -1,5 +1,5 @@
 from model import (User, Facility, Program, Recording, Message)
-from model import (FacilityProgram, UserFacility, UserRecording, UserMessage)
+from model import (ProgramStaging, FacilityProgram, UserFacility, UserRecording, UserMessage)
 from model import connect_to_db, db 
 from server import app
 from zeep import Client, helpers
@@ -163,12 +163,15 @@ def load_facilities_and_programs_from_file_and_remove_duplicates():
   db.session.commit()
 
   # add items to programs table
-  program_dict = {}
   for item in program_set:
       program = Program(program_name=item[0])
-      program_dict[program.program_name] = program.program_id
       db.session.add(program)
   db.session.commit()
+
+  # create mapping program_name to program_id
+  program_dict = {}
+  for program in Program.query.all():
+      program_dict[program.program_name] = program.program_id
 
   # add items to facilities_programs table
   for item in facility_program_set:
@@ -231,11 +234,11 @@ def load_dummy_users_with_rest_of_data(needsUpdate):
     load_facilities_and_programs_from_file_and_remove_duplicates()
 
     print('UserFacility')
-    user_facility_1 = UserFacility(user_id=1, fac_id=1)
-    user_facility_2 = UserFacility(user_id=1, fac_id=2)
-    user_facility_3 = UserFacility(user_id=1, fac_id=3)
-    user_facility_4 = UserFacility(user_id=2, fac_id=2)
-    user_facility_5 = UserFacility(user_id=2, fac_id=3)
+    user_facility_1 = UserFacility(user_id=1, fac_id=53) # Fresno facility
+    user_facility_2 = UserFacility(user_id=1, fac_id=119) # San Diego facility 
+    user_facility_3 = UserFacility(user_id=1, fac_id=5195) # Menlo Parl facility
+    user_facility_4 = UserFacility(user_id=2, fac_id=53)
+    user_facility_5 = UserFacility(user_id=2, fac_id=5195)
 
     db.session.add_all([user_facility_1, user_facility_2, user_facility_3, 
                         user_facility_4, user_facility_5])
@@ -277,9 +280,9 @@ if __name__ == '__main__':
     db.create_all()
 
     # import dummy data
-    load_dummy_data()
-    # if len(sys.argv) == 2 and sys.argv[1] == 'update':
-    #     load_dummy_users_with_rest_of_data(True)
-    # else:
-    #     load_dummy_users_with_rest_of_data(False)
+    # load_dummy_data()
+    if len(sys.argv) == 2 and sys.argv[1] == 'update':
+        load_dummy_users_with_rest_of_data(True)
+    else:
+        load_dummy_users_with_rest_of_data(False)
 
