@@ -96,14 +96,19 @@ $('#programSearchForm').on('submit', (evt) => {
                 } else {
                     row += `<td><i class='facility-star far fa-star' data-facid='${fac_id}'></i></td>`;
                 }
+                // add facility name
                 let fac_name = results[i].fac_name;
-                row += `<td>${fac_name}</td>`
+                row += `<td class='facility-name' data-facid='${fac_id}'>${fac_name}</td>`
+                // add address
                 let address = results[i].address;
                 row += `<td>${address}</td>`;
+                // add city
                 let city = results[i].city;
                 row += `<td>${city}</td>`;
+                // add state
                 let state = results[i].state;
                 row += `<td>${state}</td>`;
+                // add zipcode
                 let zipcode = results[i].zipcode;
                 row += `<td>${zipcode}</td>`;
                 row += '</tr>';
@@ -120,7 +125,6 @@ $(document).on('click', '.facility-star', (evt) => {
     let facilityStar = $(evt.target);
     let fac_id = facilityStar.data('facid');
     $.get('/toggle_favorite_facility', {'fac_id': fac_id}, (results) => {
-        console.log(results);
         if (results.user_logged_in == true) {
             // A user is logged in 
             if (results.favorite == true) {
@@ -137,4 +141,24 @@ $(document).on('click', '.facility-star', (evt) => {
             });
         }
     });
+});
+
+$(document).on('click', '.facility-name', (evt) => {
+    let facilityName = $(evt.target);
+    let fac_id = facilityName.data('facid');
+    if (facilityName.find('ul').length == 0) {
+        $.get('/programs_by_facility.json', {'fac_id': fac_id}, (results) => {
+            let lst = "<ul class='programsList'>";
+            for (let i in results) {
+                lst += `<li>${results[i].program_name}</li>`
+            }
+            lst += '</ul>'
+            facilityName.append(lst);
+            // do not allow clicking on facilityName's children
+            facilityName.children().click( (e) => {e.stopPropagation()});
+        });
+    } else {
+        let programs_lst = facilityName.find('ul');
+        programs_lst.remove();
+    }
 });

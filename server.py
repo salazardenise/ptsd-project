@@ -207,6 +207,23 @@ def search_for_programs():
 
     return jsonify(lst_of_facilities)
 
+@app.route('/programs_by_facility.json')
+def return_programs_of_facility():
+
+    fac_id = request.args.get('fac_id')
+    facility = Facility.query.filter_by(fac_id=fac_id).one()
+    
+    lst_of_programs = []
+    for program in facility.programs:
+        program_dict = {}
+
+        program_dict['program_id'] = program.program_id
+        program_dict['program_name'] = program.program_name
+
+        lst_of_programs.append(program_dict)
+
+    return jsonify(lst_of_programs)
+
 @app.route('/toggle_favorite_facility') 
 def toggle_favorite_program():
     fac_id = request.args.get('fac_id')
