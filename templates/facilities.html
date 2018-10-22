@@ -4,12 +4,12 @@
 
 {% block content %}
     <h1>Programs</h1>
-    <p>Search for PTSD facilities by facility name, city, state, or zipcode.</p>
+    <p>Search for PTSD programs by program name, city, state, or zipcode.</p>
     <form action="/programs.json" method="GET" id="programSearchForm">
         <label>Search: 
             <input type="text" name="search_text" id="search_text">
             <select name="search_type" id="search_type">
-                <option value="fac_name">name</option>
+                <option value="program_name">name</option>
                 <option value="city">city</option>
                 <option value="state">state</option>
                 <option value="zipcode">zipcode</option>

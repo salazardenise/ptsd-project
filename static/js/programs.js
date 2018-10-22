@@ -83,23 +83,21 @@ $('#programSearchForm').on('submit', (evt) => {
             // add table headers
             $('#programsResults').empty()
             $('#programsResults').append("<table>");
-            let table_heading = "<tr><th>Favorite</th><th>Facility</th><th>Program</th><th>Address</th><th>City</th><th>State</th><th>Zipcode</th></tr>";
+            let table_heading = "<tr><th>Favorite</th><th>Facility</th><th>Address</th><th>City</th><th>State</th><th>Zipcode</th></tr>";
             $('#programsResults').append(table_heading);
 
             // add each row for the table
             for (let i in results) {
-                let program_id = results[i].program_id;
+                let fac_id = results[i].fac_id;
                 let row = '<tr>';
                 if (results[i].favorite == 1) {
                     // this is a favorite
-                    row += `<td><i class='program-star fas fa-star' data-programid='${program_id}'></i></td>`;
+                    row += `<td><i class='facility-star fas fa-star' data-facid='${fac_id}'></i></td>`;
                 } else {
-                    row += `<td><i class='program-star far fa-star' data-programid='${program_id}'></i></td>`;
+                    row += `<td><i class='facility-star far fa-star' data-facid='${fac_id}'></i></td>`;
                 }
                 let fac_name = results[i].fac_name;
                 row += `<td>${fac_name}</td>`
-                let program_name = results[i].program_name;
-                row += `<td>${program_name}</td>`;
                 let address = results[i].address;
                 row += `<td>${address}</td>`;
                 let city = results[i].city;
@@ -118,19 +116,19 @@ $('#programSearchForm').on('submit', (evt) => {
 
 });
 
-$(document).on('click', '.program-star', (evt) => {
-    let programStar = $(evt.target);
-    let program_id = programStar.data('programid');
-    $.get('/toggle_favorite_program', {'program_id': program_id}, (results) => {
+$(document).on('click', '.facility-star', (evt) => {
+    let facilityStar = $(evt.target);
+    let fac_id = facilityStar.data('facid');
+    $.get('/toggle_favorite_facility', {'fac_id': fac_id}, (results) => {
         console.log(results);
         if (results.user_logged_in == true) {
             // A user is logged in 
             if (results.favorite == true) {
                 // user favorited the program, toggle star to solid
-                programStar.removeClass('far').addClass('fas');
+                facilityStar.removeClass('far').addClass('fas');
             } else {
                 // user unfavorited the program, toggle star to regular
-                programStar.removeClass('fas').addClass('far');
+                facilityStar.removeClass('fas').addClass('far');
             }
         } else {
             // A user is not logged in, show error message

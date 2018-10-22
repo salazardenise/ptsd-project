@@ -170,65 +170,64 @@ def search_for_programs():
     search_type = request.args.get('search_type')
 
     user_id = session.get('user_id', None)
-    sub = db.session.query(UserProgram).filter(UserProgram.user_id == user_id).subquery()
-    baseQuery = db.session.query(Program, sub.c.user_id).outerjoin(sub)
+    sub = db.session.query(UserFacility).filter(UserFacility.user_id == user_id).subquery()
+    baseQuery = db.session.query(Facility, sub.c.user_id).outerjoin(sub)
 
-    if search_type == 'program_name':
-        base_with_filter = baseQuery.filter(Program.program_name.like(f'%{search_text}%'))
+    if search_type == 'fac_name':
+        base_with_filter = baseQuery.filter(Facility.fac_name.like(f'%{search_text}%'))
     elif search_type == 'city':
-        base_with_filter = baseQuery.filter(Program.city.like(f'%{search_text}%'))
+        base_with_filter = baseQuery.filter(Facility.city.like(f'%{search_text}%'))
     elif search_type == 'state':
-        base_with_filter = baseQuery.filter(Program.state.like(f'%{search_text}%'))
+        base_with_filter = baseQuery.filter(Facility.state.like(f'%{search_text}%'))
     elif search_type == 'zipcode':
-        base_with_filter = baseQuery.filter(Program.zipcode.like(f'%{search_text}%'))
+        base_with_filter = baseQuery.filter(Facility.zipcode.like(f'%{search_text}%'))
     else:
         return jsonify([])
 
-    programs = base_with_filter.order_by(sub.c.user_id, Program.fac_name, Program.program_name).all()
-    # programs is a list of tuples
-    # each program in programs is (<Program>, user_id)
+    facilities = base_with_filter.order_by(sub.c.user_id, Facility.fac_name).all()
+    # facilities is a list of tuples
+    # each facility in facilities is (<Facility>, user_id)
     
-    lst_of_programs = []
-    for program in programs:
-        program_dict = {}
+    lst_of_facilities = []
+    for facility in facilities:
+        facility_dict = {}
 
-        program_dict['program_id'] = program[0].program_id
-        program_dict['fac_name'] = program[0].fac_name
-        program_dict['program_name'] = program[0].program_name
-        program_dict['address'] = program[0].address
-        program_dict['city'] = program[0].city
-        program_dict['state'] = program[0].state
-        program_dict['zipcode'] = program[0].zipcode
-        if program[1] != None:
-            program_dict['favorite'] = 1
+        facility_dict['fac_id'] = facility[0].fac_id
+        facility_dict['fac_name'] = facility[0].fac_name
+        facility_dict['address'] = facility[0].address
+        facility_dict['city'] = facility[0].city
+        facility_dict['state'] = facility[0].state
+        facility_dict['zipcode'] = facility[0].zipcode
+        if facility[1] != None:
+            facility_dict['favorite'] = 1
         else:
-            program_dict['favorite'] = 0
+            facility_dict['favorite'] = 0
 
-        lst_of_programs.append(program_dict)
+        lst_of_facilities.append(facility_dict)
 
-    return jsonify(lst_of_programs)
+    return jsonify(lst_of_facilities)
 
-@app.route('/toggle_favorite_program') 
+@app.route('/toggle_favorite_facility') 
 def toggle_favorite_program():
-    program_id = request.args.get('program_id')
+    fac_id = request.args.get('fac_id')
     results = {}
 
     if 'user_id' in session:
         user_id = session['user_id']
         results['user_logged_in'] = True
-        favorite_exists = db.session.query(Program).join(UserProgram).filter(UserProgram.user_id==user_id, 
-                                                                             Program.program_id==program_id).first()
+        favorite_exists = db.session.query(Facility).join(UserFacility).filter(UserFacility.user_id==user_id, 
+                                                                               UserFacility.fac_id==fac_id).first()
 
         if favorite_exists is None:
             # let the user favorite the program
-            user_program = UserProgram(user_id = user_id, program_id=program_id)
-            db.session.add(user_program)
+            user_facility = UserFacility(user_id = user_id, fac_id=fac_id)
+            db.session.add(user_facility)
             db.session.commit()
             results['favorite'] = True
         else:
             # let the user unfavorite the program
-            db.session.query(UserProgram).filter(UserProgram.user_id==user_id, 
-                                                 UserProgram.program_id==program_id).delete()
+            db.session.query(UserFacility).filter(UserFacility.user_id==user_id, 
+                                                  UserFacility.fac_id==fac_id).delete()
             db.session.commit()
             results['favorite'] = False
     else:
