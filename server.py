@@ -9,6 +9,7 @@ from model import (UserProgram, UserRecording, UserMessage)
 from model import connect_to_db, db
 from twilio.rest import Client
 import os
+import requests
 
 # modules for google oauth
 import google.oauth2.credentials
@@ -39,9 +40,34 @@ app.jinja_env.undefined = StrictUndefined
 
 @app.route('/')
 def index():
-    """ Display omepage. """
+    """ Display homepage. """
 
-    return render_template('homepage.html')
+    healthruwords_url = 'https://healthruwords.p.mashape.com/v1/quotes/'
+    params = {
+        'maxR': 1,
+        'size': 'medium',
+        't': 'Hope'
+    }
+    headers = {
+        'X-Mashape-Key': os.environ['HEALTHRUWORDS_API_KEY'],
+        'Accept': 'application/json',
+        'User-Agent': ''
+    }
+    data = []
+    quote_results = requests.get(healthruwords_url, 
+                         params=params, 
+                         headers=headers)
+
+    if (quote_results.status_code == 200):
+        quote = quote_results.json()[0]
+    else:
+        # default quote if call to API fails
+        quote = {
+            'media': 'http://healthruwords.com/wp-content/uploads/2016/09/Healthruwords.com_-_Inspirational_Images_-_Imagination-over-Knowledge-300x300.jpg',
+            'author': 'Roxana Jones'
+        }
+
+    return render_template('homepage.html', quote=quote)
 
 @app.route('/signup', methods=['GET'])
 def display_signup_form():

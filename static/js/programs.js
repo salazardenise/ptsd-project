@@ -17,8 +17,8 @@ $('#programSearchForm').on('submit', (evt) => {
         } 
         else { 
             /////////////////////////////////////////////////////////
-            // PROCESS PROGRAMS RESULTS TO GET SET OF programs with addresses attached
-
+            // PROCESS PROGRAMS RESULTS TO GET SET OF facilities with addresses attached
+            
 
 
             // /////////////////////////////////////////////////////////

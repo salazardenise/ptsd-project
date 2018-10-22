@@ -3,9 +3,17 @@
 {% block title %}PTSD Project{% endblock %}
 
 {% block content %}
-    <h2>You are not alone.</h2>
-    <p> ... some stats and how to use this site ... </p>
-    <hr>
-    <h2>National Resources and Hotlines</h2>
-    <p> ... </p>
+    <div>
+        <h2>You are not alone.</h2>
+        <p> ... some stats and how to use this site ... </p>
+    <div>
+    <div>
+        <h2>National Resources and Hotlines</h2>
+        <p> ... </p>
+    </div>
+    <div>
+        <img src="{{ quote.media }}" alt="Hope quote">
+        <br>
+        Author: {{ quote.author }}. <a href="http://healtruwords.com">http://healtruwords.com</a>
+    </div>
 {% endblock %}
