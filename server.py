@@ -355,7 +355,7 @@ def display_email_message():
     """
     
     # check if user is logged in
-    if 'user_id' in session:
+    if 'user_id' in session and 'message_id' in session:
 
         # check if user authorized app, if not, redirect to authorize route  
         if 'credentials' not in session:

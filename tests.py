@@ -631,5 +631,77 @@ class TestMessages(unittest.TestCase):
         self.assertIn(b'"user_logged_in":false', result.data)
         self.assertIn(b'"favorite":null', result.data)
 
+class TestEmailMessage(unittest.TestCase):
+
+    def setUp(self):
+        """ Set up before every test. """
+
+        self.client = app.test_client()
+        app.config['TESTING'] = True
+
+        # connect to test database
+        connect_to_db(app, 'postgresql:///testdb')
+
+        # create tables and add sample data
+        db.create_all()
+        load_dummy_data()
+
+    def tearDown(self):
+        """ Tear down after every test. """
+
+        db.session.close()
+        db.drop_all()
+
+    def test_store_message_id_route(self):
+        """ Test that message id is stored in session with this route. """
+
+        message_id = 1
+
+        result = self.client.get(f'/store_message_id?message_id={message_id}', follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                self.assertEqual(sess['message_id'], '1')
+
+    def test_email_message_user_not_logged_in_redirect_home(self):
+        """ Test route /email_message when user not logged in. """
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['message_id'] = 2
+
+        result = self.client.get('/email_message', follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+        # route redirects to homepage if no user logged in and flashes the following
+        self.assertIn(b'Sign Up or Log In to enable sending email message templates.', result.data)
+        self.assertIn(b'<h2>You are not alone.</h2>', result.data)
+
+    def test_email_message_user_yes_logged_in_no_credentials_redirect_authorize(self):
+        """ Test route /email_message when user logged in but no credentials. """
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['message_id'] = 2
+                sess['user_id'] = 2
+
+        result = self.client.get('/email_message')
+        self.assertEqual(result.status_code, 302)
+        # route redirects to /authorize when user_id but not credentials is in session
+
+    def test_email_message_user_yes_logged_in_yes_credentials_render_email_message(self):
+        """ Test route /email_message when user logged in and credentials in session. """
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = 2
+                sess['message_id'] = 2
+                sess['credentials'] = ''
+
+        result = self.client.get('/email_message', follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(b'<h1>Email Message</h1>', result.data)
+
+
 if __name__ == '__main__':
     unittest.main()
