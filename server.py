@@ -38,10 +38,7 @@ app.secret_key = 'temporary_secret_key'
 # it doesn't fail silently
 app.jinja_env.undefined = StrictUndefined
 
-@app.route('/')
-def index():
-    """ Display homepage. """
-
+def get_random_quote():
     healthruwords_url = 'https://healthruwords.p.mashape.com/v1/quotes/'
     params = {
         'maxR': 1,
@@ -66,6 +63,12 @@ def index():
             'media': 'http://healthruwords.com/wp-content/uploads/2016/09/Healthruwords.com_-_Inspirational_Images_-_Imagination-over-Knowledge-300x300.jpg',
             'author': 'Roxana Jones'
         }
+    return quote 
+
+@app.route('/')
+def index():
+    """ Display homepage. """
+    quote = get_random_quote()
 
     return render_template('homepage.html', quote=quote)
 
@@ -350,8 +353,7 @@ def display_email_message():
     This route should only be called when a user is logged in.
     i.e. A user that is not logged in should not be able to send an email message.
     """
-
-
+    
     # check if user is logged in
     if 'user_id' in session:
 

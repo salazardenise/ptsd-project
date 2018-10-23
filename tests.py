@@ -3,6 +3,7 @@ from server import app
 from model import connect_to_db, db, User
 from seed import load_dummy_data
 from flask import session
+import server
 
 class TestRoutes(unittest.TestCase):
 
@@ -17,14 +18,6 @@ class TestRoutes(unittest.TestCase):
         self.client = app.test_client()
         app.config['Testing'] = True
 
-    def test_hompage_flask_route(self):
-        """ Test that homepage displays at root route. """
-
-        result = self.client.get('/')
-        self.assertEqual(result.status_code, 200)
-        self.assertIn(b'<h2>You are not alone.</h2>', result.data)
-        self.assertIn(b'http://healtruwords.com', result.data)
-
     def test_signup_flask_route(self):
         """ Test that signup displays signup page. """
 
@@ -38,6 +31,36 @@ class TestRoutes(unittest.TestCase):
         result = self.client.get('/login')
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'<h1>Log In</h1>', result.data)
+
+class TestHomepage(unittest.TestCase):
+    def setUp(self):
+        """ 
+        Set up before every test. 
+
+        The Flask app has a test_client() method on it.
+        It is a mini browswer that can make requests.
+        """
+
+        self.client = app.test_client()
+        app.config['Testing'] = True
+
+        # Make mock
+        def _get_random_quote():
+            return {
+                'media': 'http://healthruwords.com/wp-content/uploads/2016/09/Healthruwords.com_-_Inspirational_Images_-_Imagination-over-Knowledge-300x300.jpg',
+                'author': 'Roxana Jones'
+            }
+
+        server.get_random_quote = _get_random_quote
+
+    def test_hompage_flask_route(self):
+        """ Test that homepage displays at root route. """
+
+        result = self.client.get('/')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(b'<h2>You are not alone.</h2>', result.data)
+        self.assertIn(b'Author: Roxana Jones', result.data)
+        self.assertIn(b'http://healtruwords.com', result.data)
 
 class TestSignup(unittest.TestCase):
 
