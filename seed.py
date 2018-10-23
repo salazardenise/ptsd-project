@@ -7,7 +7,6 @@ import os
 import sys
 
 def load_dummy_data():
-    print('User')
     denise = User(username='denisecodes', password='Python', 
                   first_name='Denise', last_name='Codes', email='denise@codes.com')
     roy = User(username='roycodes', password='Python',
@@ -19,7 +18,6 @@ def load_dummy_data():
     denisedenise = User(username='denisedenise', password='PythonPython',
                         first_name='Denise', last_name='Denise', email='denise.salazar.1210@gmail.com')
 
-    print('Facility')
     angels = Facility(address='100 A St', city='CityOfAngels', 
                       fac_name='fac_name_1', state='CA', zipcode=10000)
     devils = Facility(address='100 B St', city='CityOfDevils', 
@@ -32,7 +30,6 @@ def load_dummy_data():
     roy.facilities.append(devils)
     roy.facilities.append(wizards)
 
-    print('Program')
     cake = Program(program_name='Cake')
     pudding = Program(program_name='Pudding')
     bread = Program(program_name='Bread')
@@ -42,7 +39,6 @@ def load_dummy_data():
     devils.programs.append(pudding)
     devils.programs.append(bread)
 
-    print('Recording')
     ocean = Recording(name='Ocean', description='Ocean sounds', file_path='/static/ocean')
     wind = Recording(name='Wind', description='Wind sounds', file_path='/static/wind')
     park = Recording(name='Park', description='Park sounds', file_path='/static/park')
@@ -52,7 +48,6 @@ def load_dummy_data():
     roy.recordings.append(wind)
     roy.recordings.append(park)
 
-    print('Message')
     family = Message(message_type='Family', message='I am not feeling well. I will contact you when I start feeling better.')
     boss = Message(message_type='Co-worker', message='I am out sick today. Please message me if there are any immediate deliverables for today.')
     friend = Message(message_type='Friend', message='I really wanted to see you but I cannot visit with you today. Will get in touch when I am feeling better.')

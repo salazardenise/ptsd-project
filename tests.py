@@ -213,28 +213,29 @@ class TestPrograms(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'<h1>Programs</h1>', result.data)
 
-    def test_programs_search_program_name_no_user_logged_in(self):
-        """ Test that progras.json route returns programs desired in JSON format. 
+    def test_facilities_search_fac_name_no_user_logged_in(self):
+        """ Test that programs.json route returns facilities desired in JSON format. 
 
-        Programs 1 and 2 end with 'ls'."""
+        Facilities 1, 2, and 3 start with a fac_name of 'fac_name_'."""
 
-        search_type = 'program_name'
-        search_text = 'ls'
+        search_type = 'fac_name'
+        search_text = 'fac_name_'
 
         result = self.client.get(f'/programs.json?search_type={search_type}&search_text={search_text}')
         self.assertEqual(result.status_code, 200)
-        self.assertIn(b'"program_name":"angels"', result.data)
-        self.assertIn(b'"program_name":"devils"', result.data)
+        self.assertIn(b'"fac_name":"fac_name_1"', result.data)
+        self.assertIn(b'"fac_name":"fac_name_2"', result.data)
+        self.assertIn(b'"fac_name":"fac_name_3"', result.data)
         self.assertNotIn(b'"favorite":1', result.data)
         self.assertIn(b'"favorite":0', result.data)
 
-    def test_programs_search_program_name_yes_user_logged_in(self):
-        """ Test that progras.json route returns programs desired in JSON format. 
+    def test_facilities_search_fac_name_yes_user_logged_in(self):
+        """ Test that programs.json route returns facilities desired in JSON format. 
 
-        Programs 1 and 2 end with 'ls'."""
+        Facilities 1, 2, and 3 start with a fac_name of 'fac_name_'."""
 
-        search_type = 'program_name'
-        search_text = 'ls'
+        search_type = 'fac_name'
+        search_text = 'fac_name_'
 
         with self.client as c:
             with c.session_transaction() as sess:
@@ -242,14 +243,15 @@ class TestPrograms(unittest.TestCase):
 
         result = self.client.get(f'/programs.json?search_type={search_type}&search_text={search_text}')
         self.assertEqual(result.status_code, 200)
-        self.assertIn(b'"program_name":"angels"', result.data)
-        self.assertIn(b'"program_name":"devils"', result.data)
+        self.assertIn(b'"fac_name":"fac_name_1"', result.data)
+        self.assertIn(b'"fac_name":"fac_name_2"', result.data)
+        self.assertIn(b'"fac_name":"fac_name_3"', result.data)
         self.assertIn(b'"favorite":1', result.data)
 
-    def test_programs_search_city_no_user_logged_in(self):
-        """ Test that progras.json route returns programs desired in JSON format. 
+    def test_facilities_search_city_no_user_logged_in(self):
+        """ Test that programs.json route returns facilities desired in JSON format. 
 
-        All 3 programs in database start with 'City'. """
+        All 3 facility cities in database start with 'City'. """
 
         search_type = 'city'
         search_text = 'City'
@@ -262,10 +264,10 @@ class TestPrograms(unittest.TestCase):
         self.assertNotIn(b'"favorite":1', result.data)
         self.assertIn(b'"favorite":0', result.data)
 
-    def test_programs_search_city_yes_user_logged_in(self):
-        """ Test that progras.json route returns programs desired in JSON format. 
+    def test_facilities_search_city_yes_user_logged_in(self):
+        """ Test that programs.json route returns facilities desired in JSON format. 
 
-        All 3 programs in database start with 'City'. """
+        All 3 facility cities in database start with 'City'. """
 
         search_type = 'city'
         search_text = 'City'
@@ -281,8 +283,8 @@ class TestPrograms(unittest.TestCase):
         self.assertIn(b'"city":"CityOfWizards"', result.data)
         self.assertIn(b'"favorite":1', result.data)
 
-    def test_programs_search_state_no_user_logged_in(self):
-        """ Test that progras.json route returns programs desired in JSON format. """
+    def test_facilities_search_state_no_user_logged_in(self):
+        """ Test that programs.json route returns facilities desired in JSON format. """
 
         search_type = 'state'
         search_text = 'CA'
@@ -293,8 +295,8 @@ class TestPrograms(unittest.TestCase):
         self.assertNotIn(b'"favorite":1', result.data)
         self.assertIn(b'"favorite":0', result.data)
 
-    def test_programs_search_state_yes_user_logged_in(self):
-        """ Test that progras.json route returns programs desired in JSON format. """
+    def test_facilities_search_state_yes_user_logged_in(self):
+        """ Test that programs.json route returns facilities desired in JSON format. """
 
         search_type = 'state'
         search_text = 'CA'
@@ -308,8 +310,8 @@ class TestPrograms(unittest.TestCase):
         self.assertIn(b'"state":"CA"', result.data)
         self.assertIn(b'"favorite":1', result.data)
 
-    def test_programs_search_zipcode_no_user_logged_in(self):
-        """ Test that progras.json route returns programs desired in JSON format. 
+    def test_facilities_search_zipcode_no_user_logged_in(self):
+        """ Test that programs.json route returns facilities desired in JSON format. 
 
         Only program 1 has a zipcode of 10000."""
 
@@ -322,8 +324,8 @@ class TestPrograms(unittest.TestCase):
         self.assertNotIn(b'"favorite":1', result.data)
         self.assertIn(b'"favorite":0', result.data)
 
-    def test_programs_search_zipcode_yes_user_logged_in(self):
-        """ Test that progras.json route returns programs desired in JSON format. 
+    def test_facilities_search_zipcode_yes_user_logged_in(self):
+        """ Test that programs.json route returns facilities desired in JSON format. 
 
         Only program 1 has a zipcode of 10000."""
 
@@ -340,8 +342,8 @@ class TestPrograms(unittest.TestCase):
         self.assertIn(b'"favorite":1', result.data)
 
 
-    def test_programs_search_nothing_no_user_logged_in(self):
-        """ Test that progras.json route returns programs desired in JSON format. 
+    def test_facilities_search_nothing_no_user_logged_in(self):
+        """ Test that programs.json route returns facilities desired in JSON format. 
 
         Test searching for not allowed type."""
 
@@ -352,8 +354,8 @@ class TestPrograms(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'[]', result.data)
 
-    def test_programs_search_nothing_yes_user_logged_in(self):
-        """ Test that progras.json route returns programs desired in JSON format. 
+    def test_facilities_search_nothing_yes_user_logged_in(self):
+        """ Test that programs.json route returns facilities desired in JSON format. 
 
         Test searching for not allowed type."""
 
@@ -368,46 +370,46 @@ class TestPrograms(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'[]', result.data)
 
-    def test_toggle_program_to_favorite_user_logged_in(self):
-        """ Test that logged in user can favorite a program. 
+    def test_toggle_facility_to_favorite_user_logged_in(self):
+        """ Test that logged in user can favorite a facility. 
 
-        User 2's favorite programs are 2 and 3.
-        Let's test user 2 favoriting program 1."""
+        User 2's favorite facilities are 2 and 3.
+        Let's test user 2 favoriting facility 1."""
 
         with self.client as c:
             with c.session_transaction() as sess:
                 sess['user_id'] = 2
                 
-        program_id = 1
+        fac_id = 1
 
-        result = self.client.get(f'/toggle_favorite_program?program_id={program_id}')
+        result = self.client.get(f'/toggle_favorite_facility?fac_id={fac_id}')
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'"user_logged_in":true', result.data)
         self.assertIn(b'"favorite":true', result.data)
 
-    def test_toggle_program_to_unfavorite_user_logged_in(self):
-        """ Test that logged in user can unfavorite a program. 
+    def test_toggle_facility_to_unfavorite_user_logged_in(self):
+        """ Test that logged in user can unfavorite a facility. 
 
-        User 2's favorite programs are 2 and 3.
-        Let's test user 2 unfavoriting program 2."""
+        User 2's favorite facilities are 2 and 3.
+        Let's test user 2 unfavoriting facility 2."""
 
         with self.client as c:
             with c.session_transaction() as sess:
                 sess['user_id'] = 2
                 
-        program_id = 2
+        fac_id = 2
 
-        result = self.client.get(f'/toggle_favorite_program?program_id={program_id}')
+        result = self.client.get(f'/toggle_favorite_facility?fac_id={fac_id}')
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'"user_logged_in":true', result.data)
         self.assertIn(b'"favorite":false', result.data)
 
-    def test_toggle_program_user_not_logged_in(self):
+    def test_toggle_facility_user_not_logged_in(self):
         """ Test that user not logged in attempts to toggle favoriting program. """
 
-        program_id = 1
+        fac_id = 1
 
-        result = self.client.get(f'/toggle_favorite_program?program_id={program_id}')
+        result = self.client.get(f'/toggle_favorite_facility?fac_id={fac_id}')
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'"user_logged_in":false', result.data)
         self.assertIn(b'"favorite":null', result.data)
