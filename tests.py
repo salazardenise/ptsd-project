@@ -748,6 +748,74 @@ class TestEmailMessage(unittest.TestCase):
         self.assertIn(b'email message was sent', result.data)
         self.assertIn(b'<h2>You are not alone.</h2>', result.data)
 
+class TestTextMessage(unittest.TestCase):
+
+    def setUp(self):
+        """ Set up before every test. """
+
+        self.client = app.test_client()
+        app.config['TESTING'] = True
+
+        # connect to test database
+        connect_to_db(app, 'postgresql:///testdb')
+
+        # create tables and add sample data
+        db.create_all()
+        load_dummy_data()
+
+        # Make mock
+        def _send_text_message(from_, body, to):
+            pass
+
+        server.send_text_message = _send_text_message
+
+    def tearDown(self):
+        """ Tear down after every test. """
+
+        db.session.close()
+        db.drop_all()
+
+    def test_text_message_user_not_logged_in(self):
+        """ Test get test_message route when user is not lgged in. """
+
+        message_id = 1
+
+        result = self.client.get(f'/text_message?message_id={message_id}', follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+        # this message gets flashed
+        self.assertIn(b'Sign Up or Log In to enable sending text message templates.', result.data)
+        self.assertIn(b'<h2>You are not alone.</h2>', result.data)
+
+    def test_text_message_user_logged_in(self):
+        """ Test get test_message route when user is logged in. """
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = 2
+
+        message_id = 1
+
+        result = self.client.get(f'/text_message?message_id={message_id}', follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(b'<h1>Text Message</h1>', result.data)
+
+    def test_text_message_post(self):
+        """ Test sending a text message. """
+
+        data = {
+            'from_first_name': 'Denise',
+            'from_last_name': 'Codes',
+            'to_name': 'Roy Codes',
+            'body_message': 'body_message',
+            'phone': '000-000-0000'
+        }
+
+        result = self.client.post('/text_message', data=data, follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+        # this message gets flashed
+        self.assertIn(b'message sent to Roy Codes', result.data)
+        self.assertIn(b'<h2>You are not alone.</h2>', result.data)
+
 
 if __name__ == '__main__':
     unittest.main()

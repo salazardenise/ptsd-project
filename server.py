@@ -572,7 +572,7 @@ def process_text_message():
     phone_raw = request.form.get('phone')
     phone_list = phone_raw.split('-')
     phone = ''.join(phone_list)
-    print(phone)
+    # print(phone)
 
     # create message
     content_message = 'Hi'
