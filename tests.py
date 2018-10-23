@@ -23,6 +23,7 @@ class TestRoutes(unittest.TestCase):
         result = self.client.get('/')
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'<h2>You are not alone.</h2>', result.data)
+        self.assertIn(b'http://healtruwords.com', result.data)
 
     def test_signup_flask_route(self):
         """ Test that signup displays signup page. """
@@ -369,6 +370,19 @@ class TestPrograms(unittest.TestCase):
         result = self.client.get(f'/programs.json?search_type={search_type}&search_text={search_text}')
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'[]', result.data)
+
+    def test_get_programs_by_facility(self):
+        """ Test that programs_by_facility.json route returns programs desired in JSON format. 
+
+        fac_id of 2 has 2 programs 2 and 3 associated it."""
+
+        fac_id = 2
+
+        result = self.client.get(f'/programs_by_facility.json?fac_id={fac_id}')
+        self.assertEqual(result.status_code, 200)
+        self.assertNotIn(b'"program_id":1', result.data)
+        self.assertIn(b'"program_id":2', result.data)
+        self.assertIn(b'"program_id":3', result.data)
 
     def test_toggle_facility_to_favorite_user_logged_in(self):
         """ Test that logged in user can favorite a facility. 
