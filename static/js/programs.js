@@ -17,66 +17,79 @@ $('#programSearchForm').on('submit', (evt) => {
         } 
         else { 
             /////////////////////////////////////////////////////////
-            // PROCESS PROGRAMS RESULTS TO GET SET OF facilities with addresses attached
-            
+            // DISPLAY PROGRAMS RESULTS LOCATIONS IN MAP
+            $('#programsMap').show()
 
+            // create map
+            let map;
 
-            // /////////////////////////////////////////////////////////
-            // // DISPLAY PROGRAMS RESULTS LOCATIONS IN MAP
-            // $('#programsMap').show()
+            // determine where to center map
+            function setCenterOfMap(search_text) {
+                let location = new google.maps.Geocoder();
 
-            // // create map
-            // let defaultLocationUS= {lat: 39, lng: -95};
-            // let map = new google.maps.Map(document.querySelector('#programsMap'), {
-            //     center: defaultLocationUS,
-            //     zoom: 6});
+                location.geocode({'address': search_text}, 
+                    function (results, status) {
+                        if (status === google.maps.GeocoderStatus.OK) {
+                            map = new google.maps.Map(document.querySelector('#programsMap'), {
+                                center: results[0].geometry.location,
+                                zoom: 6
+                            });
+                        } else {
+                            let defaultLocationUS= {lat: 39, lng: -95};
+                            map = new google.maps.Map(document.querySelector('#programsMap'), {
+                                center: defaultLocationUS,
+                                zoom: 2
+                            });
+                        }
+                    }
+                )
+            }
+            setCenterOfMap(search_text);
 
-            // // determine where to center map
-            // function setCenterOfMap(search_text) {
-            //     let location = new google.maps.Geocoder();
+            let infoWindow = new google.maps.InfoWindow({
+                width: 150
+            });
 
-            //     location.geocode({'address': search_text}, 
-            //         function (results, status) {
-            //             console.log(status);
-            //             if (status === google.maps.GeocoderStatus.OK) {
-            //                 console.log(status);
-            //                 map.setCenter(results[0].geometry.location);
-            //             } else {
-            //                 console.log('Geocode was not successful for the following reason: ' + status);
-            //             }
-            //         }
-            //     )
-            // }
-            // setCenterOfMap(search_text);
+            // add each facility to map with marker and info window
+            function addFacilityLocationByAddress(facilityName, facilityFullAddress) {
+                let facilityLocation = new google.maps.Geocoder();
+                let address = facilityFullAddress;
+                facilityLocation.geocode(
+                    {'address': address, 'region': 'US'},
+                    function(results, status) {
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            let facilityLatLng = results[0].geometry.location;
+                            let facilityMarker = new google.maps.Marker({
+                                position: facilityLatLng,
+                                map: map,
+                                title: facilityName,
+                            }); 
+                            // Define the content of the infoWindow
+                            let html = (
+                                '<div>' +
+                                '<p>' + facilityName + '</p>' +
+                                '<p>' + facilityFullAddress + '</p>' +
+                                '</div>'
+                            );
+                            // bind an infowindow to the marker
+                            google.maps.event.addListener(facilityMarker, 'click', function () {
+                                infoWindow.close();
+                                infoWindow.setContent(html);
+                                infoWindow.open(map, facilityMarker);
+                            });
+                        } else {
+                            console.log('Geocode not successful for ' + address)
+                        }
+                    }
+                )
+            }
 
-            // // add each program to map with marker and info window
-            // function addProgramLocationByAddress(programName, programFullAddress) {
-            //     let programLocation = new google.maps.Geocoder();
-            //     let address = programFullAddress;
-            //     programLocation.geocode(
-            //         {'address': address, 'region': 'US'},
-            //         function(results, status) {
-            //             console.log(status);
-            //             if (status == google.maps.GeocoderStatus.OK) {
-            //                 let programLatLng = results[0].geometry.location;
-            //                 let programMarker = new google.maps.Marker({
-            //                     position: programLatLng,
-            //                     map: map,
-            //                     title: programName,
-            //                 }); 
-            //             } else {
-            //                 console.log('Geocode not successful for ' + address)
-            //             }
-            //         }
-            //     )
-            // }
-
-            // for (let i in results) {
-            //     let programFullAddress = results[i].address + ', ' + 
-            //                          results[i].city + ', ' + 
-            //                          results[i].state;
-            //     addProgramLocationByAddress(results[i].program_name, programFullAddress);
-            // }
+            for (let i in results) {
+                let facilityFullAddress = results[i].address + ', ' + 
+                                     results[i].city + ', ' + 
+                                     results[i].state;
+                addFacilityLocationByAddress(results[i].fac_name, facilityFullAddress);
+            }
 
             ///////////////////////////////////////////////////////////
             // DISPLAY PROGRAMS RESULTS IN TABLE      

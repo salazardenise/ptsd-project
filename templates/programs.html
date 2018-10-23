@@ -7,7 +7,7 @@
     <p>Search for PTSD facilities by facility name, city, state, or zipcode. Click on a facility name to show the programs available there.</p>
     <form action="/programs.json" method="GET" id="programSearchForm">
         <label>Search: 
-            <input type="text" name="search_text" id="search_text">
+            <input type="text" name="search_text" id="search_text" required>
             <select name="search_type" id="search_type">
                 <option value="fac_name">name</option>
                 <option value="city">city</option>
