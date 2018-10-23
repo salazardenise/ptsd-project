@@ -88,8 +88,6 @@ class TestSignup(unittest.TestCase):
 
         username = 'denisecodes'
 
-        data = {'username': username}
-
         result = self.client.get(f'/validate_signup?username={username}')
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'"username_found":true', result.data)
@@ -98,8 +96,6 @@ class TestSignup(unittest.TestCase):
         """ Test when a username attempts to signup with a new username. """
 
         username = 'fabiocodes'
-
-        data = {'username': username}
 
         result = self.client.get(f'/validate_signup?username={username}')
         self.assertEqual(result.status_code, 200)
@@ -246,6 +242,7 @@ class TestPrograms(unittest.TestCase):
         search_text = 'fac_name_'
 
         result = self.client.get(f'/programs.json?search_type={search_type}&search_text={search_text}')
+
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'"fac_name":"fac_name_1"', result.data)
         self.assertIn(b'"fac_name":"fac_name_2"', result.data)
@@ -646,6 +643,15 @@ class TestEmailMessage(unittest.TestCase):
         db.create_all()
         load_dummy_data()
 
+        # Make mock
+        def _load_message_and_send(_):
+            message_status = {
+                'labelIds': ['SENT']
+            }
+            return message_status
+
+        server.load_message_and_send = _load_message_and_send
+
     def tearDown(self):
         """ Tear down after every test. """
 
@@ -701,6 +707,28 @@ class TestEmailMessage(unittest.TestCase):
         result = self.client.get('/email_message', follow_redirects=True)
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'<h1>Email Message</h1>', result.data)
+
+    def test_email_message_post(self):
+        """ Test sending email message. """
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = 2
+
+        data = {
+            'from_first_name': 'Denise',
+            'from_last_name': 'Codes',
+            'to_name': 'Roy Codes',
+            'to_email': 'denise@codes.com',
+            'subject': 'subject',
+            'body_message': 'body_message'
+        }
+
+        result = self.client.post('/email_message', data=data, follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+        # this message gets flashed
+        self.assertIn(b'email message was sent', result.data)
+        self.assertIn(b'<h2>You are not alone.</h2>', result.data)
 
 
 if __name__ == '__main__':
