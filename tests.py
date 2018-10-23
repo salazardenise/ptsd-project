@@ -628,6 +628,24 @@ class TestMessages(unittest.TestCase):
         self.assertIn(b'"user_logged_in":false', result.data)
         self.assertIn(b'"favorite":null', result.data)
 
+    def test_validate_logged_in_user_not_logged_in(self):
+        """ Test the validate_logged_in route when user is not logged in. """
+
+        result = self.client.get(f'/validate_logged_in')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(b'"user_logged_in":false', result.data)
+
+    def test_validate_logged_in_user_yes_logged_in(self):
+        """ Test the validate_logged_in route when user is logged in. """
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = 2
+
+        result = self.client.get(f'/validate_logged_in')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(b'"user_logged_in":true', result.data)
+
 class TestEmailMessage(unittest.TestCase):
 
     def setUp(self):
