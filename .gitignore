@@ -5,3 +5,5 @@ secrets.sh
 .coverage
 client_secret.json
 htmlcov/
+mac_env/
+chromedriver

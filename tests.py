@@ -58,7 +58,7 @@ class TestHomepage(unittest.TestCase):
 
         result = self.client.get('/')
         self.assertEqual(result.status_code, 200)
-        self.assertIn(b'<h2>You are not alone.</h2>', result.data)
+        self.assertIn(b'You are not alone.', result.data)
         self.assertIn(b'Author: Roxana Jones', result.data)
         self.assertIn(b'http://healtruwords.com', result.data)
 
@@ -86,7 +86,7 @@ class TestSignup(unittest.TestCase):
     def test_validate_signup_username_found(self):
         """ Test when new user attempts to signup with a username that is already taken. """
 
-        username = 'denisecodes'
+        username = 'DeniseCodes101'
 
         result = self.client.get(f'/validate_signup?username={username}')
         self.assertEqual(result.status_code, 200)
@@ -114,7 +114,7 @@ class TestSignup(unittest.TestCase):
 
         result = self.client.post('/signup', data=data, follow_redirects=True)
         self.assertEqual(result.status_code, 200)
-        self.assertIn(b'<h2>You are not alone.</h2>', result.data)
+        self.assertIn(b'You are not alone.', result.data)
         self.assertIn(b'BobCodes1 successfully signed up.', result.data)
 
 class TestLoginLogout(unittest.TestCase):
@@ -141,8 +141,8 @@ class TestLoginLogout(unittest.TestCase):
     def test_validate_login_valid_username_invalid_password(self):
         """ Test when user attempts to login and password does not match username. """
 
-        username = 'denisecodes'
-        password = 'Python101'
+        username = 'DeniseCodes101'
+        password = 'Python'
 
         data = {'username': username, 'password': password}
 
@@ -154,8 +154,8 @@ class TestLoginLogout(unittest.TestCase):
     def test_validate_login_valid_username_valid_password(self):
         """ Test when user attempts to login with valid username and password. """
 
-        username = 'denisecodes'
-        password = 'Python'
+        username = 'DeniseCodes101'
+        password = 'Python101'
 
         data = {'username': username, 'password': password}
 
@@ -180,8 +180,8 @@ class TestLoginLogout(unittest.TestCase):
     def test_successful_login(self):
         """ Test when a new user signs up successfully. """
 
-        username = 'denisecodes'
-        password = 'Python'
+        username = 'DeniseCodes101'
+        password = 'Python101'
 
         data = {'username': username, 
                 'password': password}
@@ -190,8 +190,8 @@ class TestLoginLogout(unittest.TestCase):
             result = c.post('/login', data=data, follow_redirects=True)
             self.assertEqual(result.status_code, 200)
             self.assertEqual(session['user_id'], 1)
-            self.assertIn(b'<h2>You are not alone.</h2>', result.data)
-            self.assertIn(b'denisecodes successfully logged in.', result.data)
+            self.assertIn(b'You are not alone.', result.data)
+            self.assertIn(b'DeniseCodes101 successfully logged in.', result.data)
 
     def test_logout(self):
         """Test logout route."""
@@ -203,7 +203,7 @@ class TestLoginLogout(unittest.TestCase):
             result = self.client.get('/logout', follow_redirects=True)
 
             self.assertNotIn(b'user_id', session)
-            self.assertIn(b'denisecodes successfully logged out.', result.data)
+            self.assertIn(b'DeniseCodes101 successfully logged out.', result.data)
 
 class TestPrograms(unittest.TestCase):
 
@@ -699,7 +699,7 @@ class TestEmailMessage(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         # route redirects to homepage if no user logged in and flashes the following
         self.assertIn(b'Sign Up or Log In to enable sending email message templates.', result.data)
-        self.assertIn(b'<h2>You are not alone.</h2>', result.data)
+        self.assertIn(b'You are not alone.', result.data)
 
     def test_email_message_user_yes_logged_in_no_credentials_redirect_authorize(self):
         """ Test route /email_message when user logged in but no credentials. """
@@ -746,7 +746,7 @@ class TestEmailMessage(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         # this message gets flashed
         self.assertIn(b'email message was sent', result.data)
-        self.assertIn(b'<h2>You are not alone.</h2>', result.data)
+        self.assertIn(b'You are not alone.', result.data)
 
 class TestTextMessage(unittest.TestCase):
 
@@ -784,7 +784,7 @@ class TestTextMessage(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         # this message gets flashed
         self.assertIn(b'Sign Up or Log In to enable sending text message templates.', result.data)
-        self.assertIn(b'<h2>You are not alone.</h2>', result.data)
+        self.assertIn(b'You are not alone.', result.data)
 
     def test_text_message_user_logged_in(self):
         """ Test get test_message route when user is logged in. """
@@ -814,7 +814,7 @@ class TestTextMessage(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         # this message gets flashed
         self.assertIn(b'message sent to Roy Codes', result.data)
-        self.assertIn(b'<h2>You are not alone.</h2>', result.data)
+        self.assertIn(b'You are not alone.', result.data)
 
 
 if __name__ == '__main__':

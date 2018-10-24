@@ -7,15 +7,15 @@ import os
 import sys
 
 def load_dummy_data():
-    denise = User(username='denisecodes', password='Python', 
+    denise = User(username='DeniseCodes101', password='Python101', 
                   first_name='Denise', last_name='Codes', email='denise@codes.com')
-    roy = User(username='roycodes', password='Python',
+    roy = User(username='RoyCodes101', password='Python101',
                   first_name='Roy', last_name='Codes', email='roy@codes.com')
-    leo = User(username="leocodes", password="Java",
+    leo = User(username="LeoCodes101", password="JavaNinja101",
                   first_name='Leo', last_name='Codes', email='leo@codes.com')
-    turing = User(username='turingcodes', password='JavaScript',
+    turing = User(username='TuringCodes', password='JavaScript101',
                   first_name='Turing', last_name='Codes', email='turing@codes.com')
-    denisedenise = User(username='denisedenise', password='PythonPython',
+    denisedenise = User(username='DeniseDenise101', password='PythonPython101',
                         first_name='Denise', last_name='Denise', email='denise.salazar.1210@gmail.com')
 
     angels = Facility(address='100 A St', city='CityOfAngels', 
@@ -209,15 +209,15 @@ def load_messages():
 def load_dummy_users_with_rest_of_data(needsUpdate):
         
     print('User')
-    denise = User(username='denisecodes', password='Python', 
+    denise = User(username='DeniseCodes101', password='Python101', 
                   first_name='Denise', last_name='Codes', email='denise@codes.com')
-    roy = User(username='roycodes', password='Python',
+    roy = User(username='RoyCodes101', password='Python101',
                   first_name='Roy', last_name='Codes', email='roy@codes.com')
-    leo = User(username="leocodes", password="Java",
+    leo = User(username="LeoCodes101", password="JavaNinja101",
                   first_name='Leo', last_name='Codes', email='leo@codes.com')
-    turing = User(username='turingcodes', password='JavaScript',
+    turing = User(username='TuringCodes', password='JavaScript101',
                   first_name='Turing', last_name='Codes', email='turing@codes.com')
-    denisedenise = User(username='denisedenise', password='PythonPython',
+    denisedenise = User(username='DeniseDenise101', password='PythonPython101',
                         first_name='Denise', last_name='Denise', email='denise.salazar.1210@gmail.com')
 
     db.session.add_all([denise, roy, leo, turing, denisedenise])
