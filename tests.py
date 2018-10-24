@@ -231,7 +231,7 @@ class TestPrograms(unittest.TestCase):
 
         result = self.client.get('/programs')
         self.assertEqual(result.status_code, 200)
-        self.assertIn(b'<h1>Programs</h1>', result.data)
+        self.assertIn(b'Programs', result.data)
 
     def test_facilities_search_fac_name_no_user_logged_in(self):
         """ Test that programs.json route returns facilities desired in JSON format. 
