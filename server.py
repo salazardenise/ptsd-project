@@ -19,6 +19,9 @@ from email.mime.text import MIMEText
 import base64
 from apiclient import errors
 
+# module for hashing passwords
+import hashlib
+
 # This variable specifies the name of a file that contains the OAuth 2.0
 # information for this application, including its client_id and client_secret.
 CLIENT_SECRETS_FILE = "client_secret.json"
@@ -87,14 +90,15 @@ def signup():
     email = request.form.get('email')
     phone = request.form.get('phone')
     username = request.form.get('username')
-    password = request.form.get('password1')
+    password_plain = request.form.get('password1')
+    password_hash = hashlib.sha256(password_plain.encode('utf-8')).hexdigest()
 
     new_user = User(first_name=first_name,
                     last_name=last_name,
                     email=email,
                     phone=phone,
                     username=username,
-                    password=password)
+                    password=password_hash)
     db.session.add(new_user)
     db.session.commit()
 
@@ -113,8 +117,16 @@ def login():
     """ Login the user. """
 
     username = request.form.get('username')
-    session['user_id'] = db.session.query(User.user_id).filter_by(username=username).one()[0]
-    flash(f'{username} successfully logged in.')
+    password_entered_plain = request.form.get('password')
+    password_hash = hashlib.sha256(password_entered_plain.encode('utf-8')).hexdigest()
+
+    user = User.query.filter_by(username=username).one()
+    password_db_hash = user.password
+    if password_db_hash == password_hash:
+        session['user_id'] = db.session.query(User.user_id).filter_by(username=username).one()[0]
+        flash(f'{username} successfully logged in.')
+    else:
+        flash('username and password entered did not match')
     return redirect('/')
 
 @app.route('/validate_signup', methods=['GET'])
@@ -131,18 +143,21 @@ def validate_login_credentials():
     """ Take username and password and validate them. """
 
     username = request.form.get('username')
-    password = request.form.get('password')
+    password_entered_plain = request.form.get('password')
 
     result = {}
     # Does username exist?
-    if User.query.filter_by(username=username).first() is None:
+    user = User.query.filter_by(username=username).first()
+    if user is None:
         result['username_found'] = False
         result['valid_login'] = None
         return jsonify(result)
     
     # If yes, does password match username?
     result['username_found'] = True
-    if User.query.filter_by(username=username, password=password).first() is not None:
+    password_entered_hash = hashlib.sha256(password_entered_plain.encode('utf-8')).hexdigest()
+    password_db_hash = user.password
+    if password_db_hash == password_entered_hash:
         result['valid_login'] = True
     else:
         result['valid_login'] = False
@@ -603,5 +618,5 @@ if __name__ == '__main__':
     # ACTION ITEM for developers:
     #     When running in production *do not* leave this option enabled.
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-    # app.run(port=5000, host='0.0.0.0')
-    app.run(port=5000)
+    app.run(port=5000, host='0.0.0.0')
+    #app.run(port=5000)
