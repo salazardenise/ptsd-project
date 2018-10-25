@@ -6,6 +6,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
+from selenium.common.exceptions import NoSuchElementException
 
 
 import unittest
@@ -484,6 +485,31 @@ class TestPrograms(unittest.TestCase):
         # should still be on same page
         WebDriverWait(self.browser, 3).until(EC.title_is('Programs'))
 
+    def test_submit_search_click_on_facility_cause_programs_to_display(self):
+
+        self.browser.get('http://localhost:5000/programs')
+
+        # fill required fields in form
+        searchTextInput = self.browser.find_element_by_name('search_text')
+        search_text = 'CA'
+        searchTextInput.send_keys(search_text)
+
+        singleSelectSearchTypeValues = {'name': 'search_type', 'values': ['fac_name', 'city', 'state', 'zipcode']}
+        select = Select(self.browser.find_element(By.NAME, 'search_type'))
+        searchSearchType = select.select_by_visible_text('state')
+
+        # send form
+        submitButton = self.browser.find_element_by_css_selector('button[type="submit"]')
+        submitButton.click()
+
+        # this causes map and table to show
+        # try clicking on a facility name which triggers showing its programs
+        wait = WebDriverWait(self.browser,10)
+        firstFacility = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, 'facility-name')))
+        firstFacility.click()
+
+        programsList = WebDriverWait(self.browser, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'programsList')))
+        self.assertEqual(programsList.is_displayed(), True)
 
 class TestRecordings(unittest.TestCase):
 
