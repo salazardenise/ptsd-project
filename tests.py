@@ -146,7 +146,7 @@ class TestLoginLogout(unittest.TestCase):
 
         data = {'username': username, 'password': password}
 
-        result = self.client.post('/validate_login', data=data, follow_redirects=True)
+        result = self.client.post('/login', data=data, follow_redirects=True)
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'"username_found":true', result.data)
         self.assertIn(b'"valid_login":false', result.data)
@@ -159,7 +159,7 @@ class TestLoginLogout(unittest.TestCase):
 
         data = {'username': username, 'password': password}
 
-        result = self.client.post('/validate_login', data=data, follow_redirects=True)
+        result = self.client.post('/login', data=data, follow_redirects=True)
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'"username_found":true', result.data)
         self.assertIn(b'"valid_login":true', result.data)
@@ -172,7 +172,7 @@ class TestLoginLogout(unittest.TestCase):
 
         data = {'username': username, 'password': password}
 
-        result = self.client.post('/validate_login', data=data, follow_redirects=True)
+        result = self.client.post('/login', data=data, follow_redirects=True)
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'"username_found":false', result.data)
         self.assertIn(b'"valid_login":null', result.data)
@@ -190,8 +190,8 @@ class TestLoginLogout(unittest.TestCase):
             result = c.post('/login', data=data, follow_redirects=True)
             self.assertEqual(result.status_code, 200)
             self.assertEqual(session['user_id'], 1)
-            self.assertIn(b'You are not alone.', result.data)
-            self.assertIn(b'DeniseCodes101 successfully logged in.', result.data)
+            self.assertIn(b'"username_found":true', result.data)
+            self.assertIn(b'"valid_login":true', result.data)
 
     def test_logout(self):
         """Test logout route."""

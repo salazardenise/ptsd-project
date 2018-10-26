@@ -6,7 +6,7 @@ $('#logInForm').on('submit', (evt) => {
     let password = $('#logInPassword').val();
     let username = $('#logInUsername').val();
 
-    $.post('/validate_login', {'username': username, 'password': password}, (result) => {
+    $.post('/login', {'username': username, 'password': password}, (result) => {
         if (result.username_found == false) { // username does not exist
             $('#logInErrorMessage').html("Error: Username not recognized.")
             $('#logInErrorMessage').fadeIn(400, () => {
@@ -21,8 +21,8 @@ $('#logInForm').on('submit', (evt) => {
                 });
             }
             else {
-                // login is valid, resubmit form
-                $('#logInForm').unbind('submit').submit();
+                // login is valid, user is logged in in backend, user go to homepage
+                window.location.href = '/';
             }
         }
     });

@@ -112,23 +112,6 @@ def display_login_form():
 
     return render_template('login.html')
 
-@app.route('/login', methods=['POST'])
-def login():
-    """ Login the user. """
-
-    username = request.form.get('username')
-    password_entered_plain = request.form.get('password')
-    password_hash = hashlib.sha256(password_entered_plain.encode('utf-8')).hexdigest()
-
-    user = User.query.filter_by(username=username).one()
-    password_db_hash = user.password
-    if password_db_hash == password_hash:
-        session['user_id'] = db.session.query(User.user_id).filter_by(username=username).one()[0]
-        flash(f'{username} successfully logged in.')
-    else:
-        flash('username and password entered did not match')
-    return redirect('/')
-
 @app.route('/validate_signup', methods=['GET'])
 def user_exists():
     """ Determines if username given already exists in the database. """
@@ -138,7 +121,7 @@ def user_exists():
         return jsonify({'username_found': True})
     return jsonify({'username_found': False})
 
-@app.route('/validate_login', methods=['POST'])
+@app.route('/login', methods=['POST'])
 def validate_login_credentials():
     """ Take username and password and validate them. """
 
@@ -157,8 +140,11 @@ def validate_login_credentials():
     result['username_found'] = True
     password_entered_hash = hashlib.sha256(password_entered_plain.encode('utf-8')).hexdigest()
     password_db_hash = user.password
+
     if password_db_hash == password_entered_hash:
         result['valid_login'] = True
+        # log user in by assing their id to the session
+        session['user_id'] = user.user_id
     else:
         result['valid_login'] = False
 
