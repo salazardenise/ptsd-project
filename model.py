@@ -22,6 +22,8 @@ class User(db.Model):
                          nullable=False)
     password = db.Column(db.String(100),
                          nullable=False)
+    salt = db.Column(db.String(100), 
+                        nullable=False)
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
     email = db.Column(db.String(100))

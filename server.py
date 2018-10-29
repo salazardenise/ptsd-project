@@ -21,6 +21,10 @@ from apiclient import errors
 
 # module for hashing passwords
 import hashlib
+import binascii
+
+# salt size for salting passwords when new user signs up
+salt_size = 16
 
 # This variable specifies the name of a file that contains the OAuth 2.0
 # information for this application, including its client_id and client_secret.
@@ -91,14 +95,16 @@ def signup():
     phone = request.form.get('phone')
     username = request.form.get('username')
     password_plain = request.form.get('password1')
-    password_hash = hashlib.sha256(password_plain.encode('utf-8')).hexdigest()
+    salt = binascii.hexlify(os.urandom(salt_size))
+    password_hash = hashlib.sha256(password_plain.encode('utf-8') + salt).hexdigest()
 
     new_user = User(first_name=first_name,
                     last_name=last_name,
                     email=email,
                     phone=phone,
                     username=username,
-                    password=password_hash)
+                    password=password_hash,
+                    salt=salt.decode('utf-8'))
     db.session.add(new_user)
     db.session.commit()
 
@@ -138,7 +144,9 @@ def validate_login_credentials():
     
     # If yes, does password match username?
     result['username_found'] = True
-    password_entered_hash = hashlib.sha256(password_entered_plain.encode('utf-8')).hexdigest()
+    salt = user.salt.encode('utf-8')
+
+    password_entered_hash = hashlib.sha256(password_entered_plain.encode('utf-8') + salt).hexdigest()
     password_db_hash = user.password
 
     if password_db_hash == password_entered_hash:
