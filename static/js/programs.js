@@ -95,19 +95,21 @@ $('#programSearchForm').on('submit', (evt) => {
             // DISPLAY PROGRAMS RESULTS IN TABLE      
             // add table headers
             $('#programsResults').empty()
-            $('#programsResults').append("<table>");
-            let table_heading = "<tr><th>Favorite</th><th>Facility</th><th>Address</th><th>City</th><th>State</th><th>Zipcode</th></tr>";
-            $('#programsResults').append(table_heading);
+            let table = '';
+            table += "<table class='table table-hover table-sm'>";
+            let table_heading = "<thead><tr><th scope='col'>Favorite</th><th scope='col'>Facility</th><th scope='col'>Address</th><th scope='col'>City</th><th scope='col'>State</th><th scope='col'>Zipcode</th></tr></thead>";
+            table += table_heading
 
             // add each row for the table
+            table += '<tbody>';
             for (let i in results) {
                 let fac_id = results[i].fac_id;
                 let row = '<tr>';
                 if (results[i].favorite == 1) {
                     // this is a favorite
-                    row += `<td><i class='facility-star fas fa-star' data-facid='${fac_id}'></i></td>`;
+                    row += `<th scope='row'><i class='facility-star fas fa-star' data-facid='${fac_id}'></i></th>`;
                 } else {
-                    row += `<td><i class='facility-star far fa-star' data-facid='${fac_id}'></i></td>`;
+                    row += `<th scope='row'><i class='facility-star far fa-star' data-facid='${fac_id}'></i></th>`;
                 }
                 // add facility name
                 let fac_name = results[i].fac_name;
@@ -125,9 +127,11 @@ $('#programSearchForm').on('submit', (evt) => {
                 let zipcode = results[i].zipcode;
                 row += `<td>${zipcode}</td>`;
                 row += '</tr>';
-                $('#programsResults').append(row);
+                table += row
             }
-            $('#programsResults').append("</table>");
+            table += '</tbody>';
+            table += "</table>";
+            $('#programsResults').append(table);
         }
         
     });  
