@@ -1,6 +1,10 @@
 .message-description {
-    height: 1em;
+    height: 1.5em;
     overflow: hidden;
+}
+
+.message-description:hover{
+    background-color: #e3f2fd;
 }
 
 .expand-cursor {

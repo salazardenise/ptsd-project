@@ -3,19 +3,29 @@
 {% block title %}Messages{% endblock %}
 
 {% block content %}
-<h1>Message Templates</h1>
-<p>Are you feeling anxiety having to message family, friends, and co-workers? Sometimes it is hard to reach out to others. Choose a template below to send a message if you need it.</p>
-<h1>Choose One</h1>
-
-<p id="messagesErrorMessage"><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable favoriting messages.</small></p>
-<p id="textMessageErrorMessage"><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable sending text message templates.</small></p>
-<p id="emailMessageErrorMessage"><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable sending email message templates.</small></p>
-<p id="gmailMessageErrorMessage"><small>This app only supports sending emails through gmail. <a href="/signup">Sign Up</a> with a gmail address to enable sending email message templates.</small></p>
-
-<table>
-{% for message in messages %}
-    <tr>
-        <td>
+<div class="container mt-5">
+    <div class="row">
+        <h1>Message Templates</h1>
+        <p>Are you feeling anxiety having to message family, friends, and co-workers? Sometimes it is hard to reach out to others. Choose a template below to send a message if you need it.</p>
+    </div>
+    <div class="row mt-5">
+        <h1>Choose One</h1>
+    </div>
+    <div class="row">
+        <p id="messagesErrorMessage"><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable favoriting messages.</small></p>
+    </div>
+    <div class="row">
+        <p id="textMessageErrorMessage"><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable sending text message templates.</small></p>
+    </div>
+    <div class="row">
+        <p id="emailMessageErrorMessage"><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable sending email message templates.</small></p>
+    </div>
+    <div class="row">
+        <p id="gmailMessageErrorMessage"><small>This app only supports sending emails through gmail. <a href="/signup">Sign Up</a> with a gmail address to enable sending email message templates.</small></p>
+    </div>
+    <div class="row">
+        {% for message in messages %}
+        <div class="col-sm-12 col-md-6 mt-3" style="padding-right: 0; padding-left: 0;">
             <h2>
                 {% if message[1] != None %}
                 <i class="message-star fas fa-star" data-messageid="{{ message[0].message_id }}"></i> 
@@ -24,19 +34,16 @@
                 {% endif %}
                 {{ message[0].message_type }}
             </h2>
-        <td>
-        <td>
-            <div class='message-description expand-cursor'>{{ message[0].message }}</div>
-        </td>
-        <td>
-            <button class="email-button" data-messageid="{{ message[0].message_id }}">Email</button>
-        </td>
-        <td>
-            <button class="text-button" data-messageid="{{ message[0].message_id }}">Text</button>
-        </td>
-    </tr>
-{% endfor %}
-</table>
+
+            <div class='message-description expand-cursor mb-3' style="text-align: justify; padding-right: 5%;">{{ message[0].message }}</div>
+
+            <button class="email-button btn btn-primary" data-messageid="{{ message[0].message_id }}">Email</button>
+
+            <button class="text-button btn btn-primary" data-messageid="{{ message[0].message_id }}">Text</button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
 {% block personalScripts %}
     <!-- Personal scripts -->
