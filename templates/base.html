@@ -51,26 +51,24 @@
     <div class=”container”>
         <div class="row">
             <div class="col-sm-1">
-                <img src="/static/img/finding-peace-logo.png" alt="finding peace logo of a bird" style="height: 3em">
+                <img src="/static/img/finding-peace-logo.png" alt="finding peace logo of a bird" style="height: 3em;">
             </div>
-            <div class="col-sm-11">
+            <div class="col-sm-8">
                 <h1>finding peace</h1>
                 <h3>a resource for people with PTSD</h3>
             </div>
-        </div>
-        <hr>
-        <div class="row">
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-            {% endwith %}
+            <div class="col-sm-3">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <span>{{ message }}</span>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
         </div>
     </div>
+    <hr>
     {% block content %}
         CONTENT GOES HERE
     {% endblock %}
