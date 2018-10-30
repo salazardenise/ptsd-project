@@ -31,7 +31,6 @@
             {% endif %}
         </div>
     </header>
-    <hr style="clear: both;">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
         <ul>
@@ -41,12 +40,27 @@
         </ul>
     {% endif %}
     {% endwith %}
-    Menu: 
-    <nav>
-        <a href="/">Home</a>
-        <a href="/programs">Find Programs</a>
-        <a href="/recordings">Self Care</a>
-        <a href="/messages">Message Templates</a>
+    <nav style="clear: both;" class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Menu</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/programs">Programs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/recordings">Self Care</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="/messages">Message Templates</a>
+                </li>
+            </ul>
+        </div>
     </nav>
     {% block content %}
         CONTENT GOES HERE
