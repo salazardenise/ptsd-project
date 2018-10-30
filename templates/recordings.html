@@ -3,30 +3,37 @@
 {% block title %}Recordings{% endblock %}
 
 {% block content %}
-<h1>Self-Care</h1>
-<p>Be kind to yourself and practice self-care. It's the little things we do to help ourselves that can make a difference. Take a walk, buy some flowers, meditate, listen to some relaxing recordings. Sound effects obtained from <a href="https://www.freetousesounds.com">https://www.freetousesounds.com</a></p>
-
-<h1>Recordings</h1>
-<p id="recordingsErrorMessage"><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable favoriting recordings.</small></p>
-
-    {% for recording in recordings %}
-        <div>
-            <h2>
-                {% if recording[1] != None %}
-                    <i class="recording-star fas fa-star" data-recordingid="{{ recording[0].recording_id }}"></i>
+<div class="container">
+    <div class="row mt-5">
+        <h1>Self-Care</h1>
+        <p>Be kind to yourself and practice self-care. It's the little things we do to help ourselves that can make a difference. Take a walk, buy some flowers, meditate, listen to some relaxing recordings. Sound effects obtained from <a href="https://www.freetousesounds.com">https://www.freetousesounds.com</a></p>
+    </div>
+    <div class="row mt-5">
+        <h1>Recordings</h1>
+    </div>
+    <div class="row">
+        <p id="recordingsErrorMessage"><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable favoriting recordings.</small></p>
+    </div>
+    <div class="row">
+        {% for recording in recordings %}
+        <div class="col-sm-12 col-md-6 mt-3" style="padding-right: 0; padding-left: 0;">
+            <h2>{% if recording[1] != None %}
+                 <i class="recording-star fas fa-star" data-recordingid="{{ recording[0].recording_id }}"></i>
                 {% else %}
-                    <i class="recording-star far fa-star" data-recordingid="{{ recording[0].recording_id }}"></i>
+                <i class="recording-star far fa-star" data-recordingid="{{ recording[0].recording_id }}"></i>
                 {% endif %}
                 {{ recording[0].name }}
             </h2>
-            <p>{{ recording[0].description }}</p>
+            <p style="text-align: justify; padding-right: 5%;">{{ recording[0].description }}</p>
             <audio controls>
                 <source src="{{ recording[0].file_path }}" type="audio/wav">
             </audio>
         </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
 {% block personalScripts %}
     <!-- Personal scripts -->
     <script src="/static/js/recordings.js"></script>
-    {% endblock %}
+{% endblock %}
