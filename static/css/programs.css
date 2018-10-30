@@ -5,3 +5,7 @@
 #programsErrorMessage{
     display: none;
 }
+.form-control {
+width:auto;
+display:inline-block;
+}
