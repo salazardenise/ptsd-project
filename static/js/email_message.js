@@ -1,8 +1,5 @@
 "use strict";
 
-/* Set ip preview */
-$('#bodyMessageEmail').height($("#bodyMessageEmail")[0].scrollHeight);
-
 function updatePreviewMessage() {
 
     let toName = $('#toNameEmail').val();

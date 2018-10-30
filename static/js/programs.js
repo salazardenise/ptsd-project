@@ -18,7 +18,7 @@ $('#programSearchForm').on('submit', (evt) => {
         else { 
             /////////////////////////////////////////////////////////
             // DISPLAY PROGRAMS RESULTS LOCATIONS IN MAP
-            $('#programsMap').show()
+            $('#programsMap').fadeIn(400, () => {});
 
             // create map
             let map;

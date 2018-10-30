@@ -6,3 +6,10 @@
 .expand-cursor {
     cursor: pointer;
 }
+
+#messagesErrorMessage,
+#textMessageErrorMessage,
+#emailMessageErrorMessage,
+#gmailMessageErrorMessage {
+    display: none;
+}

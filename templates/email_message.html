@@ -35,8 +35,14 @@
         {{ user.first_name }} {{ user.last_name }}
     </div>
 </div>
-<script src="/static/js/email_message.js"></script>
 {% else %}
 <p><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable sending email message templates.</p>
 {% endif %}
+{% endblock %}
+{% block personalScripts %}
+    <script>/* Set ip preview */
+        $('#bodyMessageEmail').height($("#bodyMessageEmail")[0].scrollHeight);
+    </script>
+    <!-- Personal scripts -->
+    <script src="/static/js/email_message.js"></script>
 {% endblock %}

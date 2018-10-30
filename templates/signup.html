@@ -67,5 +67,8 @@
 </form>
 <p id="signUpErrorMessage" hidden></p>
 <p>Already signed up? Login <a href="/login">here</a>.</p>
-<script src="/static/js/signup.js"></script>
+{% endblock %}
+{% block personalScripts %}
+    <!-- Personal scripts -->
+    <script src="/static/js/signup.js"></script>
 {% endblock %}

@@ -14,9 +14,7 @@ $('.recording-star').on('click', (evt) => {
         } else {
             // A user is not logged in, show error message
             $('#recordingsErrorMessage').fadeIn(400, () => {
-                setTimeout(() => {
-                    $('#recordingsErrorMessage').fadeOut(400,);
-                }, 5000);
+                setTimeout(() => {$('#recordingsErrorMessage').fadeOut(400,)}, 5000);
             });
         }
     });

@@ -7,7 +7,7 @@
 <p>Be kind to yourself and practice self-care. It's the little things we do to help ourselves that can make a difference. Take a walk, buy some flowers, meditate, listen to some relaxing recordings. Sound effects obtained from <a href="https://www.freetousesounds.com">https://www.freetousesounds.com</a></p>
 
 <h1>Recordings</h1>
-<p id="recordingsErrorMessage" hidden><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable favoriting recordings.</small></p>
+<p id="recordingsErrorMessage"><small><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable favoriting recordings.</small></p>
 
     {% for recording in recordings %}
         <div>
@@ -25,6 +25,8 @@
             </audio>
         </div>
     {% endfor %}
-
-<script src="/static/js/recordings.js"></script>
 {% endblock %}
+{% block personalScripts %}
+    <!-- Personal scripts -->
+    <script src="/static/js/recordings.js"></script>
+    {% endblock %}

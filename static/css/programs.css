@@ -1,3 +1,7 @@
 #programsMap {
     height: 300px;
+    display: none;
+}
+#programsErrorMessage{
+    display: none;
 }
