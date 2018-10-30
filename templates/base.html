@@ -49,13 +49,15 @@
         </div>
     </nav>
     <div class=”container”>
-        <header class="row">
-            <img src="/static/img/finding-peace-logo.png" alt="finding peace logo of a bird" style="height: 5em; display: inline-block; float: left;">
-            <div style="display: inline-block; float: left;">
+        <div class="row">
+            <div class="col-sm-1">
+                <img src="/static/img/finding-peace-logo.png" alt="finding peace logo of a bird" style="height: 3em">
+            </div>
+            <div class="col-sm-11">
                 <h1>finding peace</h1>
                 <h3>a resource for people with PTSD</h3>
             </div>
-        </header>
+        </div>
         <hr>
         <div class="row">
             {% with messages = get_flashed_messages() %}
