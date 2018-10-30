@@ -18,35 +18,13 @@
     <link rel="stylesheet" href="/static/css/text_message.css">
 </head>
 <body>
-    <header>
-        <img src="/static/img/finding-peace-logo.png" alt="finding peace logo of a bird" style="width:15%; display: inline-block; float: left;">
-        <div style="display: inline-block; float: left;">
-            <h1>finding peace</h1>
-            <h2>a resource for people with PTSD</h2>
-            {% if 'user_id' not in session %}
-            <a href="/signup">Sign Up</a> or
-            <a href="/login">Log In</a>
-            {% else %}
-            <a href="/logout">Log Out</a>
-            {% endif %}
-        </div>
-    </header>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul>
-        {% for message in messages %}
-            <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-    {% endwith %}
-    <nav style="clear: both;" class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Menu</a>
+      <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+        <span class="navbar-brand">Menu</span>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="/">Home</a>
                 </li>
@@ -57,11 +35,40 @@
                     <a class="nav-link" href="/recordings">Self Care</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled" href="/messages">Message Templates</a>
+                    <a class="nav-link" href="/messages">Message Templates</a>
                 </li>
             </ul>
+            <span class="navbar-text">
+                {% if 'user_id' not in session %}
+                <a href="/signup" style="color: blue;">Sign Up</a> or
+                <a href="/login" style="color: blue;">Log In</a>
+                {% else %}
+                <a href="/logout" style="color: blue;">Log Out</a>
+                {% endif %}
+            </span>
         </div>
     </nav>
+    <div class=”container-fluid”>
+        <header class="row">
+            <img src="/static/img/finding-peace-logo.png" alt="finding peace logo of a bird" style="height: 5em; display: inline-block; float: left;">
+            <div style="display: inline-block; float: left;">
+                <h1>finding peace</h1>
+                <h3>a resource for people with PTSD</h3>
+            </div>
+        </header>
+        <hr>
+        <div class="row">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
+    </div>
     {% block content %}
         CONTENT GOES HERE
     {% endblock %}
