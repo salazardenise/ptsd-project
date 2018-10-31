@@ -564,10 +564,9 @@ def send_text_message(from_, body, to):
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token) 
 
-    message = client.messages.create( 
-                              from_=from_,
-                              body=body,
-                              to=to)
+    message = client.messages.create(from_=from_,
+                                     body=body,
+                                     to=to)
 
 @app.route('/text_message', methods=["POST"])
 def process_text_message():
@@ -592,10 +591,10 @@ def process_text_message():
     content_message += 'Best, ' + from_first_name + ' ' + from_last_name
 
     # phone numbers to use
-    # FOR DEMO PURPOSES, 
+    # FOR DEMO PURPOSES,
     # TWILIO TRAIL ACCOUNT ALLOWS SENDING TEXTS ONLY TO MY PHONE NUMBER
-    from_=os.environ['TWILIO_FROM_NUMBER']
-    to=os.environ['TWILIO_TO_NUMBER']
+    from_ = os.environ['TWILIO_FROM_NUMBER']
+    to = os.environ['TWILIO_TO_NUMBER']
     send_text_message(from_, content_message, to)
 
     flash(f'message sent to {to_name}')

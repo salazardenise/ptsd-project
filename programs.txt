@@ -1802,17 +1802,17 @@
 111 |Providence VA Medical Center|830 Chalkstone Avenue|Providence|RI|02908-4799|Women's Trauma Recovery Program
 111 |Providence VA Medical Center|830 Chalkstone Avenue|Providence|RI|02908-4799|Returning OEF/OIF/OND Veterans Enviroment of Recovery Intensive/Inpatient
 111 |Providence VA Medical Center|830 Chalkstone Avenue|Providence|RI|02908-4799|Women's Inpatient Specialty Enviroment of Recovery Intensive/Inpatient
-33 |Columbia VA Healthcare System|6439 Garners Ferry Road|Columbia|SC|29209-1639|Evaluation & Brief Treatment Unit
-33 |Columbia VA Healthcare System|6439 Garners Ferry Road|Columbia|SC|29209-1639|PTSD Clinical Team
-33 |Columbia VA Healthcare System|6439 Garners Ferry Road|Columbia|SC|29209-1639|PTSD Day Hospital
-33 |Columbia VA Healthcare System|6439 Garners Ferry Road|Columbia|SC|29209-1639|DOM PTSD
-33 |Columbia VA Healthcare System|6439 Garners Ferry Road|Columbia|SC|29209-1639|PTSD RRTP
-33 |Columbia VA Healthcare System|6439 Garners Ferry Road|Columbia|SC|29209-1639|Specialized Inpatient PTSD Unit
-33 |Columbia VA Healthcare System|6439 Garners Ferry Road|Columbia|SC|29209-1639|Substance Use PTSD Team
-33 |Columbia VA Healthcare System|6439 Garners Ferry Road|Columbia|SC|29209-1639|Women's Stress Disorder Treatment Team
-33 |Columbia VA Healthcare System|6439 Garners Ferry Road|Columbia|SC|29209-1639|Women's Trauma Recovery Program
-33 |Columbia VA Healthcare System|6439 Garners Ferry Road|Columbia|SC|29209-1639|Returning OEF/OIF/OND Veterans Enviroment of Recovery Intensive/Inpatient
-33 |Columbia VA Healthcare System|6439 Garners Ferry Road|Columbia|SC|29209-1639|Women's Inpatient Specialty Enviroment of Recovery Intensive/Inpatient
+33 |Columbia VA Health Care System|6439 Garners Ferry Road|Columbia|SC|29209-1639|Evaluation & Brief Treatment Unit
+33 |Columbia VA Health Care System|6439 Garners Ferry Road|Columbia|SC|29209-1639|PTSD Clinical Team
+33 |Columbia VA Health Care System|6439 Garners Ferry Road|Columbia|SC|29209-1639|PTSD Day Hospital
+33 |Columbia VA Health Care System|6439 Garners Ferry Road|Columbia|SC|29209-1639|DOM PTSD
+33 |Columbia VA Health Care System|6439 Garners Ferry Road|Columbia|SC|29209-1639|PTSD RRTP
+33 |Columbia VA Health Care System|6439 Garners Ferry Road|Columbia|SC|29209-1639|Specialized Inpatient PTSD Unit
+33 |Columbia VA Health Care System|6439 Garners Ferry Road|Columbia|SC|29209-1639|Substance Use PTSD Team
+33 |Columbia VA Health Care System|6439 Garners Ferry Road|Columbia|SC|29209-1639|Women's Stress Disorder Treatment Team
+33 |Columbia VA Health Care System|6439 Garners Ferry Road|Columbia|SC|29209-1639|Women's Trauma Recovery Program
+33 |Columbia VA Health Care System|6439 Garners Ferry Road|Columbia|SC|29209-1639|Returning OEF/OIF/OND Veterans Enviroment of Recovery Intensive/Inpatient
+33 |Columbia VA Health Care System|6439 Garners Ferry Road|Columbia|SC|29209-1639|Women's Inpatient Specialty Enviroment of Recovery Intensive/Inpatient
 28 |Ralph H. Johnson VA Medical Center|109 Bee Street|Charleston|SC|29401-5799|Evaluation & Brief Treatment Unit
 28 |Ralph H. Johnson VA Medical Center|109 Bee Street|Charleston|SC|29401-5799|PTSD Clinical Team
 28 |Ralph H. Johnson VA Medical Center|109 Bee Street|Charleston|SC|29401-5799|PTSD Day Hospital
@@ -1824,28 +1824,28 @@
 28 |Ralph H. Johnson VA Medical Center|109 Bee Street|Charleston|SC|29401-5799|Women's Trauma Recovery Program
 28 |Ralph H. Johnson VA Medical Center|109 Bee Street|Charleston|SC|29401-5799|Returning OEF/OIF/OND Veterans Enviroment of Recovery Intensive/Inpatient
 28 |Ralph H. Johnson VA Medical Center|109 Bee Street|Charleston|SC|29401-5799|Women's Inpatient Specialty Enviroment of Recovery Intensive/Inpatient
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|Evaluation & Brief Treatment Unit
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|PTSD Clinical Team
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|PTSD Day Hospital
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|DOM PTSD
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|PTSD RRTP
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|Specialized Inpatient PTSD Unit
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|Substance Use PTSD Team
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|Women's Stress Disorder Treatment Team
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|Women's Trauma Recovery Program
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|Returning OEF/OIF/OND Veterans Enviroment of Recovery Intensive/Inpatient
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|Women's Inpatient Specialty Enviroment of Recovery Intensive/Inpatient
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|Evaluation & Brief Treatment Unit
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|PTSD Clinical Team
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|PTSD Day Hospital
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|DOM PTSD
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|PTSD RRTP
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|Specialized Inpatient PTSD Unit
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|Substance Use PTSD Team
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|Women's Stress Disorder Treatment Team
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|Women's Trauma Recovery Program
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|Returning OEF/OIF/OND Veterans Enviroment of Recovery Intensive/Inpatient
-124 |Royal C. Johnson Veterans Memorial Medical Center|2501 W. 22nd Street, PO Box 5046|Sioux Falls|SD|57117-5046|Women's Inpatient Specialty Enviroment of Recovery Intensive/Inpatient
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|Evaluation & Brief Treatment Unit
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|PTSD Clinical Team
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|PTSD Day Hospital
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|DOM PTSD
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|PTSD RRTP
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|Specialized Inpatient PTSD Unit
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|Substance Use PTSD Team
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|Women's Stress Disorder Treatment Team
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|Women's Trauma Recovery Program
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|Returning OEF/OIF/OND Veterans Enviroment of Recovery Intensive/Inpatient
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|Women's Inpatient Specialty Enviroment of Recovery Intensive/Inpatient
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|Evaluation & Brief Treatment Unit
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|PTSD Clinical Team
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|PTSD Day Hospital
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|DOM PTSD
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|PTSD RRTP
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|Specialized Inpatient PTSD Unit
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|Substance Use PTSD Team
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|Women's Stress Disorder Treatment Team
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|Women's Trauma Recovery Program
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|Returning OEF/OIF/OND Veterans Enviroment of Recovery Intensive/Inpatient
+124 |Sioux Falls VA Health Care System|2501 W. 22nd Street|Sioux Falls|SD|57105|Women's Inpatient Specialty Enviroment of Recovery Intensive/Inpatient
 408 |Sioux Falls Vet Center|3200 W 49th Street|Sioux Falls|SD|57106|Evaluation & Brief Treatment Unit
 408 |Sioux Falls Vet Center|3200 W 49th Street|Sioux Falls|SD|57106|PTSD Clinical Team
 408 |Sioux Falls Vet Center|3200 W 49th Street|Sioux Falls|SD|57106|PTSD Day Hospital
