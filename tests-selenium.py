@@ -1,22 +1,31 @@
-# The selenium.webdriver module provides all the WebDriver implementations. 
+""" Run this module to perform all Selenium integration tests."""
+
+# standard python imports
+import unittest
+
+# third party imports
+# from flask import session
+
+# The selenium.webdriver module provides all the WebDriver implementations.
 from selenium import webdriver
-# The Keys class provide keys in the keyboard like RETURN, F1, ALT etc.
-from selenium.webdriver.common.keys import Keys
+
 # The expected_conditions module contains a set of predefined conditions to use with WebDriverWait.
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
-from selenium.common.exceptions import NoSuchElementException
 
+# The Keys class provide keys in the keyboard like RETURN, F1, ALT etc.
+# from selenium.webdriver.common.keys import Keys
+# from selenium.common.exceptions i mport NoSuchElementException
 
-import unittest
-from server import app
-from model import connect_to_db, db, User
-from seed import load_dummy_data
-from flask import session
-import server
+# import server
+# from server import app
+# from model import connect_to_db, db, User
+# from seed import load_dummy_data
+
 
 class TestHomepage(unittest.TestCase):
+    """ This class tests clicking on signup/login/logout links at homapge. """
 
     def setUp(self):
         self.browser = webdriver.Chrome()
@@ -36,7 +45,8 @@ class TestHomepage(unittest.TestCase):
         self.browser.get('http://localhost:5000/')
         self.browser.find_element_by_link_text('Sign Up').click()
         result = self.browser.find_element_by_tag_name('p')
-        self.assertEqual('Signing up allows you to favorite different features of this site. Fill out the form to proceed.', result.text)
+        self.assertIn('Signing up allows you to send message templates and favorite different features of this site.',
+                         result.text)
 
     def test_click_login(self):
         """ Check that clicking on Log In redirects to correct route. """
@@ -51,11 +61,12 @@ class TestHomepage(unittest.TestCase):
         """ Check that clicking on Programs redirects to correct route. """
 
         self.browser.get('http://localhost:5000/')
-        self.browser.find_element_by_link_text('Find Programs').click()
+        self.browser.find_element_by_link_text('Programs').click()
         result = self.browser.find_element_by_id('programsTitle')
         self.assertIn('Programs', result.text)
 
 class TestSignUp(unittest.TestCase):
+    """ This class tests user using SignUp page, filling out form. """
 
     def setUp(self):
         self.browser = webdriver.Chrome()
@@ -67,14 +78,14 @@ class TestSignUp(unittest.TestCase):
         """ Check that going to signup shows correct title. """
 
         self.browser.get('http://localhost:5000/signup')
-        self.assertEqual(self.browser.title, 'Sign Up') 
+        self.assertEqual(self.browser.title, 'Sign Up')
 
     def test_should_not_leave_page_unless_required_fields_filled_in(self):
         """ Test that user stays on page if all required fields not filled in. """
 
         self.browser.get('http://localhost:5000/signup')
-        submitButton = self.browser.find_element_by_css_selector('input[type="submit"]')
-        submitButton.click()
+        submit_button = self.browser.find_element_by_css_selector('input[type="submit"]')
+        submit_button.click()
         WebDriverWait(self.browser, 3).until(EC.title_is('Sign Up'))
 
     def test_clicking_on_unclickable_elements_does_nothing(self):
@@ -92,25 +103,25 @@ class TestSignUp(unittest.TestCase):
         self.browser.get('http://localhost:5000/signup')
 
         # fill required fields in form
-        emailInput = self.browser.find_element_by_name('email')
+        email_input = self.browser.find_element_by_name('email')
         email = 'denise@codes.com'
-        emailInput.send_keys(email)
+        email_input.send_keys(email)
 
-        usernameInput = self.browser.find_element_by_name('username')
+        username_input = self.browser.find_element_by_name('username')
         username = 'BobCodes101'
-        usernameInput.send_keys(username)
+        username_input.send_keys(username)
 
-        password1Input = self.browser.find_element_by_name('password1')
+        password1_input = self.browser.find_element_by_name('password1')
         password1 = 'Python101'
-        password1Input.send_keys(password1)
+        password1_input.send_keys(password1)
 
-        password2Input = self.browser.find_element_by_name('password2')
+        password2_input = self.browser.find_element_by_name('password2')
         password2 = 'Python101'
-        password2Input.send_keys(password2)
+        password2_input.send_keys(password2)
 
         # send form
-        submitButton = self.browser.find_element_by_css_selector('input[type="submit"]')
-        submitButton.click()
+        submit_button = self.browser.find_element_by_css_selector('input[type="submit"]')
+        submit_button.click()
 
         WebDriverWait(self.browser, 3).until(EC.title_is('PTSD Project'))
 
@@ -120,25 +131,25 @@ class TestSignUp(unittest.TestCase):
         self.browser.get('http://localhost:5000/signup')
 
         # fill required fields in form
-        emailInput = self.browser.find_element_by_name('email')
+        email_input = self.browser.find_element_by_name('email')
         email = 'bob@codes.com'
-        emailInput.send_keys(email)
-        self.assertEqual(emailInput.get_attribute('value'), email)
+        email_input.send_keys(email)
+        self.assertEqual(email_input.get_attribute('value'), email)
 
-        usernameInput = self.browser.find_element_by_name('username')
+        username_input = self.browser.find_element_by_name('username')
         username = 'BobCodes101'
-        usernameInput.send_keys(username)
-        self.assertEqual(usernameInput.get_attribute('value'), username)
+        username_input.send_keys(username)
+        self.assertEqual(username_input.get_attribute('value'), username)
 
-        password1Input = self.browser.find_element_by_name('password1')
+        password1_input = self.browser.find_element_by_name('password1')
         password1 = 'Python101'
-        password1Input.send_keys(password1)
-        self.assertEqual(password1Input.get_attribute('value'), password1)
+        password1_input.send_keys(password1)
+        self.assertEqual(password1_input.get_attribute('value'), password1)
 
-        password2Input = self.browser.find_element_by_name('password2')
+        password2_input = self.browser.find_element_by_name('password2')
         password2 = 'Python101'
-        password2Input.send_keys(password2)
-        self.assertEqual(password2Input.get_attribute('value'), password2)
+        password2_input.send_keys(password2)
+        self.assertEqual(password2_input.get_attribute('value'), password2)
 
     def test_should_not_submit_form_if_username_taken(self):
         """ Test that form does not submit if username already exists in database. """
@@ -146,29 +157,30 @@ class TestSignUp(unittest.TestCase):
         self.browser.get('http://localhost:5000/signup')
 
         # fill required fields in form
-        emailInput = self.browser.find_element_by_name('email')
+        email_input = self.browser.find_element_by_name('email')
         email = 'denise@codes.com'
-        emailInput.send_keys(email)
+        email_input.send_keys(email)
 
-        usernameInput = self.browser.find_element_by_name('username')
+        username_input = self.browser.find_element_by_name('username')
         username = 'DeniseCodes101'
-        usernameInput.send_keys(username)
+        username_input.send_keys(username)
 
-        password1Input = self.browser.find_element_by_name('password1')
+        password1_input = self.browser.find_element_by_name('password1')
         password1 = 'Python101'
-        password1Input.send_keys(password1)
+        password1_input.send_keys(password1)
 
-        password2Input = self.browser.find_element_by_name('password2')
+        password2_input = self.browser.find_element_by_name('password2')
         password2 = 'Python101'
-        password2Input.send_keys(password2)
+        password2_input.send_keys(password2)
 
         # attempt to submit form
-        password2Input.submit()
+        password2_input.submit()
 
-        signupErrorMessage = self.browser.find_element_by_id('signUpErrorMessage')
-        WebDriverWait(self.browser, 5).until(EC.visibility_of(signupErrorMessage))
+        signup_error_message = self.browser.find_element_by_id('signUpErrorMessage')
+        WebDriverWait(self.browser, 5).until(EC.visibility_of(signup_error_message))
         result = self.browser.find_element_by_id('signUpErrorMessage')
-        self.assertEqual('Error: Username is already taken. Please enter a different one.', result.text)
+        self.assertEqual('Error: Username is already taken. Please enter a different one.',
+                         result.text)
 
     def test_should_not_submit_form_if_passwords_do_not_match(self):
         """ Test that form does not submit if two passwords entered do not match. """
@@ -176,44 +188,45 @@ class TestSignUp(unittest.TestCase):
         self.browser.get('http://localhost:5000/signup')
 
         # fill required fields in form
-        emailInput = self.browser.find_element_by_name('email')
+        email_input = self.browser.find_element_by_name('email')
         email = 'bill@codes.com'
-        emailInput.send_keys(email)
+        email_input.send_keys(email)
 
-        usernameInput = self.browser.find_element_by_name('username')
+        username_input = self.browser.find_element_by_name('username')
         username = 'BillCodes101'
-        usernameInput.send_keys(username)
+        username_input.send_keys(username)
 
-        password1Input = self.browser.find_element_by_name('password1')
+        password1_input = self.browser.find_element_by_name('password1')
         password1 = 'Python101'
-        password1Input.send_keys(password1)
+        password1_input.send_keys(password1)
 
-        password2Input = self.browser.find_element_by_name('password2')
+        password2_input = self.browser.find_element_by_name('password2')
         password2 = 'Python102'
-        password2Input.send_keys(password2)
+        password2_input.send_keys(password2)
 
         # attempt to submit form
-        password2Input.submit()
+        password2_input.submit()
 
-        signupErrorMessage = self.browser.find_element_by_id('signUpErrorMessage')
-        WebDriverWait(self.browser, 5).until(EC.visibility_of(signupErrorMessage))
+        signup_error_message = self.browser.find_element_by_id('signUpErrorMessage')
+        WebDriverWait(self.browser, 5).until(EC.visibility_of(signup_error_message))
         result = self.browser.find_element_by_id('signUpErrorMessage')
-        self.assertEqual('Error: Re-entered password does not match password. Please check this.', result.text)
+        self.assertEqual('Error: Re-entered password does not match password. Please check this.',
+                         result.text)
 
     def test_should_enter_data_into_form_fields(self):
         """ Test that you can enter data into form fields.  """
 
         self.browser.get('http://localhost:5000/signup')
         element = self.browser.find_element_by_name('first_name')
-        originalValue = element.get_attribute('value')
-        self.assertEqual(originalValue, '')
+        original_value = element.get_attribute('value')
+        self.assertEqual(original_value, '')
 
         element.clear()
         element.send_keys('Denise')
 
-        element =  self.browser.find_element_by_name('first_name')
-        newFormValue = element.get_attribute('value')
-        self.assertEqual(newFormValue, 'Denise')
+        element = self.browser.find_element_by_name('first_name')
+        new_form_value = element.get_attribute('value')
+        self.assertEqual(new_form_value, 'Denise')
 
     def test_sending_keyboard_events_should_append_text_in_inputs(self):
         """ Test that you can append text to a field. """
@@ -242,6 +255,7 @@ class TestSignUp(unittest.TestCase):
         self.assertEqual(len(value), 0)
 
 class TestLogIn(unittest.TestCase):
+    """ This class tests user using login page, filling out form. """
 
     def setUp(self):
         self.browser = webdriver.Chrome()
@@ -253,14 +267,14 @@ class TestLogIn(unittest.TestCase):
         """ Check that going to login shows correct title. """
 
         self.browser.get('http://localhost:5000/login')
-        self.assertEqual(self.browser.title, 'Log In')  
+        self.assertEqual(self.browser.title, 'Log In')
 
     def test_should_not_leave_page_unless_required_fields_filled_in(self):
         """ Test that user stays on page if all required fields not filled in. """
 
         self.browser.get('http://localhost:5000/login')
-        submitButton = self.browser.find_element_by_css_selector('input[type="submit"]')
-        submitButton.click()
+        submit_button = self.browser.find_element_by_css_selector('input[type="submit"]')
+        submit_button.click()
         WebDriverWait(self.browser, 3).until(EC.title_is('Log In'))
 
     def test_clicking_on_unclickable_elements_does_nothing(self):
@@ -275,19 +289,19 @@ class TestLogIn(unittest.TestCase):
         self.browser.get('http://localhost:5000/login')
 
         # fill required fields in form
-        usernameInput = self.browser.find_element_by_name('username')
+        username_input = self.browser.find_element_by_name('username')
         username = 'DeniseCodes101'
-        usernameInput.send_keys(username)
+        username_input.send_keys(username)
 
-        passwordInput = self.browser.find_element_by_name('password')
+        password_input = self.browser.find_element_by_name('password')
         password = 'Python101'
-        passwordInput.send_keys(password)
+        password_input.send_keys(password)
 
         # send form
-        submitButton = self.browser.find_element_by_css_selector('input[type="submit"]')
-        submitButton.click()
+        submit_button = self.browser.find_element_by_css_selector('input[type="submit"]')
+        submit_button.click()
 
-        WebDriverWait(self.browser, 3).until(EC.title_is('PTSD Project'))
+        WebDriverWait(self.browser, 5).until(EC.title_is('PTSD Project'))
 
     def test_should_be_able_to_enter_text_into_required_fields(self):
         """ Test entering text into fields. """
@@ -295,15 +309,15 @@ class TestLogIn(unittest.TestCase):
         self.browser.get('http://localhost:5000/login')
 
         # fill required fields in form
-        usernameInput = self.browser.find_element_by_name('username')
+        username_input = self.browser.find_element_by_name('username')
         username = 'DeniseCodes101'
-        usernameInput.send_keys(username)
-        self.assertEqual(usernameInput.get_attribute('value'), username)
+        username_input.send_keys(username)
+        self.assertEqual(username_input.get_attribute('value'), username)
 
-        passwordInput = self.browser.find_element_by_name('password')
+        password_input = self.browser.find_element_by_name('password')
         password = 'Python101'
-        passwordInput.send_keys(password)
-        self.assertEqual(passwordInput.get_attribute('value'), password)
+        password_input.send_keys(password)
+        self.assertEqual(password_input.get_attribute('value'), password)
 
     def test_should_not_submit_form_if_username_not_found(self):
         """ Test that form does not submit if username not found in database. """
@@ -311,21 +325,21 @@ class TestLogIn(unittest.TestCase):
         self.browser.get('http://localhost:5000/login')
 
         # fill required fields in form
-        usernameInput = self.browser.find_element_by_name('username')
+        username_input = self.browser.find_element_by_name('username')
         username = 'KatrinaCodes101'
-        usernameInput.send_keys(username)
-        self.assertEqual(usernameInput.get_attribute('value'), username)
+        username_input.send_keys(username)
+        self.assertEqual(username_input.get_attribute('value'), username)
 
-        passwordInput = self.browser.find_element_by_name('password')
+        password_input = self.browser.find_element_by_name('password')
         password = 'Python101'
-        passwordInput.send_keys(password)
-        self.assertEqual(passwordInput.get_attribute('value'), password)
+        password_input.send_keys(password)
+        self.assertEqual(password_input.get_attribute('value'), password)
 
         # attempt to submit form
-        passwordInput.submit()
+        password_input.submit()
 
-        logInErrorMessage = self.browser.find_element_by_id('logInErrorMessage')
-        WebDriverWait(self.browser, 5).until(EC.visibility_of(logInErrorMessage))
+        login_error_message = self.browser.find_element_by_id('logInErrorMessage')
+        WebDriverWait(self.browser, 5).until(EC.visibility_of(login_error_message))
         result = self.browser.find_element_by_id('logInErrorMessage')
         self.assertEqual('Error: Username not recognized.', result.text)
 
@@ -335,21 +349,21 @@ class TestLogIn(unittest.TestCase):
         self.browser.get('http://localhost:5000/login')
 
         # fill required fields in form
-        usernameInput = self.browser.find_element_by_name('username')
+        username_input = self.browser.find_element_by_name('username')
         username = 'DeniseCodes101'
-        usernameInput.send_keys(username)
-        self.assertEqual(usernameInput.get_attribute('value'), username)
+        username_input.send_keys(username)
+        self.assertEqual(username_input.get_attribute('value'), username)
 
-        passwordInput = self.browser.find_element_by_name('password')
+        password_input = self.browser.find_element_by_name('password')
         password = 'NinjaEngineer101'
-        passwordInput.send_keys(password)
-        self.assertEqual(passwordInput.get_attribute('value'), password)
+        password_input.send_keys(password)
+        self.assertEqual(password_input.get_attribute('value'), password)
 
         # attempt to submit form
-        passwordInput.submit()
+        password_input.submit()
 
-        logInErrorMessage = self.browser.find_element_by_id('logInErrorMessage')
-        WebDriverWait(self.browser, 5).until(EC.visibility_of(logInErrorMessage))
+        login_error_message = self.browser.find_element_by_id('logInErrorMessage')
+        WebDriverWait(self.browser, 5).until(EC.visibility_of(login_error_message))
         result = self.browser.find_element_by_id('logInErrorMessage')
         self.assertEqual('Error: Username and password do not match', result.text)
 
@@ -358,15 +372,15 @@ class TestLogIn(unittest.TestCase):
 
         self.browser.get('http://localhost:5000/login')
         element = self.browser.find_element_by_name('username')
-        originalValue = element.get_attribute('value')
-        self.assertEqual(originalValue, '')
+        original_value = element.get_attribute('value')
+        self.assertEqual(original_value, '')
 
         element.clear()
         element.send_keys('DeniseCodes101')
 
-        element =  self.browser.find_element_by_name('username')
-        newFormValue = element.get_attribute('value')
-        self.assertEqual(newFormValue, 'DeniseCodes101')
+        element = self.browser.find_element_by_name('username')
+        new_form_value = element.get_attribute('value')
+        self.assertEqual(new_form_value, 'DeniseCodes101')
 
     def test_sending_keyboard_events_should_append_text_in_inputs(self):
         """ Test that you can append text to a field. """
@@ -394,6 +408,7 @@ class TestLogIn(unittest.TestCase):
         self.assertEqual(len(value), 0)
 
 class TestPrograms(unittest.TestCase):
+    """ This class tests user using programs page. """
 
     def setUp(self):
         self.browser = webdriver.Chrome()
@@ -419,23 +434,23 @@ class TestPrograms(unittest.TestCase):
         self.browser.get('http://localhost:5000/programs')
 
         # fill required fields in form
-        searchTextInput = self.browser.find_element_by_name('search_text')
+        search_text_input = self.browser.find_element_by_name('search_text')
         search_text = 'CA'
-        searchTextInput.send_keys(search_text)
+        search_text_input.send_keys(search_text)
 
-        singleSelectSearchTypeValues = {'name': 'search_type', 'values': ['fac_name', 'city', 'state', 'zipcode']}
+        # single_select_search_type_values = {'name': 'search_type', 'values': ['fac_name', 'city', 'state', 'zipcode']}
         select = Select(self.browser.find_element(By.NAME, 'search_type'))
-        searchSearchType = select.select_by_visible_text('state')
+        select.select_by_visible_text('state')
 
         # send form
-        submitButton = self.browser.find_element_by_css_selector('button[type="submit"]')
-        submitButton.click()
+        submit_button = self.browser.find_element_by_css_selector('button[type="submit"]')
+        submit_button.click()
 
         # assert table and map are now visible
-        programsTable = self.browser.find_element_by_id('programsResults')
-        self.assertEqual(programsTable.is_displayed(), True)
-        programsMap = self.browser.find_element_by_id('programsMap')
-        self.assertEqual(programsMap.is_displayed(), True)        
+        programs_table = self.browser.find_element_by_id('programsResults')
+        self.assertEqual(programs_table.is_displayed(), True)
+        programs_map = self.browser.find_element_by_id('programsMap')
+        self.assertEqual(programs_map.is_displayed(), True)
 
         # stays on same page even if sending form
         WebDriverWait(self.browser, 3).until(EC.title_is('Programs'))
@@ -446,72 +461,75 @@ class TestPrograms(unittest.TestCase):
         self.browser.get('http://localhost:5000/programs')
 
         # send form
-        submitButton = self.browser.find_element_by_css_selector('button[type="submit"]')
-        submitButton.click()
+        submit_button = self.browser.find_element_by_css_selector('button[type="submit"]')
+        submit_button.click()
 
         # assert table and map are still hidden
-        programsTable = self.browser.find_element_by_id('programsResults')
-        self.assertEqual(programsTable.is_displayed(), False)
-        programsMap = self.browser.find_element_by_id('programsMap')
-        self.assertEqual(programsMap.is_displayed(), False)
+        programs_table = self.browser.find_element_by_id('programsResults')
+        self.assertEqual(programs_table.is_displayed(), False)
+        programs_map = self.browser.find_element_by_id('programsMap')
+        self.assertEqual(programs_map.is_displayed(), False)
 
         # should still be on same page
         WebDriverWait(self.browser, 3).until(EC.title_is('Programs'))
 
     def test_submit_search_form_and_no_results(self):
+        """ Test that searching for something that restuns no results does just that. """
 
         self.browser.get('http://localhost:5000/programs')
 
         # fill required fields in form
-        searchTextInput = self.browser.find_element_by_name('search_text')
+        search_text_input = self.browser.find_element_by_name('search_text')
         # assume this does not exist anywhere in facilities table
         search_text = 'LionsTigersBears'
-        searchTextInput.send_keys(search_text)
+        search_text_input.send_keys(search_text)
 
         # send form
-        submitButton = self.browser.find_element_by_css_selector('button[type="submit"]')
-        submitButton.click()
+        submit_button = self.browser.find_element_by_css_selector('button[type="submit"]')
+        submit_button.click()
 
         # show error message
-        programsResults = self.browser.find_element_by_id('programsResults')
-        WebDriverWait(self.browser, 5).until(EC.visibility_of(programsResults))
+        programs_results = self.browser.find_element_by_id('programsResults')
+        WebDriverWait(self.browser, 5).until(EC.visibility_of(programs_results))
         result = self.browser.find_element_by_id('programsResults')
         self.assertEqual('No results found. Try again with a different search.', result.text)
 
         # assert map is still hidden
-        programsMap = self.browser.find_element_by_id('programsMap')
-        self.assertEqual(programsMap.is_displayed(), False)
+        programs_map = self.browser.find_element_by_id('programsMap')
+        self.assertEqual(programs_map.is_displayed(), False)
 
         # should still be on same page
         WebDriverWait(self.browser, 3).until(EC.title_is('Programs'))
 
     def test_submit_search_click_on_facility_cause_programs_to_display(self):
+        """ Test that clicking on a facility shows its programs. """
 
         self.browser.get('http://localhost:5000/programs')
 
         # fill required fields in form
-        searchTextInput = self.browser.find_element_by_name('search_text')
+        search_text_input = self.browser.find_element_by_name('search_text')
         search_text = 'CA'
-        searchTextInput.send_keys(search_text)
+        search_text_input.send_keys(search_text)
 
-        singleSelectSearchTypeValues = {'name': 'search_type', 'values': ['fac_name', 'city', 'state', 'zipcode']}
+        #single_select_search_type_values = {'name': 'search_type', 'values': ['fac_name', 'city', 'state', 'zipcode']}
         select = Select(self.browser.find_element(By.NAME, 'search_type'))
-        searchSearchType = select.select_by_visible_text('state')
+        select.select_by_visible_text('state')
 
         # send form
-        submitButton = self.browser.find_element_by_css_selector('button[type="submit"]')
-        submitButton.click()
+        submit_button = self.browser.find_element_by_css_selector('button[type="submit"]')
+        submit_button.click()
 
         # this causes map and table to show
         # try clicking on a facility name which triggers showing its programs
-        wait = WebDriverWait(self.browser,10)
-        firstFacility = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, 'facility-name')))
-        firstFacility.click()
+        wait = WebDriverWait(self.browser, 10)
+        first_facility = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, 'facility-name')))
+        first_facility.click()
 
-        programsList = WebDriverWait(self.browser, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'programsList')))
-        self.assertEqual(programsList.is_displayed(), True)
+        programs_list = WebDriverWait(self.browser, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'programsList')))
+        self.assertEqual(programs_list.is_displayed(), True)
 
 class TestRecordings(unittest.TestCase):
+    """ this class tests user using recordings page. """
 
     def setUp(self):
         self.browser = webdriver.Chrome()
@@ -526,6 +544,7 @@ class TestRecordings(unittest.TestCase):
         self.assertEqual(self.browser.title, 'Recordings')
 
 class TestMessages(unittest.TestCase):
+    """ This class tests user using messages page. """
 
     def setUp(self):
         self.browser = webdriver.Chrome()
@@ -540,6 +559,7 @@ class TestMessages(unittest.TestCase):
         self.assertEqual(self.browser.title, 'Messages')
 
 # class TestEmailMessage(unittest.TestCase):
+#     """ This class tests user using email message page. """
 
 #     def setUp(self):
 #         self.browser = webdriver.Chrome()
@@ -552,6 +572,7 @@ class TestMessages(unittest.TestCase):
 #         self.assertEqual(self.browser.title, 'Email Message')
 
 # class TestTextMessage(unittest.TestCase):
+#     """ This class tests user using text message page. """
 
 #     def setUp(self):
 #         self.browser = webdriver.Chrome()
