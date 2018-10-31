@@ -58,7 +58,7 @@ class TestHomepage(unittest.TestCase):
 
         result = self.client.get('/')
         self.assertEqual(result.status_code, 200)
-        self.assertIn(b'You are not alone.', result.data)
+        self.assertIn(b'You are not alone', result.data)
         self.assertIn(b'Author: Roxana Jones', result.data)
         self.assertIn(b'http://healtruwords.com', result.data)
 
@@ -114,7 +114,7 @@ class TestSignup(unittest.TestCase):
 
         result = self.client.post('/signup', data=data, follow_redirects=True)
         self.assertEqual(result.status_code, 200)
-        self.assertIn(b'You are not alone.', result.data)
+        self.assertIn(b'You are not alone', result.data)
         self.assertIn(b'BobCodes1 successfully signed up.', result.data)
 
 class TestLoginLogout(unittest.TestCase):
@@ -699,7 +699,7 @@ class TestEmailMessage(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         # route redirects to homepage if no user logged in and flashes the following
         self.assertIn(b'Sign Up or Log In to enable sending email message templates.', result.data)
-        self.assertIn(b'You are not alone.', result.data)
+        self.assertIn(b'You are not alone', result.data)
 
     def test_email_message_user_yes_logged_in_no_credentials_redirect_authorize(self):
         """ Test route /email_message when user logged in but no credentials. """
@@ -746,7 +746,7 @@ class TestEmailMessage(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         # this message gets flashed
         self.assertIn(b'email message was sent', result.data)
-        self.assertIn(b'You are not alone.', result.data)
+        self.assertIn(b'You are not alone', result.data)
 
 class TestTextMessage(unittest.TestCase):
 
@@ -784,7 +784,7 @@ class TestTextMessage(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         # this message gets flashed
         self.assertIn(b'Sign Up or Log In to enable sending text message templates.', result.data)
-        self.assertIn(b'You are not alone.', result.data)
+        self.assertIn(b'You are not alone', result.data)
 
     def test_text_message_user_logged_in(self):
         """ Test get test_message route when user is logged in. """
@@ -814,7 +814,7 @@ class TestTextMessage(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         # this message gets flashed
         self.assertIn(b'message sent to Roy Codes', result.data)
-        self.assertIn(b'You are not alone.', result.data)
+        self.assertIn(b'You are not alone', result.data)
 
 
 if __name__ == '__main__':
