@@ -3,41 +3,72 @@
 {% block title %}Text Message{% endblock %}
 
 {% block content %}
-<h1>Text Message</h1>
-
-{% if 'user_id' in session %}
-<div style="display: inline-block; width: 30%;">
-<form action="/text_message" id="textMessageForm" method="POST">
-    <input type="hidden" id="fromFirstName" name="from_first_name" value=" {{ user.first_name }}">
-    <input type="hidden" id="fromLastName" name="from_last_name" value=" {{ user.last_name }}">
-    <h3>To</h3>
-    Name: <input type="text" name="to_name" id="toName">
-    <br>
-    Phone number: +1<input type="text" name="phone" id="toPhoneNumber" placeholder="000-000-0000" pattern="\d{3}[\-]\d{3}[\-]\d{4}">
-    <br>
-    *<sup>(US numbers only.)</sup>
-    <br>
-    <h3>Message Body</h3>
-    <textarea name="body_message" id="bodyMessage"> {{ message.message }}</textarea>
-    <br>
-    <input type="submit" value="Send Text">
-</form>
-</div>
-<div style="display: inline-block; vertical-align: top; width: 30%;">
-    <h3>Preview</h3>
-    <div id="previewMessage">
-        Hi,
-        <br><br>
-        {{ message.message }}
-        <br><br>
-        Best,
-        <br>
-        {{ user.first_name }} {{ user.last_name }}
+<div class="container">
+    <div class="row mt-5">
+        <h1>Text Message</h1>
     </div>
+
+    {% if 'user_id' in session %}
+    <div class="row">
+        <div class="col-sm-6" style="padding-right: 0; padding-left: 0;">
+            <h2>To</h2>
+            <form action="/text_message" id="textMessageForm" method="POST">
+                <input type="hidden" id="fromFirstName" name="from_first_name" value=" {{ user.first_name }}">
+                <input type="hidden" id="fromLastName" name="from_last_name" value=" {{ user.last_name }}">
+
+                <div class="form-group row">
+                    <label for="toName" class="col-sm-5 col-form-label">Name: </label>
+                    <div class="col-sm-7">
+                        <input type="text" 
+                               name="to_name" 
+                               id="toName"
+                               class="form-control"
+                               placeholder="Name">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="toPhoneNumber" class="col-sm-5 col-form-label">Phone number: </label>
+                    <div class="col-sm-7">
+                        <input type="text" 
+                               name="phone" 
+                               id="toPhoneNumber" 
+                               placeholder="000-000-0000" 
+                               class="form-control"
+                               pattern="\d{3}[\-]\d{3}[\-]\d{4}"
+                               aria-describedby="phoneNumberHelp">
+                        <small id="phoneNumberHelp" class="form-text text-muted">Only U.S. numbers allowed in current version.</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="bodyMessage"><h2>Message Body</h2></label>
+                    <br>
+                    <textarea name="body_message" id="bodyMessage"> {{ message.message }}</textarea>
+                </div>
+                
+                <input type="submit" value="Send Text" class="btn btn-primary">
+            </form>
+        </div>
+        <div class="col-sm-4" style="padding-right: 0; padding-left: 0;">
+            <h2>Preview</h2>
+            <div id="previewMessage">
+                Hi,
+                <br><br>
+                {{ message.message }}
+                <br><br>
+                Best,
+                <br>
+                {{ user.first_name }} {{ user.last_name }}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="row">
+        <p><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable sending text message templates.</p>
+    </div>
+    {% endif %}
 </div>
-{% else %}
-<p><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable sending text message templates.</p>
-{% endif %}
 {% endblock %}
 {% block personalScripts %}
     <script>
