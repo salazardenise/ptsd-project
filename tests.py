@@ -1,15 +1,23 @@
+""" This module tests the Flask routes for the PTSD Project app. """
+
+# standard Python imports
 import unittest
-from server import app
-from model import connect_to_db, db, User
-from seed import load_dummy_data
+
+# third party imports
 from flask import session
+
+# server.py and model.py imports
 import server
+from server import app
+from model import connect_to_db, db
+from seed import load_dummy_data
 
 class TestRoutes(unittest.TestCase):
+    """ This class tests that signup and login routes returns corresponding html. """
 
     def setUp(self):
-        """ 
-        Set up before every test. 
+        """
+        Set up before every test.
 
         The Flask app has a test_client() method on it.
         It is a mini browswer that can make requests.
@@ -33,9 +41,11 @@ class TestRoutes(unittest.TestCase):
         self.assertIn(b'<h1>Log In</h1>', result.data)
 
 class TestHomepage(unittest.TestCase):
+    """ This class tests the homepage route and mocks the random quote generator"""
+
     def setUp(self):
-        """ 
-        Set up before every test. 
+        """
+        Set up before every test.
 
         The Flask app has a test_client() method on it.
         It is a mini browswer that can make requests.
@@ -63,6 +73,7 @@ class TestHomepage(unittest.TestCase):
         self.assertIn(b'http://healtruwords.com', result.data)
 
 class TestSignup(unittest.TestCase):
+    """ This class tests routes associated with signup. """
 
     def setUp(self):
         """ Set up before every test. """
@@ -109,7 +120,7 @@ class TestSignup(unittest.TestCase):
         password1 = 'Python101'
 
         data = {'email': email,
-                'username': username, 
+                'username': username,
                 'password1': password1}
 
         result = self.client.post('/signup', data=data, follow_redirects=True)
@@ -118,6 +129,7 @@ class TestSignup(unittest.TestCase):
         self.assertIn(b'BobCodes1 successfully signed up.', result.data)
 
 class TestLoginLogout(unittest.TestCase):
+    """ This class tests routes asociated with login and logout. """
 
     def setUp(self):
         """ Set up before every test. """
@@ -166,7 +178,7 @@ class TestLoginLogout(unittest.TestCase):
 
     def test_validate_login_invalid_username(self):
         """ Test when user attempts to login with invalid username. """
-        
+
         username = 'fabiocodes'
         password = 'Python'
 
@@ -183,7 +195,7 @@ class TestLoginLogout(unittest.TestCase):
         username = 'DeniseCodes101'
         password = 'Python101'
 
-        data = {'username': username, 
+        data = {'username': username,
                 'password': password}
 
         with self.client as c:
@@ -206,6 +218,7 @@ class TestLoginLogout(unittest.TestCase):
             self.assertIn(b'DeniseCodes101 successfully logged out.', result.data)
 
 class TestPrograms(unittest.TestCase):
+    """ This class tests routes asscoiated with programs. """
 
     def setUp(self):
         """ Set up before every test. """
@@ -234,7 +247,7 @@ class TestPrograms(unittest.TestCase):
         self.assertIn(b'Programs', result.data)
 
     def test_facilities_search_fac_name_no_user_logged_in(self):
-        """ Test that programs.json route returns facilities desired in JSON format. 
+        """ Test that programs.json route returns facilities desired in JSON format.
 
         Facilities 1, 2, and 3 start with a fac_name of 'fac_name_'."""
 
@@ -251,7 +264,7 @@ class TestPrograms(unittest.TestCase):
         self.assertIn(b'"favorite":0', result.data)
 
     def test_facilities_search_fac_name_yes_user_logged_in(self):
-        """ Test that programs.json route returns facilities desired in JSON format. 
+        """ Test that programs.json route returns facilities desired in JSON format.
 
         Facilities 1, 2, and 3 start with a fac_name of 'fac_name_'."""
 
@@ -270,7 +283,7 @@ class TestPrograms(unittest.TestCase):
         self.assertIn(b'"favorite":1', result.data)
 
     def test_facilities_search_city_no_user_logged_in(self):
-        """ Test that programs.json route returns facilities desired in JSON format. 
+        """ Test that programs.json route returns facilities desired in JSON format.
 
         All 3 facility cities in database start with 'City'. """
 
@@ -286,7 +299,7 @@ class TestPrograms(unittest.TestCase):
         self.assertIn(b'"favorite":0', result.data)
 
     def test_facilities_search_city_yes_user_logged_in(self):
-        """ Test that programs.json route returns facilities desired in JSON format. 
+        """ Test that programs.json route returns facilities desired in JSON format.
 
         All 3 facility cities in database start with 'City'. """
 
@@ -332,7 +345,7 @@ class TestPrograms(unittest.TestCase):
         self.assertIn(b'"favorite":1', result.data)
 
     def test_facilities_search_zipcode_no_user_logged_in(self):
-        """ Test that programs.json route returns facilities desired in JSON format. 
+        """ Test that programs.json route returns facilities desired in JSON format.
 
         Only program 1 has a zipcode of 10000."""
 
@@ -346,7 +359,7 @@ class TestPrograms(unittest.TestCase):
         self.assertIn(b'"favorite":0', result.data)
 
     def test_facilities_search_zipcode_yes_user_logged_in(self):
-        """ Test that programs.json route returns facilities desired in JSON format. 
+        """ Test that programs.json route returns facilities desired in JSON format.
 
         Only program 1 has a zipcode of 10000."""
 
@@ -364,7 +377,7 @@ class TestPrograms(unittest.TestCase):
 
 
     def test_facilities_search_nothing_no_user_logged_in(self):
-        """ Test that programs.json route returns facilities desired in JSON format. 
+        """ Test that programs.json route returns facilities desired in JSON format.
 
         Test searching for not allowed type."""
 
@@ -376,7 +389,7 @@ class TestPrograms(unittest.TestCase):
         self.assertIn(b'[]', result.data)
 
     def test_facilities_search_nothing_yes_user_logged_in(self):
-        """ Test that programs.json route returns facilities desired in JSON format. 
+        """ Test that programs.json route returns facilities desired in JSON format.
 
         Test searching for not allowed type."""
 
@@ -392,7 +405,7 @@ class TestPrograms(unittest.TestCase):
         self.assertIn(b'[]', result.data)
 
     def test_get_programs_by_facility(self):
-        """ Test that programs_by_facility.json route returns programs desired in JSON format. 
+        """ Test that programs_by_facility.json route returns programs desired in JSON format.
 
         fac_id of 2 has 2 programs 2 and 3 associated it."""
 
@@ -405,7 +418,7 @@ class TestPrograms(unittest.TestCase):
         self.assertIn(b'"program_id":3', result.data)
 
     def test_toggle_facility_to_favorite_user_logged_in(self):
-        """ Test that logged in user can favorite a facility. 
+        """ Test that logged in user can favorite a facility.
 
         User 2's favorite facilities are 2 and 3.
         Let's test user 2 favoriting facility 1."""
@@ -413,7 +426,7 @@ class TestPrograms(unittest.TestCase):
         with self.client as c:
             with c.session_transaction() as sess:
                 sess['user_id'] = 2
-                
+
         fac_id = 1
 
         result = self.client.get(f'/toggle_favorite_facility?fac_id={fac_id}')
@@ -422,7 +435,7 @@ class TestPrograms(unittest.TestCase):
         self.assertIn(b'"favorite":true', result.data)
 
     def test_toggle_facility_to_unfavorite_user_logged_in(self):
-        """ Test that logged in user can unfavorite a facility. 
+        """ Test that logged in user can unfavorite a facility.
 
         User 2's favorite facilities are 2 and 3.
         Let's test user 2 unfavoriting facility 2."""
@@ -430,7 +443,7 @@ class TestPrograms(unittest.TestCase):
         with self.client as c:
             with c.session_transaction() as sess:
                 sess['user_id'] = 2
-                
+
         fac_id = 2
 
         result = self.client.get(f'/toggle_favorite_facility?fac_id={fac_id}')
@@ -449,6 +462,7 @@ class TestPrograms(unittest.TestCase):
         self.assertIn(b'"favorite":null', result.data)
 
 class TestRecordings(unittest.TestCase):
+    """ This class tests routes associated with recordings. """
 
     def setUp(self):
         """ Set up before every test. """
@@ -481,7 +495,7 @@ class TestRecordings(unittest.TestCase):
         self.assertNotIn(b'fas fa-star', result.data)
 
     def test_recordings_flask_route_user_logged_in(self):
-        """ Test that recordings displays recordings page. 
+        """ Test that recordings displays recordings page.
 
         User 2 has favorited recordings 2 and 3."""
 
@@ -498,7 +512,7 @@ class TestRecordings(unittest.TestCase):
         self.assertIn(b'fas fa-star', result.data)
 
     def test_toggle_recording_to_favorite_user_logged_in(self):
-        """ Test that logged in user can favorite a recording. 
+        """ Test that logged in user can favorite a recording.
 
         User 2's favorite recordings are 2 and 3.
         Let's test user 2 favoriting recording 1."""
@@ -506,7 +520,7 @@ class TestRecordings(unittest.TestCase):
         with self.client as c:
             with c.session_transaction() as sess:
                 sess['user_id'] = 2
-                
+
         recording_id = 1
 
         result = self.client.get(f'/toggle_favorite_recording?recording_id={recording_id}')
@@ -515,7 +529,7 @@ class TestRecordings(unittest.TestCase):
         self.assertIn(b'"favorite":true', result.data)
 
     def test_toggle_recording_to_unfavorite_user_logged_in(self):
-        """ Test that logged in user can unfavorite a recording. 
+        """ Test that logged in user can unfavorite a recording.
 
         User 2's favorite recordings are 2 and 3.
         Let's test user 2 unfavoriting recording 2."""
@@ -523,7 +537,7 @@ class TestRecordings(unittest.TestCase):
         with self.client as c:
             with c.session_transaction() as sess:
                 sess['user_id'] = 2
-                
+
         recording_id = 2
 
         result = self.client.get(f'/toggle_favorite_recording?recording_id={recording_id}')
@@ -542,6 +556,7 @@ class TestRecordings(unittest.TestCase):
         self.assertIn(b'"favorite":null', result.data)
 
 class TestMessages(unittest.TestCase):
+    """ This class tests routes associated with messages page. """
 
     def setUp(self):
         """ Set up before every test. """
@@ -571,7 +586,7 @@ class TestMessages(unittest.TestCase):
         self.assertNotIn(b'fas fa-star', result.data)
 
     def test_messages_flask_route_user_logged_in(self):
-        """ Test that messages displays messages page. 
+        """ Test that messages displays messages page.
 
         User 2 has favorited messages 2 and 3."""
 
@@ -585,7 +600,7 @@ class TestMessages(unittest.TestCase):
         self.assertIn(b'fas fa-star', result.data)
 
     def test_toggle_message_to_favorite_user_logged_in(self):
-        """ Test that logged in user can favorite a message. 
+        """ Test that logged in user can favorite a message.
 
         User 2's favorite messages are 2 and 3.
         Let's test user 2 favoriting message 1."""
@@ -593,7 +608,7 @@ class TestMessages(unittest.TestCase):
         with self.client as c:
             with c.session_transaction() as sess:
                 sess['user_id'] = 2
-                
+
         message_id = 1
 
         result = self.client.get(f'/toggle_favorite_message?message_id={message_id}')
@@ -602,7 +617,7 @@ class TestMessages(unittest.TestCase):
         self.assertIn(b'"favorite":true', result.data)
 
     def test_toggle_message_to_unfavorite_user_logged_in(self):
-        """ Test that logged in user can unfavorite a message. 
+        """ Test that logged in user can unfavorite a message.
 
         User 2's favorite messages are 2 and 3.
         Let's test user 2 unfavoriting message 2."""
@@ -610,7 +625,7 @@ class TestMessages(unittest.TestCase):
         with self.client as c:
             with c.session_transaction() as sess:
                 sess['user_id'] = 2
-                
+
         message_id = 2
 
         result = self.client.get(f'/toggle_favorite_message?message_id={message_id}')
@@ -647,6 +662,9 @@ class TestMessages(unittest.TestCase):
         self.assertIn(b'"user_logged_in":true', result.data)
 
 class TestEmailMessage(unittest.TestCase):
+    """ This class tests routes associated with sending an email.
+
+    It mocks functions that user Google Gmail API. """
 
     def setUp(self):
         """ Set up before every test. """
@@ -757,6 +775,7 @@ class TestEmailMessage(unittest.TestCase):
         self.assertIn(b'You are not alone', result.data)
 
 class TestTextMessage(unittest.TestCase):
+    """ This class tests sending a text message and mocks functions that use Twilio API. """
 
     def setUp(self):
         """ Set up before every test. """
