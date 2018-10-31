@@ -668,7 +668,15 @@ class TestEmailMessage(unittest.TestCase):
             }
             return message_status
 
+        # Make mock
+        def _get_random_quote():
+            return {
+                'media': 'http://healthruwords.com/wp-content/uploads/2016/09/Healthruwords.com_-_Inspirational_Images_-_Imagination-over-Knowledge-300x300.jpg',
+                'author': 'Roxana Jones'
+            }
+
         server.load_message_and_send = _load_message_and_send
+        server.get_random_quote = _get_random_quote
 
     def tearDown(self):
         """ Tear down after every test. """
