@@ -17,3 +17,7 @@
 #gmailMessageErrorMessage {
     display: none;
 }
+
+.message-star {
+    cursor: pointer;
+}

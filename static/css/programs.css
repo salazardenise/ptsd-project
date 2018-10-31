@@ -9,3 +9,11 @@
 width:auto;
 display:inline-block;
 }
+.facility-star,
+.facility-name {
+    cursor: pointer;
+}
+
+.programsList{
+    cursor: default;
+}
