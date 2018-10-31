@@ -46,7 +46,7 @@ class TestHomepage(unittest.TestCase):
         self.browser.find_element_by_link_text('Sign Up').click()
         result = self.browser.find_element_by_tag_name('p')
         self.assertIn('Signing up allows you to send message templates and favorite different features of this site.',
-                         result.text)
+                      result.text)
 
     def test_click_login(self):
         """ Check that clicking on Log In redirects to correct route. """
@@ -64,6 +64,41 @@ class TestHomepage(unittest.TestCase):
         self.browser.find_element_by_link_text('Programs').click()
         result = self.browser.find_element_by_id('programsTitle')
         self.assertIn('Programs', result.text)
+
+    def test_click_logout(self):
+        """ Check that after logging in, user can click logout. """
+    
+        # first go to login
+        self.browser.get('http://localhost:5000/login')
+
+        # fill required fields in form
+        username_input = self.browser.find_element_by_name('username')
+        username = 'DeniseCodes101'
+        username_input.send_keys(username)
+
+        password_input = self.browser.find_element_by_name('password')
+        password = 'Python101'
+        password_input.send_keys(password)
+
+        # send form
+        submit_button = self.browser.find_element_by_css_selector('input[type="submit"]')
+        submit_button.click()
+
+        # wait till users gets redirected to homepage
+        WebDriverWait(self.browser, 5).until(EC.title_is('PTSD Project'))
+
+        # click on logout
+        self.browser.find_element_by_link_text('Log Out').click()
+
+        # check that now login and singup links are displayed
+        signup_link = self.browser.find_element_by_link_text('Sign Up')
+        self.assertEqual(signup_link.is_displayed(), True)
+        login_link = self.browser.find_element_by_link_text('Log In')
+        self.assertEqual(login_link.is_displayed(), True)
+
+        # check we are still at homepage
+        self.assertEqual(self.browser.title, 'PTSD Project')
+
 
 class TestSignUp(unittest.TestCase):
     """ This class tests user using SignUp page, filling out form. """
