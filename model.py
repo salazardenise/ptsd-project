@@ -2,10 +2,10 @@
 
 from flask_sqlalchemy import SQLAlchemy
 
-""" This is the connection to the PostgreSQL database, 
+""" This is the connection to the PostgreSQL database,
 obtained through the Flask-SQLAlchemy helper library. """
 
-db = SQLAlchemy();
+db = SQLAlchemy()
 
 ##############################################################################
 # Model definitions
@@ -16,25 +16,25 @@ class User(db.Model):
     __tablename__ = 'users'
 
     user_id = db.Column(db.Integer,
-                   primary_key=True,
-                   autoincrement=True)
+                        primary_key=True,
+                        autoincrement=True)
     username = db.Column(db.String(100),
                          nullable=False)
     password = db.Column(db.String(100),
                          nullable=False)
-    salt = db.Column(db.String(100), 
-                        nullable=False)
+    salt = db.Column(db.String(100),
+                     nullable=False)
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
     email = db.Column(db.String(100))
     phone = db.Column(db.String(100))
 
     facilities = db.relationship('Facility',
-                                secondary='users_facilities')
+                                 secondary='users_facilities')
     recordings = db.relationship('Recording',
                                  secondary='users_recordings')
     messages = db.relationship('Message',
-                                secondary='users_messages')
+                               secondary='users_messages')
 
     def __repr__(self):
         return f'<User user_id:{self.user_id} username:{self.username}>'
@@ -45,8 +45,8 @@ class ProgramStaging(db.Model):
     __tablename__ = 'programs_staging'
 
     programstaging_id = db.Column(db.Integer,
-                   primary_key=True,
-                   autoincrement=True)
+                                  primary_key=True,
+                                  autoincrement=True)
     address = db.Column(db.String(100), nullable=False)
     city = db.Column(db.String(100), nullable=False)
     fac_id = db.Column(db.Integer, nullable=False)
@@ -63,7 +63,7 @@ class Facility(db.Model):
 
     __tablename__ = 'facilities'
 
-    fac_id = db.Column(db.Integer, 
+    fac_id = db.Column(db.Integer,
                        primary_key=True,
                        autoincrement=True)
     fac_name = db.Column(db.String(500), nullable=False)
@@ -135,8 +135,8 @@ class Recording(db.Model):
     __tablename__ = 'recordings'
 
     recording_id = db.Column(db.Integer,
-                   primary_key=True,
-                   autoincrement=True)
+                             primary_key=True,
+                             autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500), nullable=False)
     file_path = db.Column(db.String(500), nullable=False)
@@ -152,8 +152,8 @@ class UserRecording(db.Model):
     __tablename__ = 'users_recordings'
 
     userrecording_id = db.Column(db.Integer,
-                   primary_key=True,
-                   autoincrement=True)
+                                 primary_key=True,
+                                 autoincrement=True)
     user_id = db.Column(db.Integer,
                         db.ForeignKey('users.user_id'),
                         nullable=False)
@@ -170,8 +170,8 @@ class Message(db.Model):
     __tablename__ = 'messages'
 
     message_id = db.Column(db.Integer,
-                   primary_key=True,
-                   autoincrement=True)
+                           primary_key=True,
+                           autoincrement=True)
     message_type = db.Column(db.String(100), nullable=False)
     message = db.Column(db.String(500), nullable=False)
 
@@ -186,14 +186,14 @@ class UserMessage(db.Model):
     __tablename__ = 'users_messages'
 
     usermessage_id = db.Column(db.Integer,
-                   primary_key=True,
-                   autoincrement=True)
+                               primary_key=True,
+                               autoincrement=True)
     user_id = db.Column(db.Integer,
                         db.ForeignKey('users.user_id'),
                         nullable=False)
     message_id = db.Column(db.Integer,
-                             db.ForeignKey('messages.message_id'),
-                             nullable=False)
+                           db.ForeignKey('messages.message_id'),
+                           nullable=False)
 
     def __repr__(self):
         return f'<UserMessage usermessage_id:{self.usermessage_id} user_id:{self.user_id} message_id:{self.message_id}>'
