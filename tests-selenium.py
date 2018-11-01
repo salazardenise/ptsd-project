@@ -16,7 +16,7 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 
 # The Keys class provide keys in the keyboard like RETURN, F1, ALT etc.
 # from selenium.webdriver.common.keys import Keys
-# from selenium.common.exceptions i mport NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 
 # import server
 # from server import app
@@ -67,7 +67,7 @@ class TestHomepage(unittest.TestCase):
 
     def test_click_logout(self):
         """ Check that after logging in, user can click logout. """
-    
+
         # first go to login
         self.browser.get('http://localhost:5000/login')
 
@@ -565,12 +565,12 @@ class TestPrograms(unittest.TestCase):
 
         # since no user is logged in, there should be no solid favorite star
         try:
-            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'fas')))
-            not_found = False
-        except:
-            not_found = True
+            WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CLASS_NAME, 'fas fa-star')))
+            found = True
+        except TimeoutException:
+            found = False
 
-        assert not_found
+        self.assertEqual(found, False)
 
     def test_logged_in_user_perform_search_solid_star_displayed(self):
         """ Test that a logged in user can perform a search and see their favorite facilities """
@@ -632,19 +632,20 @@ class TestRecordings(unittest.TestCase):
         self.assertEqual(self.browser.title, 'Recordings')
 
     def test_no_user_logged_in_no_solid_stars(self):
-        """ Test that a user (not logged in) sees no solid stars & cannot favoite recordings. """
+        """ Test that a user (not logged in) sees no solid stars. """
 
         self.browser.get('http://localhost:5000/recordings')
         first_not_favorite_star = self.browser.find_element_by_class_name('far')
         self.assertEqual(first_not_favorite_star.is_displayed(), True)
 
+        # since no user is logged in, there should be no solid favorite star
         try:
-            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'fas')))
-            not_found = False
-        except:
-            not_found = True
+            WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CLASS_NAME, 'fas')))
+            found = True
+        except TimeoutException:
+            found = False
 
-        assert not_found
+        self.assertEqual(found, False)
 
     def test_no_user_logged_in_clicks_on_star_see_error_message(self):
         """ Test that a user (not logged in) clicks on a star, then sees an error message. """
@@ -653,14 +654,14 @@ class TestRecordings(unittest.TestCase):
         first_star = self.browser.find_element_by_class_name('recording-star')
         first_star.click()
 
-        # no star becomes solid
+        # since no user is logged in, there should be no solid favorite star
         try:
-            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'fas')))
-            not_found = False
-        except:
-            not_found = True
+            WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CLASS_NAME, 'fas')))
+            found = True
+        except TimeoutException:
+            found = False
 
-        assert not_found
+        self.assertEqual(found, False)
 
         # check that error message pops up
         programs_error_message = self.browser.find_element_by_id('recordingsErrorMessage')
@@ -718,12 +719,12 @@ class TestMessages(unittest.TestCase):
         self.assertEqual(first_not_favorite_star.is_displayed(), True)
 
         try:
-            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'fas')))
-            not_found = False
-        except:
-            not_found = True
+            WebDriverWait(self.browser, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'fas')))
+            found = True
+        except TimeoutException:
+            found = False
 
-        assert not_found
+        self.assertEqual(found, False)
 
     def test_user_logged_in_yes_solid_stars(self):
         """ Test that a user that is logged in sees their favortie recordings as solid stars. """
