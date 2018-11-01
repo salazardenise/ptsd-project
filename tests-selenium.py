@@ -563,6 +563,59 @@ class TestPrograms(unittest.TestCase):
         programs_list = WebDriverWait(self.browser, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'programsList')))
         self.assertEqual(programs_list.is_displayed(), True)
 
+        # since no user is logged in, there should be no solid favorite star
+        try:
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'fas')))
+            not_found = False
+        except:
+            not_found = True
+
+        assert not_found
+
+    def test_logged_in_user_perform_search_solid_star_displayed(self):
+        """ Test that a logged in user can perform a search and see their favorite facilities """
+
+        # first go to login
+        self.browser.get('http://localhost:5000/login')
+
+        # fill required fields in form
+        username_input = self.browser.find_element_by_name('username')
+        username = 'DeniseCodes101'
+        username_input.send_keys(username)
+
+        password_input = self.browser.find_element_by_name('password')
+        password = 'Python101'
+        password_input.send_keys(password)
+
+        # send form
+        submit_button = self.browser.find_element_by_css_selector('input[type="submit"]')
+        submit_button.click()
+
+        # wait till users gets redirected to homepage
+        WebDriverWait(self.browser, 5).until(EC.title_is('PTSD Project'))
+
+        # now go to programs page
+        self.browser.get('http://localhost:5000/programs')
+
+        # fill required fields in form
+        search_text_input = self.browser.find_element_by_name('search_text')
+        search_text = 'CA'
+        search_text_input.send_keys(search_text)
+
+        #single_select_search_type_values = {'name': 'search_type', 'values': ['fac_name', 'city', 'state', 'zipcode']}
+        select = Select(self.browser.find_element(By.NAME, 'search_type'))
+        select.select_by_visible_text('state')
+
+        # send form
+        submit_button = self.browser.find_element_by_css_selector('button[type="submit"]')
+        submit_button.click()
+
+        # this causes map and table to show
+        # check that one of the stars is solid (favorited already)
+        WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CLASS_NAME, 'fas')))
+        first_favorite_star = self.browser.find_element_by_tag_name('i')
+        self.assertEqual(first_favorite_star.is_displayed(), True)
+
 class TestRecordings(unittest.TestCase):
     """ this class tests user using recordings page. """
 
@@ -578,6 +631,70 @@ class TestRecordings(unittest.TestCase):
         self.browser.get('http://localhost:5000/recordings')
         self.assertEqual(self.browser.title, 'Recordings')
 
+    def test_no_user_logged_in_no_solid_stars(self):
+        """ Test that a user (not logged in) sees no solid stars & cannot favoite recordings. """
+
+        self.browser.get('http://localhost:5000/recordings')
+        first_not_favorite_star = self.browser.find_element_by_class_name('far')
+        self.assertEqual(first_not_favorite_star.is_displayed(), True)
+
+        try:
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'fas')))
+            not_found = False
+        except:
+            not_found = True
+
+        assert not_found
+
+    def test_no_user_logged_in_clicks_on_star_see_error_message(self):
+        """ Test that a user (not logged in) clicks on a star, then sees an error message. """
+
+        self.browser.get('http://localhost:5000/recordings')
+        first_star = self.browser.find_element_by_class_name('recording-star')
+        first_star.click()
+
+        # no star becomes solid
+        try:
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'fas')))
+            not_found = False
+        except:
+            not_found = True
+
+        assert not_found
+
+        # check that error message pops up
+        programs_error_message = self.browser.find_element_by_id('recordingsErrorMessage')
+        self.assertEqual(programs_error_message.is_displayed(), True)
+
+
+    def test_user_logged_in_yes_solid_stars(self):
+        """ Test that a user that is logged in sees their favortie recordings as solid stars. """
+
+        # first go to login
+        self.browser.get('http://localhost:5000/login')
+
+        # fill required fields in form
+        username_input = self.browser.find_element_by_name('username')
+        username = 'DeniseCodes101'
+        username_input.send_keys(username)
+
+        password_input = self.browser.find_element_by_name('password')
+        password = 'Python101'
+        password_input.send_keys(password)
+
+        # send form
+        submit_button = self.browser.find_element_by_css_selector('input[type="submit"]')
+        submit_button.click()
+
+        # wait till users gets redirected to homepage
+        WebDriverWait(self.browser, 5).until(EC.title_is('PTSD Project'))
+
+        # now go to recordings page
+        self.browser.get('http://localhost:5000/recordings')
+
+        first_favorite_star = self.browser.find_element_by_class_name('fas')
+        self.assertEqual(first_favorite_star.is_displayed(), True)
+
 class TestMessages(unittest.TestCase):
     """ This class tests user using messages page. """
 
@@ -592,6 +709,49 @@ class TestMessages(unittest.TestCase):
 
         self.browser.get('http://localhost:5000/messages')
         self.assertEqual(self.browser.title, 'Messages')
+
+    def test_no_user_logged_in_no_solid_stars(self):
+        """ Test that a user that is not logged in sees no solid stars and cannot favoite a recording. """
+
+        self.browser.get('http://localhost:5000/messages')
+        first_not_favorite_star = self.browser.find_element_by_class_name('far')
+        self.assertEqual(first_not_favorite_star.is_displayed(), True)
+
+        try:
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'fas')))
+            not_found = False
+        except:
+            not_found = True
+
+        assert not_found
+
+    def test_user_logged_in_yes_solid_stars(self):
+        """ Test that a user that is logged in sees their favortie recordings as solid stars. """
+
+        # first go to login
+        self.browser.get('http://localhost:5000/login')
+
+        # fill required fields in form
+        username_input = self.browser.find_element_by_name('username')
+        username = 'DeniseCodes101'
+        username_input.send_keys(username)
+
+        password_input = self.browser.find_element_by_name('password')
+        password = 'Python101'
+        password_input.send_keys(password)
+
+        # send form
+        submit_button = self.browser.find_element_by_css_selector('input[type="submit"]')
+        submit_button.click()
+
+        # wait till users gets redirected to homepage
+        WebDriverWait(self.browser, 5).until(EC.title_is('PTSD Project'))
+
+        # now go to recordings page
+        self.browser.get('http://localhost:5000/messages')
+
+        first_favorite_star = self.browser.find_element_by_class_name('fas')
+        self.assertEqual(first_favorite_star.is_displayed(), True)
 
 # class TestEmailMessage(unittest.TestCase):
 #     """ This class tests user using email message page. """
