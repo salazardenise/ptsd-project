@@ -138,7 +138,7 @@ def load_programs_from_va_into_file():
 def load_facilities_and_programs_from_file_and_remove_duplicates():
     """ Load all rows from programs.txt file, remove duplicates, seed tables in database.
 
-    All rows from programs.txt goes into the programs_staging table. 
+    All rows from programs.txt goes into the programs_staging table.
     The data from the rows is then broken down into two tables: facilities and programs."""
 
     file = open('programs.txt', 'r')
@@ -232,7 +232,16 @@ def load_recordings():
     stream = Recording(name='Stream',
                        description="A flowing river has a relaxing and healing sound. Birds sing in the background while water flows.",
                        file_path='/static/audio/Bachlauf_Binaural_Biberach.mp3')
-    db.session.add_all([ocean, park, stream])
+    guitar = Recording(name='Guitar',
+                       description='Classic guitar sounds from guitarists Vito Kruger and Favio Rodriguez.',
+                       file_path='/static/audio/USA_Instrumental_Classic_Guitar_Vito_and_Favio_Mono.mp3')
+    forest = Recording(name='Forest',
+                       description='Listen to the therapeutic and relaxing sounds of a forest in Germany.',
+                       file_path='/static/audio/Germany_BadenWürttemberg_Forest_Birds_MorningSounds.mp3')
+    rain = Recording(name='Rain',
+                     description='Sounds of rain and thunder.',
+                     file_path='/static/audio/Indonesia_Bali_Ubud_RainOnPalmTrees_Thunder_.mp3')
+    db.session.add_all([ocean, park, stream, guitar, forest, rain])
     db.session.commit()
 
 def load_messages():
