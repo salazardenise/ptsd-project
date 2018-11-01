@@ -726,6 +726,45 @@ class TestMessages(unittest.TestCase):
 
         self.assertEqual(found, False)
 
+    def test_no_user_logged_in_clicks_star_see_error_message(self):
+        """ Test that a user that is not logged in clicks on star and sees error message. """
+
+        self.browser.get('http://localhost:5000/messages')
+        first_not_favorite_star = self.browser.find_element_by_class_name('far')
+        first_not_favorite_star.click()
+
+        messages_error_message = self.browser.find_element_by_id('messagesErrorMessage')
+        WebDriverWait(self.browser, 5).until(EC.visibility_of(messages_error_message))
+        result = self.browser.find_element_by_id('messagesErrorMessage')
+        self.assertIn('Sign Up or Log In to enable favoriting messages.',
+                      result.text)
+
+    def test_no_user_logged_in_clicks_email_see_error_message(self):
+        """ Test that a user that is not logged in clicks on Email button and sees error message. """
+
+        self.browser.get('http://localhost:5000/messages')
+        email_button = self.browser.find_element_by_class_name('email-button')
+        email_button.click()
+
+        email_error_message = self.browser.find_element_by_id('emailMessageErrorMessage')
+        WebDriverWait(self.browser, 5).until(EC.visibility_of(email_error_message))
+        result = self.browser.find_element_by_id('emailMessageErrorMessage')
+        self.assertIn('Sign Up or Log In to enable sending email message templates.',
+                      result.text)
+
+    def test_no_user_logged_in_clicks_text_see_error_message(self):
+        """ Test that a user that is not logged in clicks on Email button and sees error message. """
+
+        self.browser.get('http://localhost:5000/messages')
+        text_button = self.browser.find_element_by_class_name('text-button')
+        text_button.click()
+
+        text_error_message = self.browser.find_element_by_id('textMessageErrorMessage')
+        WebDriverWait(self.browser, 5).until(EC.visibility_of(text_error_message))
+        result = self.browser.find_element_by_id('textMessageErrorMessage')
+        self.assertIn('Sign Up or Log In to enable sending text message templates.',
+                      result.text)
+
     def test_user_logged_in_yes_solid_stars(self):
         """ Test that a user that is logged in sees their favortie recordings as solid stars. """
 
