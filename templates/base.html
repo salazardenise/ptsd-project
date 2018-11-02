@@ -16,6 +16,7 @@
     <!-- Personal styles -->
     <link rel="stylesheet" href="/static/css/signup.css">
     <link rel="stylesheet" href="/static/css/login.css">
+    <link rel="stylesheet" href="/static/css/user_profile.css">
     <link rel="stylesheet" href="/static/css/programs.css">
     <link rel="stylesheet" href="/static/css/recordings.css">
     <link rel="stylesheet" href="/static/css/messages.css">
@@ -47,6 +48,7 @@
                 <a href="/signup" style="color: blue;">Sign Up</a> or
                 <a href="/login" style="color: blue;">Log In</a>
                 {% else %}
+                <a href="/user_profile"><i class="fas fa-user" style="cursor: pointer;"></i></a>&nbsp;
                 <a href="/logout" style="color: blue;">Log Out</a>
                 {% endif %}
             </span>

@@ -217,6 +217,104 @@ class TestLoginLogout(unittest.TestCase):
             self.assertNotIn(b'user_id', session)
             self.assertIn(b'DeniseCodes101 successfully logged out.', result.data)
 
+class TestUserProfile(unittest.TestCase):
+    """ This class tests the user_profile routes. """
+
+    def setUp(self):
+        """ Set up before every test. """
+
+        self.client = app.test_client()
+        app.config['TESTING'] = True
+
+        # connect to test database
+        connect_to_db(app, 'postgresql:///testdb')
+
+        # create tables and add sample data
+        db.create_all()
+        load_dummy_data()
+
+    def tearDown(self):
+        """ Tear down after every test. """
+
+        db.session.close()
+        db.drop_all()
+
+    def test_user_profile_get_flask_route(self):
+        """ Test that programs displays programs page. """
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = 2
+
+        result = self.client.get('/user_profile')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(b'User Profile', result.data)
+
+    def test_user_profile_post_user_profile_changes(self):
+        """ Test that user can edit their attributes.
+
+        Initially, Roy Codes has an email roy@codes.com and no phone saved.
+        He will change his last_name, email, and phone in this test."""
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = 2
+
+        result = self.client.get('/user_profile')
+        self.assertIn(b'Roy', result.data)
+        self.assertIn(b'Codes', result.data)
+        self.assertIn(b'roy@codes.com', result.data)
+
+        data = {'first_name': 'Roy',
+                'last_name': 'Ninjaneer',
+                'email': 'roy@ninjaneer.com',
+                'phone': '111-111-1111'}
+        result = self.client.post('/user_profile', data=data, follow_redirects=True)
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(b'User profile saved.', result.data)
+
+        result = self.client.get('/user_profile')
+        self.assertIn(b'Roy', result.data)
+        self.assertIn(b'Ninjaneer', result.data)
+        self.assertIn(b'roy@ninjaneer.com', result.data)
+        self.assertIn(b'111-111-1111', result.data)
+        self.assertNotIn(b'roy@codes.com', result.data)
+
+    def test_user_profile_post_change_password_with_incorrect_password(self):
+        """ Test that user attempts to change password with incorrect current password.
+
+        Roy Codes's current password is Python101."""
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = 2
+
+        data = {'current_password': 'NinjaNinja101',
+                'new_password1': 'ILOVEJava101'}
+        result = self.client.post('/change_password', data=data)
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(b'"valid_password_change":false', result.data)
+
+    def test_user_profile_post_change_password_with_correct_password(self):
+        """ Test that user attempts to change password with correct current password.
+
+        Roy Codes's current password is Python101."""
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = 2
+
+        result = self.client.get('/user_profile')
+        self.assertIn(b'Roy', result.data)
+        self.assertIn(b'Codes', result.data)
+        self.assertIn(b'roy@codes.com', result.data)
+
+        data = {'current_password': 'Python101',
+                'new_password1': 'ILOVEJava101'}
+        result = self.client.post('/change_password', data=data)
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(b'"valid_password_change":true', result.data)
+
 class TestPrograms(unittest.TestCase):
     """ This class tests routes asscoiated with programs. """
 

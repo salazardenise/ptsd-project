@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <h1>User Profile</h1>
+  </div>
+  <div class="row">
+    <p>Edit your profile here, {{ user.username }}.</p>
+  </div>
+  <div class="row">
+    <div class="col-md-12" style="padding-left: 0">
+        <form id="editUserProfileForm" action="/user_profile" method="POST">
+            
+            <div class="form-group row">
+              <label for="userProfileFirstName" class="col-sm-2 col-form-label">First name: </label>
+              <div class="col-sm-10">
+                <input type="text" 
+                        id="userProfileFirstName"
+                        name="first_name"
+                        class="form-control"
+                        value="{{ user.first_name }}">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="userProfileLastName" class="col-sm-2 col-form-label">Last name: </label> 
+              <div class="col-sm-10">
+                  <input type="text" 
+                         id="userProfileLastName"
+                         name="last_name"
+                         class="form-control"
+                         value="{{ user.last_name }}">
+              </div>
+            </div>
+              
+            <div class="form-group row">
+              <label for="userProfileEmail" class="col-sm-2 col-form-label">Email:<sup><b>*</b></sup></label>
+              <div class="col-sm-10">
+                <input type="email" 
+                       name="email"
+                       id="userProfileEmail"
+                       required
+                       class="form-control"
+                       value="{{ user.email }}">
+              </div>
+            </div>
+            {% with phone = user.phone %}
+            {% if phone %}
+            <div class="form-group row">
+              <label for="userProfilePhone" class="col-sm-2 col-form-label">Phone number: </label>
+              <div class="col-sm-10">
+                  <input type="tel" 
+                         title="Phone must be of form 000-000-0000." 
+                         pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" 
+                         id="userProfilePhone"
+                         name="phone"
+                         class="form-control"
+                         value="{{ user.phone }}">
+                  <small id="phoneHelp" class="form-text text-muted">Phone must be of form 000-000-0000.</small>
+              </div>
+            </div>
+            {% else %}
+            <div class="form-group row">
+              <label for="userProfilePhone" class="col-sm-2 col-form-label">Phone number: </label>
+              <div class="col-sm-10">
+                  <input type="tel" 
+                         title="Phone must be of form 000-000-0000." 
+                         pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" 
+                         id="userProfilePhone"
+                         name="phone"
+                         class="form-control"
+                         placeholder="000-000-0000">
+                  <small id="phoneHelp" class="form-text text-muted">Phone must be of form 000-000-0000.</small>
+              </div>
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <input type="submit" 
+                   value="Save"
+                   class="btn btn-primary">
+        </form>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <p>Change your password here, {{ user.username }}.</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12" style="padding-left: 0">
+        <form id="editPasswordForm" action="/change_password" method="POST">
+
+            <div class="form-group row">
+              <label for="userProfileCurrentPassword" class="col-sm-2 col-form-label">Current Password:<sup><b>*</b></sup></label>
+              <div class="col-sm-10">
+                  <input type="text" 
+                      pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+                      title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+                      id="userProfileCurrentPassword" 
+                      name="current_password" 
+                      required
+                      class="form-control"
+                      placeholder="Password"
+                      aria-describedby="currentPasswordHelp">
+                  <small id="currentPasswordHelp" class="form-text text-muted">Password must contain at least one number and one uppercase and lowercase letter, and at lease 8 or more characters.</small>
+              </div>
+            </div>
+            
+            <div class="form-group row">
+              <label for="userProfilePassword1" class="col-sm-2 col-form-label">New Password:<sup><b>*</b></sup></label>
+              <div class="col-sm-10">
+                  <input type="text" 
+                      pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+                      title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+                      id="userProfilePassword1" 
+                      name="new_password1" 
+                      required
+                      class="form-control"
+                      placeholder="Password"
+                      aria-describedby="newPassword1Help">
+                  <small id="newPassword1Help" class="form-text text-muted">Password must contain at least one number and one uppercase and lowercase letter, and at lease 8 or more characters.</small>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="userProfilePassword2" class="col-sm-2 col-form-label">Re-enter new password:<sup><b>*</b></sup></label>
+              <div class="col-sm-10">
+                  <input type="text" 
+                          pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+                          title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" 
+                          id="userProfilePassword2" 
+                          name="new_password2" 
+                          required
+                          class="form-control"
+                          placeholder="Password"
+                          aria-describedby="newPassword2Help">
+                  <small id="newPassword2Help" class="form-text text-muted"> New password and re-entered new password must match.</small>
+              </div>
+            </div>
+
+            <input type="submit" 
+                   value="Change Password"
+                   class="btn btn-primary">
+        </form>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <p id="userProfileErrorMessage"></p>
+  </div>
+</div>
+{% endblock %}
+{% block personalScripts %}
+    <!-- Personal scripts -->
+    <script src="/static/js/user_profile.js"></script>
+{% endblock %}

@@ -63,8 +63,9 @@ def get_random_quote():
     quote_results = requests.get(healthruwords_url,
                                  params=params,
                                  headers=headers)
+    media = quote_results.json()[0]['media']
 
-    if quote_results.status_code == 200:
+    if quote_results.status_code == 200 and media != 'https://healthruwords.com/wp-content/uploads/2014/06/height':
         quote = quote_results.json()[0]
     else:
         # default quote if call to API fails
@@ -170,6 +171,75 @@ def logout():
     del session['user_id']
 
     return redirect('/')
+
+@app.route('/user_profile', methods=['GET'])
+def display_user_profile():
+    """ Display user profile page. """
+    if 'user_id' in session:
+        user_id = session.get('user_id', None)
+        user = User.query.filter_by(user_id=user_id).first()
+        return render_template('user_profile.html', user=user)
+
+    flash('Sign Up or Log In in order to see your user profile.')
+    return redirect('/')
+
+@app.route('/user_profile', methods=['POST'])
+def edit_user_profile():
+    """ Save any changes the user made to their profile. """
+
+    if 'user_id' in session:
+        user_id = session.get('user_id')
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        if phone == '000-000-0000':
+            phone = None
+
+        updates = {'first_name': first_name,
+                   'last_name': last_name,
+                   'email': email,
+                   'phone': phone}
+        db.session.query(User).filter(User.user_id == user_id).update(updates)
+        db.session.commit()
+
+        flash('User profile saved.')
+        return redirect('/')
+
+    flash('Sign Up or Log In in order to see your user profile.')
+    return redirect('/')
+
+@app.route('/change_password', methods=['POST'])
+def change_password():
+    """ Changes user password and redirects to home. """
+
+    current_password_plain = request.form.get('current_password')
+    new_password_plain = request.form.get('new_password1')
+
+    result = {}
+    # Get user
+    user_id = session.get('user_id')
+    user = User.query.filter_by(user_id=user_id).first()
+
+    # Does current password match username?
+    current_salt = user.salt.encode('utf-8')
+    current_password_hash = hashlib.sha256(current_password_plain.encode('utf-8') + current_salt).hexdigest()
+    current_password_db_hash = user.password
+
+    if current_password_db_hash == current_password_hash:
+        result['valid_password_change'] = True
+        # password matches! now change the password
+        new_salt = binascii.hexlify(os.urandom(SALT_SIZE))
+        new_password_hash = hashlib.sha256(new_password_plain.encode('utf-8') + new_salt).hexdigest()
+        updates = {'password': new_password_hash,
+                   'salt': new_salt.decode('utf-8')}
+        db.session.query(User).filter(User.user_id == user_id).update(updates)
+        db.session.commit()
+    else:
+        result['valid_password_change'] = False
+
+    return jsonify(result)
+
 
 @app.route('/programs')
 def display_programs():
