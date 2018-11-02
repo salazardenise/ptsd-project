@@ -6,6 +6,7 @@ import base64
 from email.mime.text import MIMEText
 import hashlib
 import binascii
+from operator import attrgetter
 
 # third party imports
 import requests
@@ -300,7 +301,8 @@ def return_programs_of_facility():
     facility = Facility.query.filter_by(fac_id=fac_id).one()
 
     lst_of_programs = []
-    for program in facility.programs:
+    programs_sorted = sorted(list(facility.programs), key=attrgetter('program_name'))
+    for program in programs_sorted:
         program_dict = {}
 
         program_dict['program_id'] = program.program_id
