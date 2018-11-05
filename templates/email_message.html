@@ -51,7 +51,7 @@
                 </div>          
 
                 <div class="form-group">
-                    <label for="bodyMessageEmail"><h3>Message Body</h3></label>
+                    <h3><label for="bodyMessageEmail">Message Body</label></h3>
                     <br>
                     <textarea name="body_message" id="bodyMessageEmail"> {{ message.message }}</textarea>
                 </div>      
@@ -71,6 +71,7 @@
                 {{ user.first_name }} {{ user.last_name }}
             </div>
         </div>
+    </div>
     {% else %}
     <div class="row">
         <p><a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to enable sending email message templates.</p>
