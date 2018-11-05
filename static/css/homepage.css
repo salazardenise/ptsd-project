@@ -1,3 +1,12 @@
+#centerRandomQuote {
+    text-align: center; 
+    vertical-align:middle;
+}
+
 #randomQuote {
     border: 3px solid black;
+}
+
+.justifyText {
+    text-align: justify;
 }
