@@ -28,3 +28,8 @@ nav {
 .justifyText {
     text-align: justify;
 }
+
+.removePaddingLeftRight {
+    padding-right: 0; 
+    padding-left: 0;
+}

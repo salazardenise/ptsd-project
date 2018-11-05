@@ -10,7 +10,7 @@
 
     {% if 'user_id' in session %}
     <div class="row">
-        <div class="col-sm-6" style="padding-right: 0; padding-left: 0;">
+        <div class="col-sm-6 removePaddingLeftRight">
             <h2>To</h2>
             <form action="email_message" id="emailMessageForm" method="POST">
                 <input type="hidden" id="fromFirstNameEmail" name="from_first_name" value=" {{ user.first_name }}">
@@ -59,7 +59,7 @@
                 <input type="submit" value="Send Email" class="btn btn-primary">
             </form>
         </div>
-        <div class="col-sm-4" style="padding-right: 0; padding-left: 0;">
+        <div class="col-sm-4 removePaddingLeftRight">
             <h2>Preview</h2>
             <div id="previewMessage">
                 Hi,
