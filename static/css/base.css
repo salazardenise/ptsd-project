@@ -1,13 +1,26 @@
+body {
+    background-color: ##F7F9F9;
+}
+
 nav {
-    background-color: #e3f2fd;
+    background-color: #B6DCFE; /* light blue */
 }
 
 .navbar-light .navbar-text a {
-    color: blue;
+    color: #090C9B; /* bright blue */
+}
+
+h1, h2, h3, h4 {
+    color: #00A676; /* like a teal green */
 }
 
 .fa-user {
     cursor: pointer;
+}
+
+h2 .fas,
+tr .fas {
+    color: #090C9B;
 }
 
 #logoImg {

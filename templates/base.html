@@ -56,26 +56,28 @@
             </span>
         </div>
     </nav>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-1">
-                <img id="logoImg" class="img-fluid" src="/static/img/finding-peace-logo.png" alt="finding peace logo of a bird">
-            </div>
-            <div class="col-sm-5">
-                <h1>finding peace</h1>
-                <h3>a resource for people with PTSD</h3>
-            </div>
-            <div id="flashMessage" class="col-sm-5">
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <span class="alert alert-primary">{{ message }}</span>
-                    {% endfor %}
-                {% endif %}
-                {% endwith %}
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-1">
+                    <img id="logoImg" class="img-fluid" src="/static/img/finding-peace-logo.png" alt="finding peace logo of a bird">
+                </div>
+                <div class="col-sm-5">
+                    <h1>finding peace</h1>
+                    <h3>a resource for people with PTSD</h3>
+                </div>
+                <div id="flashMessage" class="col-sm-5">
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <span class="alert alert-primary">{{ message }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                </div>
             </div>
         </div>
-    </div>
+    </header>
     <hr class="removeMarginBottom">
     {% block content %}
         CONTENT GOES HERE
