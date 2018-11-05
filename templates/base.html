@@ -50,7 +50,7 @@
                 <a href="/signup">Sign Up</a> or
                 <a href="/login">Log In</a>
                 {% else %}
-                <a href="/user_profile"><i class="fas fa-user" style="cursor: pointer;"></i></a>&nbsp;
+                <a href="/user_profile"><i class="fas fa-user"></i></a>&nbsp;&nbsp;
                 <a href="/logout">Log Out</a>
                 {% endif %}
             </span>
@@ -59,16 +59,13 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-1">
-                <img class="img-fluid" style="min-width: 3em; max-width: 5em;" src="/static/img/finding-peace-logo.png" alt="finding peace logo of a bird">
+                <img id="logoImg" class="img-fluid" src="/static/img/finding-peace-logo.png" alt="finding peace logo of a bird">
             </div>
             <div class="col-sm-5">
                 <h1>finding peace</h1>
                 <h3>a resource for people with PTSD</h3>
             </div>
-            <div class="col-sm-5" 
-                 style="display: flex;
-                        justify-content: center;
-                        align-items: center;">
+            <div id="flashMessage" class="col-sm-5">
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
                     {% for message in messages %}
@@ -79,7 +76,7 @@
             </div>
         </div>
     </div>
-    <hr style="margin-bottom: 0;">
+    <hr class="removeMarginBottom">
     {% block content %}
         CONTENT GOES HERE
     {% endblock %}
