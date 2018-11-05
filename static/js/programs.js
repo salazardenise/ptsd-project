@@ -165,17 +165,19 @@ $(document).on('click', '.facility-name', (evt) => {
     let fac_id = facilityName.data('facid');
     if (facilityName.find('ul').length == 0) {
         $.get('/programs_by_facility.json', {'fac_id': fac_id}, (results) => {
-            let lst = "<ul class='programsList'>";
+            let lst = "<ul class='programsList' style='display: none'>";
             for (let i in results) {
                 lst += `<li>${results[i].program_name}</li>`
             }
             lst += '</ul>'
             facilityName.append(lst);
+            facilityName.find('ul').slideDown('slow')
             // do not allow clicking on facilityName's children
             facilityName.children().click( (e) => {e.stopPropagation()});
         });
     } else {
         let programs_lst = facilityName.find('ul');
-        programs_lst.remove();
+        // programs_lst.remove();
+        programs_lst.slideToggle('slow');
     }
 });
