@@ -680,7 +680,7 @@ class TestMessages(unittest.TestCase):
 
         result = self.client.get('/messages')
         self.assertEqual(result.status_code, 200)
-        self.assertIn(b'<h1>Message Templates</h1>', result.data)
+        self.assertIn(b'<h1>Send Message</h1>', result.data)
         self.assertNotIn(b'fas fa-star', result.data)
 
     def test_messages_flask_route_user_logged_in(self):
@@ -694,7 +694,7 @@ class TestMessages(unittest.TestCase):
 
         result = self.client.get('/messages')
         self.assertEqual(result.status_code, 200)
-        self.assertIn(b'<h1>Message Templates</h1>', result.data)
+        self.assertIn(b'<h1>Send Message</h1>', result.data)
         self.assertIn(b'fas fa-star', result.data)
 
     def test_toggle_message_to_favorite_user_logged_in(self):

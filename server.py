@@ -64,9 +64,8 @@ def get_random_quote():
     quote_results = requests.get(healthruwords_url,
                                  params=params,
                                  headers=headers)
-    media = quote_results.json()[0]['media']
 
-    if quote_results.status_code == 200 and media != 'https://healthruwords.com/wp-content/uploads/2014/06/height':
+    if quote_results.status_code == 200 and quote_results.json()[0]['media'] != 'https://healthruwords.com/wp-content/uploads/2014/06/height':
         quote = quote_results.json()[0]
     else:
         # default quote if call to API fails
