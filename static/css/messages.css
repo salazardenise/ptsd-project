@@ -1,6 +1,8 @@
 .message-description {
     height: 1.5em;
     overflow: hidden;
+    text-align: justify; 
+    padding-right: 5%;
 }
 
 .message-description:hover{
@@ -20,4 +22,9 @@
 
 .message-star {
     cursor: pointer;
+}
+
+.messageDiv {
+    padding-right: 0; 
+    padding-left: 0;
 }
