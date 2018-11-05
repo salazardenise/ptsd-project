@@ -63,11 +63,14 @@
                 <h1>finding peace</h1>
                 <h3>a resource for people with PTSD</h3>
             </div>
-            <div class="col-sm-5" style="text-align: center; vertical-align: middle">
+            <div class="col-sm-5" 
+                 style="display: flex;
+                        justify-content: center;
+                        align-items: center;">
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
                     {% for message in messages %}
-                        <span style="background-color: #ffff99; border-radius: 5px">{{ message }}</span>
+                        <span class="alert alert-primary">{{ message }}</span>
                     {% endfor %}
                 {% endif %}
                 {% endwith %}
