@@ -453,6 +453,10 @@ def display_email_message():
         user_id = session['user_id']
         user = User.query.filter(User.user_id == user_id).one()
 
+        if 'message_id' not in session:
+            flash('Access sending an email message through by going to the /messages page first.')
+            return redirect('/')
+
         message_id = session.get('message_id')
         message = Message.query.filter(Message.message_id == message_id).one()
 
