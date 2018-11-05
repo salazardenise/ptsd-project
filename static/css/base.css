@@ -1,5 +1,6 @@
 body {
     background-color: ##F7F9F9;
+    font-family: 'Open Sans', sans-serif;
 }
 
 nav {
@@ -12,6 +13,7 @@ nav {
 
 h1, h2, h3, h4 {
     color: #00A676; /* like a teal green */
+    font-family: 'Arvo', serif;
 }
 
 .fa-user {
