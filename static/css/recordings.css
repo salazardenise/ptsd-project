@@ -12,3 +12,8 @@
     text-align: justify;
     padding-right: 5%;
 }
+video {
+    max-height: 300px;
+    min-width: 100%;
+    object-fit: fill;
+}
