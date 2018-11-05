@@ -16,7 +16,7 @@
     </div>
     <div class="row">
         {% for recording in recordings %}
-        <div class="col-sm-12 col-md-6 mt-3" style="padding-right: 0; padding-left: 0;">
+        <div class="col-sm-12 col-md-6 mt-3 recordingDiv">
             <h2>{% if recording[1] != None %}
                  <i class="recording-star fas fa-star" data-recordingid="{{ recording[0].recording_id }}"></i>
                 {% else %}
@@ -24,7 +24,7 @@
                 {% endif %}
                 {{ recording[0].name }}
             </h2>
-            <p style="text-align: justify; padding-right: 5%;">{{ recording[0].description }}</p>
+            <p>{{ recording[0].description }}</p>
             <audio controls>
                 <source src="{{ recording[0].file_path }}" type="audio/wav">
             </audio>

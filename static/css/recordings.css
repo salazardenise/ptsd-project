@@ -4,3 +4,11 @@
 .recording-star {
     cursor: pointer;
 }
+.recordingDiv {
+    padding-right: 0; 
+    padding-left: 0;
+}
+.recordingDiv p {
+    text-align: justify;
+    padding-right: 5%;
+}
