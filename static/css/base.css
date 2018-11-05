@@ -24,3 +24,7 @@ nav {
 .removeMarginBottom {
     margin-bottom: 0;
 }
+
+.justifyText {
+    text-align: justify;
+}
