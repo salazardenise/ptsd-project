@@ -1,8 +1,10 @@
 #centerRandomQuote {
     text-align: center; 
     vertical-align:middle;
+    display: none; 
 }
 
 #randomQuote {
     border: 3px solid black;
+
 }
