@@ -54,7 +54,7 @@ def load_dummy_data():
                         password=hashlib.sha256('PythonPython101'.encode('utf-8') + salt).hexdigest(),
                         salt=salt.decode('utf-8'),
                         first_name='Denise',
-                        last_name='Denise',
+                        last_name='Salazar',
                         email='denise.salazar.1210@gmail.com')
 
     angels = Facility(address='100 A St', city='CityOfAngels',
@@ -301,7 +301,7 @@ def load_dummy_users_with_rest_of_data(needs_updates):
                         password=hashlib.sha256('PythonPython101'.encode('utf-8') + salt).hexdigest(),
                         salt=salt.decode('utf-8'),
                         first_name='Denise',
-                        last_name='Denise',
+                        last_name='Salazar',
                         email='denise.salazar.1210@gmail.com')
 
     db.session.add_all([denise, roy, leo, turing, denisedenise])
