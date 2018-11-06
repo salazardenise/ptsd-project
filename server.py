@@ -170,6 +170,18 @@ def logout():
     flash(f'{username} successfully logged out.')
     del session['user_id']
     if 'credentials' in session:
+        # revoke and clear credenitals:
+        # credentials = google.oauth2.credentials.Credentials(**session['credentials'])
+
+        # revoke = requests.post('https://accounts.google.com/o/oauth2/revoke',
+        #                        params={'token': credentials.token},
+        #                       headers = {'content-type': 'application/x-www-form-urlencoded'})
+
+        # status_code = getattr(revoke, 'status_code')
+        # if status_code == 200:
+        #     print('\n\nCredentials successfully revoked.')
+        # else:
+        #     print('\n\nAn error occurred.')
         del session['credentials']
 
     return redirect('/')
@@ -593,7 +605,8 @@ def authorize():
         login_hint=user.email,
         # Enable incremental authorization. Recommended as a best practice.
         include_granted_scopes='true')
-
+    print('\n\n')
+    print(authorization_url)
     # Store the state so the callback can verify the auth server response.
     session['state'] = state
 
@@ -608,6 +621,11 @@ def oauth2callback():
         print('\n Error occured')
         flash('You must approve app access to send an email.')
         return redirect('/')
+
+    if 'error' in request.args:
+        if request.args.get('error') == 'access_denied':
+            return 'You denied access.'
+        return 'Error encountered.'
 
     # Specify the state when creating the flow in the callback so that it can
     # verified in the authorization server response.
