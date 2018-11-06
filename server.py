@@ -65,7 +65,7 @@ def get_random_quote():
                                  params=params,
                                  headers=headers)
 
-    if quote_results.status_code == 200 and quote_results.json()[0]['media'] != 'https://healthruwords.com/wp-content/uploads/2014/06/height':
+    if quote_results.status_code == 200 and quote_results.json()[0]['media'].endswith('height'):
         quote = quote_results.json()[0]
     else:
         # default quote if call to API fails
@@ -169,6 +169,8 @@ def logout():
     username = db.session.query(User.username).filter_by(user_id=user_id).one()[0]
     flash(f'{username} successfully logged out.')
     del session['user_id']
+    if 'credentials' in session:
+        del session['credentials']
 
     return redirect('/')
 
@@ -433,7 +435,8 @@ def store_message_id():
     """ Stores message_id to the session. """
     message_id = request.args.get('message_id')
     session['message_id'] = message_id
-    return redirect('/email_message')
+    return jsonify({'added': True})
+    # return redirect('/email_message')
 
 @app.route('/email_message', methods=['GET'])
 def display_email_message():
@@ -452,6 +455,10 @@ def display_email_message():
 
         user_id = session['user_id']
         user = User.query.filter(User.user_id == user_id).one()
+        print('\n')
+        print('user_id in session: ' + str(user_id))
+        print('username for that user_id: ' + user.username)
+        print('email for that user_id: ' + user.email)
 
         if 'message_id' not in session:
             flash('Access sending an email message through by going to the /messages page first.')
@@ -495,10 +502,12 @@ def process_email_message():
     # send message
     message_status = load_message_and_send(message)
     # message_status['labelIds'] is a list of strings
-    if 'SENT' in message_status['labelIds']:
+    if message_status is None:
+        flash('Email message was not sent. Make sure you have a gmail address in your user profile.')
+    elif 'SENT' in message_status['labelIds']:
         flash('email message was sent')
     else:
-        flash('email message was not sent')
+        flash('Email message was not sent')
     return redirect('/')
 
 def load_message_and_send(created_message):
@@ -510,6 +519,7 @@ def load_message_and_send(created_message):
     send_service = googleapiclient.discovery.build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
 
     message_status = send_message(send_service, 'me', created_message)
+    # message_status is None if invalid user id specified in request/Delegation denied
 
     # Save credentials back to session in case access token was refreshed.
     # ACTION ITEM: In a production app, you likely want to save these
@@ -636,7 +646,7 @@ def display_text_message():
 
 @app.route('/validate_logged_in')
 def validate_logged_in():
-    """" valides if a user is logged in or not. """
+    """" validates if a user is logged in or not. """
     if 'user_id' in session:
         results = {'user_logged_in': True}
     else:
