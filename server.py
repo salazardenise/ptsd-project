@@ -446,33 +446,29 @@ def display_email_message():
     i.e. A user that is not logged in should not be able to send an email message.
     """
 
-    # check if user is logged in
-    if 'user_id' in session and 'message_id' in session:
+    # check if user in session
+    if 'user_id' not in session:
+        flash('Sign Up or Log In to enable sending email message templates.')
+        return redirect('/')
 
-        # check if user authorized app, if not, redirect to authorize route
-        if 'credentials' not in session:
-            return redirect('/authorize')
+    # check if message_id in session
+    if 'message_id' not in session:
+        flash('Access sending an email message through by going to the /messages page first.')
+        return redirect('/')
 
-        user_id = session['user_id']
-        user = User.query.filter(User.user_id == user_id).one()
-        print('\n')
-        print('user_id in session: ' + str(user_id))
-        print('username for that user_id: ' + user.username)
-        print('email for that user_id: ' + user.email)
+    # check if user authorized app, if not, redirect to authorize route
+    if 'credentials' not in session:
+        return redirect('/authorize')
 
-        if 'message_id' not in session:
-            flash('Access sending an email message through by going to the /messages page first.')
-            return redirect('/')
+    user_id = session['user_id']
+    user = User.query.filter(User.user_id == user_id).one()
 
-        message_id = session.get('message_id')
-        message = Message.query.filter(Message.message_id == message_id).one()
+    message_id = session.get('message_id')
+    message = Message.query.filter(Message.message_id == message_id).one()
 
-        return render_template('email_message.html',
-                               message=message,
-                               user=user)
-
-    flash('Sign Up or Log In to enable sending email message templates.')
-    return redirect('/')
+    return render_template('email_message.html',
+                            message=message,
+                            user=user)
 
 @app.route('/email_message', methods=['POST'])
 def process_email_message():
@@ -518,7 +514,11 @@ def load_message_and_send(created_message):
 
     send_service = googleapiclient.discovery.build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
 
-    message_status = send_message(send_service, 'me', created_message)
+    user_id = session.get('user_id')
+    user = User.query.filter_by(user_id=user_id).one()
+
+    message_status = send_message(send_service, user.email, created_message)
+    # message_status = send_message(send_service, 'me', created_message)
     # message_status is None if invalid user id specified in request/Delegation denied
 
     # Save credentials back to session in case access token was refreshed.
@@ -552,10 +552,10 @@ def send_message(service, user_id, message):
     """Send an email message.
 
     Args:
-    service: Authorized Gmail API service instance.
-    user_id: User's email address. The special value "me"
-    can be used to indicate the authenticated user.
-    message: Message to be sent.
+        service: Authorized Gmail API service instance.
+        user_id: User's email address. The special value "me"
+        can be used to indicate the authenticated user.
+        message: Message to be sent.
 
     Returns:
     Sent Message.
@@ -573,25 +573,41 @@ def authorize():
     """ authorize route sends user to google oauth page """
 
     # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
+    # Use the client_secret.json file to identify the application requesting
+    # authorization. The client ID (from that file) and access scopes are required.
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(CLIENT_SECRETS_FILE, scopes=SCOPES)
 
+    # Indicate where the API server will redirect the user after the user completes
+    # the authorization flow. The redirect URI is required.
     flow.redirect_uri = url_for('oauth2callback', _external=True)
 
+    user_id = session.get('user_id')
+    user = User.query.filter_by(user_id=user_id).one()
+
+    # Generate URL for request to Google's OAuth 2.0 server.
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
         # re-prompting the user for permission. Recommended for web server apps.
         access_type='offline',
+        #which email is trying to login?
+        login_hint=user.email,
         # Enable incremental authorization. Recommended as a best practice.
         include_granted_scopes='true')
 
     # Store the state so the callback can verify the auth server response.
     session['state'] = state
 
+    # Redirect to Google's OAuth 2.0 server
     return redirect(authorization_url)
 
 @app.route('/oauth2callback')
 def oauth2callback():
     """ The route google oauth goes to when user authorizes this app. """
+
+    if 'error' in request.args:
+        print('\n Error occured')
+        flash('You must approve app access to send an email.')
+        return redirect('/')
 
     # Specify the state when creating the flow in the callback so that it can
     # verified in the authorization server response.
@@ -602,6 +618,7 @@ def oauth2callback():
 
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
     authorization_response = request.url
+    # now turn those parameters into a token.
     flow.fetch_token(authorization_response=authorization_response)
 
     # Store credentials in the session.
