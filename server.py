@@ -769,10 +769,10 @@ def process_text_message():
     return redirect('/')
 
 if __name__ == '__main__':
-    # debug must be set to True at the point that DebugToolbarExtension is invoked
-    app.debug = True
-    # make sure templates, etc. are not cached in debug mode
-    app.jinja_env.auto_reload = app.debug
+    # # debug must be set to True at the point that DebugToolbarExtension is invoked
+    # app.debug = True
+    # # make sure templates, etc. are not cached in debug mode
+    # app.jinja_env.auto_reload = app.debug
     # DebugToolbarExtension(app)
     connect_to_db(app)
     # When running locally, disable OAuthlib's HTTPs verification.
