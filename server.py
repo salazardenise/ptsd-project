@@ -605,8 +605,7 @@ def authorize():
         login_hint=user.email,
         # Enable incremental authorization. Recommended as a best practice.
         include_granted_scopes='true')
-    print('\n\n')
-    print(authorization_url)
+    
     # Store the state so the callback can verify the auth server response.
     session['state'] = state
 
