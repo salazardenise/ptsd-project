@@ -465,7 +465,7 @@ def display_email_message():
 
     # check if message_id in session
     if 'message_id' not in session:
-        flash('Access sending an email message through by going to the /messages page first.')
+        flash('Access sending an email message by going to the /messages page first.')
         return redirect('/')
 
     # check if user authorized app, if not, redirect to authorize route
@@ -663,20 +663,23 @@ def display_text_message():
     This route should only be called when a user is logged in.
     i.e. A user that is not logged in should not be able to send a text message.
     """
+    if 'message_id' not in request.args:
+        flash('Access sending a text message by going to the /messages page first.')
+        return redirect('/')
+
+    if 'user_id' not in session:
+        flash('Sign Up or Log In to enable sending text message templates.')
+        return redirect('/')
 
     message_id = request.args.get('message_id')
     message = Message.query.filter(Message.message_id == message_id).one()
 
-    if 'user_id' in session:
-        user_id = session['user_id']
-        user = User.query.filter(User.user_id == user_id).one()
+    user_id = session['user_id']
+    user = User.query.filter(User.user_id == user_id).one()
 
-        return render_template('text_message.html',
-                               message=message,
-                               user=user)
-
-    flash('Sign Up or Log In to enable sending text message templates.')
-    return redirect('/')
+    return render_template('text_message.html',
+                           message=message,
+                           user=user)
 
 @app.route('/validate_logged_in')
 def validate_logged_in():
