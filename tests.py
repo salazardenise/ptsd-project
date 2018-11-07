@@ -892,10 +892,11 @@ class TestTextMessage(unittest.TestCase):
         def _send_text_message(from_, body, to):
 
             class Message():
+                """ simple Message mock with error_code attribute. """
 
                 def __init__(self):
                     self.error_code = None
-            
+
             new_message = Message()
             return new_message
 
