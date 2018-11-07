@@ -7,6 +7,7 @@ from email.mime.text import MIMEText
 import hashlib
 import binascii
 from operator import attrgetter
+import re
 
 # third party imports
 import requests
@@ -547,13 +548,13 @@ def create_message(sender, to, subject, message_text):
     """Create a message for an email.
 
     Args:
-    sender: Email address of the sender.
-    to: Email address of the receiver.
-    subject: The subject of the email message.
-    message_text: The text of the email message.
+        sender: Email address of the sender.
+        to: Email address of the receiver.
+        subject: The subject of the email message.
+        message_text: The text of the email message.
 
     Returns:
-    An object containing a base64url encoded email object.
+        An object containing a base64url encoded email object.
     """
     message = MIMEText(message_text)
     message['to'] = to
@@ -573,7 +574,7 @@ def send_message(service, user_id, message):
         message: Message to be sent.
 
     Returns:
-    Sent Message.
+        Sent Message.
     """
     try:
         message = (service.users().messages().send(userId=user_id, body=message)
@@ -624,12 +625,12 @@ def oauth2callback():
         flash('You must approve app access to send an email.')
         return redirect('/')
 
-    if 'error' in request.args:
-        if request.args.get('error') == 'access_denied':
-            return 'You denied access.'
-        return 'Error encountered.'
+    # if 'error' in request.args:
+    #     if request.args.get('error') == 'access_denied':
+    #         return 'You denied access.'
+    #     return 'Error encountered.'
 
-    # Specify the state when creating the flow in the callback so that it can
+    # Specify the state when creating the flow in the callback so that it can be
     # verified in the authorization server response.
     state = session['state']
 
@@ -693,6 +694,18 @@ def validate_logged_in():
         results = {'user_logged_in': False}
     return jsonify(results)
 
+def create_text_message_content(to_name, body_message, from_first_name, from_last_name):
+    """ Create text message content. """
+    content_message = 'Hi'
+    if to_name:
+        content_message += ' ' + to_name
+    content_message += ', \n\n'
+    content_message += body_message + '\n\n'
+    content_message += 'Best, ' + from_first_name + ' ' + from_last_name
+    content_message += '\n\n'
+    content_message += 'This message was sent from the Finding Peace website.'
+    return content_message
+
 def send_text_message(from_, body, to):
     """ Send a text message. """
 
@@ -704,37 +717,43 @@ def send_text_message(from_, body, to):
     message = client.messages.create(from_=from_,
                                      body=body,
                                      to=to)
+    return message
 
 @app.route('/text_message', methods=["POST"])
 def process_text_message():
     """ Process sending a text message. """
 
-    # message info
+    # extract message info
     from_first_name = request.form.get('from_first_name')
     from_last_name = request.form.get('from_last_name')
     to_name = request.form.get('to_name')
     body_message = request.form.get('body_message')
-    phone_raw = request.form.get('phone')
-    phone_list = phone_raw.split('-')
-    phone = ''.join(phone_list)
-    # print(phone)
-
     # create message
-    content_message = 'Hi'
-    if to_name:
-        content_message += ' ' + to_name
-    content_message += ', \n\n'
-    content_message += body_message + '\n\n'
-    content_message += 'Best, ' + from_first_name + ' ' + from_last_name
+    content_message = create_text_message_content(to_name=to_name,
+                                                  body_message=body_message,
+                                                  from_first_name=from_first_name,
+                                                  from_last_name=from_last_name)
+
+    # extract phone number ensure it is valid
+    phone_raw = request.form.get('phone')
+    if re.match(r'\d{3}[\-]\d{3}[\-]\d{4}', phone_raw) is False:
+        flash('Phone number entered was invalid.')
+        return redirect('/')
+    phone_list = phone_raw.split('-')
+    phone_without_country_code = ''.join(phone_list)
+    phone = '+1' + phone_without_country_code
 
     # phone numbers to use
-    # FOR DEMO PURPOSES,
-    # TWILIO TRAIL ACCOUNT ALLOWS SENDING TEXTS ONLY TO MY PHONE NUMBER
     from_ = os.environ['TWILIO_FROM_NUMBER']
-    to = os.environ['TWILIO_TO_NUMBER']
-    send_text_message(from_, content_message, to)
+    to_ = phone
 
-    flash(f'message sent to {to_name}')
+    # send text message
+    message = send_text_message(from_, content_message, to_)
+
+    if message.error_code is not None:
+        flash('Error sending message.')
+    else:
+        flash(f'Message sent to {to_name}.')
     return redirect('/')
 
 if __name__ == '__main__':
