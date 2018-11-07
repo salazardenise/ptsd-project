@@ -65,7 +65,7 @@ def get_random_quote():
                                  params=params,
                                  headers=headers)
 
-    if quote_results.status_code == 200 and quote_results.json()[0]['media'].endswith('height'):
+    if quote_results.status_code == 200 and not quote_results.json()[0]['media'].endswith('height'):
         quote = quote_results.json()[0]
     else:
         # default quote if call to API fails
@@ -605,7 +605,7 @@ def authorize():
         login_hint=user.email,
         # Enable incremental authorization. Recommended as a best practice.
         include_granted_scopes='true')
-    
+
     # Store the state so the callback can verify the auth server response.
     session['state'] = state
 
