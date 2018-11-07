@@ -125,6 +125,9 @@ def display_login_form():
 def user_exists():
     """ Determines if username given already exists in the database. """
 
+    if 'username' not in request.args:
+        return jsonify({'username_found': False})
+
     username = request.args.get('username')
     if User.query.filter_by(username=username).first() is not None:
         return jsonify({'username_found': True})
