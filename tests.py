@@ -869,7 +869,7 @@ class TestEmailMessage(unittest.TestCase):
         result = self.client.post('/email_message', data=data, follow_redirects=True)
         self.assertEqual(result.status_code, 200)
         # this message gets flashed
-        self.assertIn(b'email message was sent', result.data)
+        self.assertIn(b'Email message was sent', result.data)
         self.assertIn(b'You are not alone', result.data)
 
 class TestTextMessage(unittest.TestCase):
@@ -890,7 +890,14 @@ class TestTextMessage(unittest.TestCase):
 
         # Make mock
         def _send_text_message(from_, body, to):
-            pass
+
+            class Message():
+
+                def __init__(self):
+                    self.error_code = None
+            
+            new_message = Message()
+            return new_message
 
         server.send_text_message = _send_text_message
 
@@ -938,7 +945,7 @@ class TestTextMessage(unittest.TestCase):
         result = self.client.post('/text_message', data=data, follow_redirects=True)
         self.assertEqual(result.status_code, 200)
         # this message gets flashed
-        self.assertIn(b'message sent to Roy Codes', result.data)
+        self.assertIn(b'Message sent to Roy Codes.', result.data)
         self.assertIn(b'You are not alone', result.data)
 
 

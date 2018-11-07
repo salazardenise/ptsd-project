@@ -482,29 +482,40 @@ def display_email_message():
     message_id = session.get('message_id')
     message = Message.query.filter(Message.message_id == message_id).one()
 
-    return render_template('email_message.html',
-                            message=message,
-                            user=user)
+    return render_template('email_message.html', message=message, user=user)
 
-@app.route('/email_message', methods=['POST'])
-def process_email_message():
-    """ Process sending an email message. """
+def create_email_message_content(to_name, body_message, from_first_name, from_last_name):
+    """ Create content for email message. """
 
-    # message info
-    from_first_name = request.form.get('from_first_name')
-    from_last_name = request.form.get('from_last_name')
-    to_name = request.form.get('to_name')
-    to_email = request.form.get('to_email')
-    subject = request.form.get('subject')
-    body_message = request.form.get('body_message')
-
-    # create content for message
     content_message = 'Dear'
     if to_name:
         content_message += ' ' + to_name
     content_message += ', \n\n'
     content_message += body_message + '\n\n'
     content_message += 'Best, ' + from_first_name + ' ' + from_last_name
+    return content_message
+
+@app.route('/email_message', methods=['POST'])
+def process_email_message():
+    """ Process sending an email message. """
+
+    # extract message info
+    from_first_name = request.form.get('from_first_name')
+    from_last_name = request.form.get('from_last_name')
+    to_name = request.form.get('to_name')
+    body_message = request.form.get('body_message')
+    # create content for message
+    content_message = create_text_message_content(to_name=to_name,
+                                                  body_message=body_message,
+                                                  from_first_name=from_first_name,
+                                                  from_last_name=from_last_name)
+
+    # extract to_email and subject
+    to_email = request.form.get('to_email')
+    if re.match(r'[^@]+@[^@]+\.[^@]+', to_email) is False:
+        flash('To Email entered was invalid.')
+        redirect('/')
+    subject = request.form.get('subject')
 
     # create message for sending
     user_id = session['user_id']
@@ -517,9 +528,9 @@ def process_email_message():
     if message_status is None:
         flash('Email message was not sent. Make sure you have a gmail address in your user profile.')
     elif 'SENT' in message_status['labelIds']:
-        flash('email message was sent')
+        flash('Email message was sent.')
     else:
-        flash('Email message was not sent')
+        flash('Email message was not sent.')
     return redirect('/')
 
 def load_message_and_send(created_message):
@@ -696,6 +707,7 @@ def validate_logged_in():
 
 def create_text_message_content(to_name, body_message, from_first_name, from_last_name):
     """ Create text message content. """
+
     content_message = 'Hi'
     if to_name:
         content_message += ' ' + to_name
