@@ -237,7 +237,7 @@ def load_recordings():
                        file_path='/static/audio/USA_Instrumental_Classic_Guitar_Vito_and_Favio_Mono.mp3')
     forest = Recording(name='Forest',
                        description='Listen to the therapeutic and relaxing sounds of a forest in Germany.',
-                       file_path='/static/audio/Germany_BadenWürttemberg_Forest_Birds_MorningSounds.mp3')
+                       file_path='/static/audio/Germany_BadenWurttemberg_Forest_Birds_MorningSounds.mp3')
     rain = Recording(name='Rain',
                      description='Sounds of rain and thunder.',
                      file_path='/static/audio/Indonesia_Bali_Ubud_RainOnPalmTrees_Thunder_.mp3')
