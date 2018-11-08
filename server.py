@@ -606,7 +606,7 @@ def authorize():
 
     # Indicate where the API server will redirect the user after the user completes
     # the authorization flow. The redirect URI is required.
-    flow.redirect_uri = url_for('oauth2callback', _external=True)
+    flow.redirect_uri = url_for('oauth2callback')
 
     user_id = session.get('user_id')
     user = User.query.filter_by(user_id=user_id).one()
