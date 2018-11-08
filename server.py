@@ -48,6 +48,12 @@ app.secret_key = 'temporary_secret_key'
 # it doesn't fail silently
 app.jinja_env.undefined = StrictUndefined
 
+@app.route('/privacy-policy')
+def display_privacy_policy():
+    """ Display privacy policy page. """
+
+    return render_template('privacy-policy.html')
+
 def get_random_quote():
     """ Get random quote from healthruwords quote generator API. """
 
