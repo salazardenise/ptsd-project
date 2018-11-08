@@ -2,6 +2,7 @@
 
 # standard python imports
 import unittest
+import os
 
 # third party imports
 # from flask import session
@@ -77,7 +78,7 @@ class TestHomepage(unittest.TestCase):
         username_input.send_keys(username)
 
         password_input = self.browser.find_element_by_name('password')
-        password = 'Python101'
+        password = os.environ['PASSWORD_ONE']
         password_input.send_keys(password)
 
         # send form
@@ -201,11 +202,11 @@ class TestSignUp(unittest.TestCase):
         username_input.send_keys(username)
 
         password1_input = self.browser.find_element_by_name('password1')
-        password1 = 'Python101'
+        password1 = os.environ['PASSWORD_ONE']
         password1_input.send_keys(password1)
 
         password2_input = self.browser.find_element_by_name('password2')
-        password2 = 'Python101'
+        password2 = os.environ['PASSWORD_ONE']
         password2_input.send_keys(password2)
 
         # attempt to submit form
@@ -329,7 +330,7 @@ class TestLogIn(unittest.TestCase):
         username_input.send_keys(username)
 
         password_input = self.browser.find_element_by_name('password')
-        password = 'Python101'
+        password = os.environ['PASSWORD_ONE']
         password_input.send_keys(password)
 
         # send form
@@ -350,7 +351,7 @@ class TestLogIn(unittest.TestCase):
         self.assertEqual(username_input.get_attribute('value'), username)
 
         password_input = self.browser.find_element_by_name('password')
-        password = 'Python101'
+        password = os.environ['PASSWORD_ONE']
         password_input.send_keys(password)
         self.assertEqual(password_input.get_attribute('value'), password)
 
@@ -584,7 +585,7 @@ class TestPrograms(unittest.TestCase):
         username_input.send_keys(username)
 
         password_input = self.browser.find_element_by_name('password')
-        password = 'Python101'
+        password = os.environ['PASSWORD_ONE']
         password_input.send_keys(password)
 
         # send form
@@ -680,7 +681,7 @@ class TestRecordings(unittest.TestCase):
         username_input.send_keys(username)
 
         password_input = self.browser.find_element_by_name('password')
-        password = 'Python101'
+        password = os.environ['PASSWORD_ONE']
         password_input.send_keys(password)
 
         # send form
@@ -777,7 +778,7 @@ class TestMessages(unittest.TestCase):
         username_input.send_keys(username)
 
         password_input = self.browser.find_element_by_name('password')
-        password = 'Python101'
+        password = os.environ['PASSWORD_ONE']
         password_input.send_keys(password)
 
         # send form

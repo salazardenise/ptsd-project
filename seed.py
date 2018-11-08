@@ -23,35 +23,35 @@ def load_dummy_data():
 
     salt = binascii.hexlify(os.urandom(SALT_SIZE))
     denise = User(username='DeniseCodes101',
-                  password=hashlib.sha256('Python101'.encode('utf-8') + salt).hexdigest(),
+                  password=hashlib.sha256(os.environ['PASSWORD_ONE'].encode('utf-8') + salt).hexdigest(),
                   salt=salt.decode('utf-8'),
                   first_name='Denise',
                   last_name='Codes',
                   email='denise@codes.com')
     salt = binascii.hexlify(os.urandom(SALT_SIZE))
     roy = User(username='RoyCodes101',
-               password=hashlib.sha256('Python101'.encode('utf-8') + salt).hexdigest(),
+               password=hashlib.sha256(os.environ['PASSWORD_TWO'].encode('utf-8') + salt).hexdigest(),
                salt=salt.decode('utf-8'),
                first_name='Roy',
                last_name='Codes',
                email='roy@codes.com')
     salt = binascii.hexlify(os.urandom(SALT_SIZE))
     leo = User(username="LeoCodes101",
-               password=hashlib.sha256('JavaNinja101'.encode('utf-8') + salt).hexdigest(),
+               password=hashlib.sha256(os.environ['PASSWORD_THREE'].encode('utf-8') + salt).hexdigest(),
                salt=salt.decode('utf-8'),
                first_name='Leo',
                last_name='Codes',
                email='leo@codes.com')
     salt = binascii.hexlify(os.urandom(SALT_SIZE))
     turing = User(username='TuringCodes',
-                  password=hashlib.sha256('JavaScript101'.encode('utf-8') + salt).hexdigest(),
+                  password=hashlib.sha256(os.environ['PASSWORD_FOUR'].encode('utf-8') + salt).hexdigest(),
                   salt=salt.decode('utf-8'),
                   first_name='Turing',
                   last_name='Codes',
                   email='turing@codes.com')
     salt = binascii.hexlify(os.urandom(SALT_SIZE))
     denisedenise = User(username='DeniseDenise101',
-                        password=hashlib.sha256('PythonPython101'.encode('utf-8') + salt).hexdigest(),
+                        password=hashlib.sha256(os.environ['PASSWORD_FIVE'].encode('utf-8') + salt).hexdigest(),
                         salt=salt.decode('utf-8'),
                         first_name='Denise',
                         last_name='Salazar',
@@ -270,35 +270,35 @@ def load_dummy_users_with_rest_of_data(needs_updates):
     print('User')
     salt = binascii.hexlify(os.urandom(SALT_SIZE))
     denise = User(username='DeniseCodes101',
-                  password=hashlib.sha256('Python101'.encode('utf-8') + salt).hexdigest(),
+                  password=hashlib.sha256(os.environ['PASSWORD_ONE'].encode('utf-8') + salt).hexdigest(),
                   salt=salt.decode('utf-8'),
                   first_name='Denise',
                   last_name='Codes',
                   email='denise@codes.com')
     salt = binascii.hexlify(os.urandom(SALT_SIZE))
     roy = User(username='RoyCodes101',
-               password=hashlib.sha256('Python101'.encode('utf-8') + salt).hexdigest(),
+               password=hashlib.sha256(os.environ['PASSWORD_TWO'].encode('utf-8') + salt).hexdigest(),
                salt=salt.decode('utf-8'),
                first_name='Roy',
                last_name='Codes',
                email='roy@codes.com')
     salt = binascii.hexlify(os.urandom(SALT_SIZE))
     leo = User(username="LeoCodes101",
-               password=hashlib.sha256('JavaNinja101'.encode('utf-8') + salt).hexdigest(),
+               password=hashlib.sha256(os.environ['PASSWORD_THREE'].encode('utf-8') + salt).hexdigest(),
                salt=salt.decode('utf-8'),
                first_name='Leo',
                last_name='Codes',
                email='leo@codes.com')
     salt = binascii.hexlify(os.urandom(SALT_SIZE))
     turing = User(username='TuringCodes',
-                  password=hashlib.sha256('JavaScript101'.encode('utf-8') + salt).hexdigest(),
+                  password=hashlib.sha256(os.environ['PASSWORD_FOUR'].encode('utf-8') + salt).hexdigest(),
                   salt=salt.decode('utf-8'),
                   first_name='Turing',
                   last_name='Codes',
                   email='turing@codes.com')
     salt = binascii.hexlify(os.urandom(SALT_SIZE))
     denisedenise = User(username='DeniseDenise101',
-                        password=hashlib.sha256('PythonPython101'.encode('utf-8') + salt).hexdigest(),
+                        password=hashlib.sha256(os.environ['PASSWORD_FIVE'].encode('utf-8') + salt).hexdigest(),
                         salt=salt.decode('utf-8'),
                         first_name='Denise',
                         last_name='Salazar',

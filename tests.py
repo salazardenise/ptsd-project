@@ -2,6 +2,7 @@
 
 # standard Python imports
 import unittest
+import os
 
 # third party imports
 from flask import session
@@ -167,7 +168,7 @@ class TestLoginLogout(unittest.TestCase):
         """ Test when user attempts to login with valid username and password. """
 
         username = 'DeniseCodes101'
-        password = 'Python101'
+        password = os.environ['PASSWORD_ONE']
 
         data = {'username': username, 'password': password}
 
@@ -193,7 +194,7 @@ class TestLoginLogout(unittest.TestCase):
         """ Test when a new user signs up successfully. """
 
         username = 'DeniseCodes101'
-        password = 'Python101'
+        password = os.environ['PASSWORD_ONE']
 
         data = {'username': username,
                 'password': password}
@@ -309,7 +310,7 @@ class TestUserProfile(unittest.TestCase):
         self.assertIn(b'Codes', result.data)
         self.assertIn(b'roy@codes.com', result.data)
 
-        data = {'current_password': 'Python101',
+        data = {'current_password': os.environ['PASSWORD_TWO'],
                 'new_password1': 'ILOVEJava101'}
         result = self.client.post('/change_password', data=data)
         self.assertEqual(result.status_code, 200)
