@@ -606,7 +606,7 @@ def authorize():
 
     # Indicate where the API server will redirect the user after the user completes
     # the authorization flow. The redirect URI is required.
-    flow.redirect_uri = url_for('oauth2callback')
+    flow.redirect_uri = 'https://findingpeaceptsd.com/oauth2callback'
 
     user_id = session.get('user_id')
     user = User.query.filter_by(user_id=user_id).one()
@@ -646,7 +646,7 @@ def oauth2callback():
     state = session['state']
 
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
-    flow.redirect_uri = url_for('oauth2callback', _external=True)
+    flow.redirect_uri = 'https://findingpeaceptsd.com/oauth2callback'
 
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
     authorization_response = request.url
