@@ -8,3 +8,5 @@ htmlcov/
 mac_env/
 chromedriver
 programs_2.txt
+flask.log
+.server.py.swp
