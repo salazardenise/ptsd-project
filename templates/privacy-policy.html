@@ -1,30 +1,86 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Privacy Policy</title>
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-    <!-- style -->
-    <style>
-        h1 {
-            color: #00A676; /* like a teal green */
-        }
-        body {
-            background-color: ##F7F9F9;
-        }
-        section {
-            width: 50%;
-            text-align: justify;
-        }
-    </style>
-</head>
-<body>
-    <div>
-        <h1>Privacy Policy</h1>
-        <section>Keeping your information safe is important. This app uses the Gmail API to send emails on your behalf. That is the only scope in which your information is used. Your email address is not used to send you promotional emails. Your information is not shared with any third parties. This app was made for educational purposes to learn how to make a full stack web app.</section>
+{% extends 'base.html' %}
+
+{% block title %}Privacy Policy{% endblock %}
+
+{% block content %}    
+    <div id="privacyPolicyContent" class="container">
+        <div class="row mt-5">
+            <div class="col-sm-12 col-md-10">
+                <h2>Privacy Policy</h2>
+                <p>Effective November 10, 2018. Last Revised November 10, 2018.</p>
+                <p>The Privacy Policy describes our policies on the collection, use, and disclosure of information about you in connection with your use of our services. The terms “we,” “us,” and “Finding Peace” refer to the Finding Peace website and its owner (<a href="mailto:finding.peace.ptsd.project@gmail.com">finding.peace.ptsd.project@gmail.com</a>).</p>
+            </div>
+            <div class="col-sm-12 col-md-10">
+                <h3>What Information We Collect</h3>
+                <p>We collect information you provide to us directly when you use the Services.</p>
+
+                <p><i>Account information.</i> To create an account, you must provide a username, password, and email address. Your username is public, and it does not have to be related your real name. You may also provide a phone number. We store your account information.</p>
+
+                <p><i>Content you submit.</i> We collect the content you submit to the Services. For favoriting feature, we store the programs, recordings, or messages that you favorite. For sending a text message, we collect the following: receiver name, receiver phone number, and message body in plain text. The text is sent using Twilio API. For sending an email, we collect the following: receiver name, receiver email, subject, and message body in plain text. The email is sent using Gmail API. Finding Peace website requests to access your gmail account to send the email on your behalf. That is the only scope in which your Goolge user data is used.</p>
+
+                <p><i>Action you take.</i> We do not collect information about the actions you take when using the Services.</p>
+
+                <p><i>Transactional information.</i> No transactional information is obtained because this site offers nothing for purchase.</p>
+            </div>
+            <div class="col-sm-12 col-md-10">
+                <h3>Information We Collect Automatically</h3>
+
+                <p>When you access or use our Services, we may also automatically collect information about you. This includes:</p>
+
+                <p>Information collected from cookies and similar technologies. We may receive information from cookies which are pieces of data your browser stores and sends back to us when making requests, and similar technologies. We use this information to improve your experience and improve the quality of our Services. For example, we store and retrieve your email address.</p>
+            </div>
+            <div class="col-sm-12 col-md-10">
+                <h3>How We Use Information About You</h3>
+
+                <p>When you use the Services, your information is not shared with other users or the public. For example:</p>
+                <ul>
+                    <li>When you submit content (such as a text message or email message) to the Services, no visitors or users of our Services will be able to see that content, the username associated with the content, and the date and time you originally submitted that content.</li>
+
+                    <li>When you send a text message, the recipient of those messages will be able to see the content of your message, your first name, and your last name. When you send an email, the recipient of those messages will be able to see the content of your message, your first name, your last name, and your email address.</li>
+
+                    <li>Once you are logged in, only you can see your user profile page.</li>
+                </ul>
+                <p>Your email address is not used to send you promotional emails.</p>
+
+                <p>We do not share, sell, or give away your personal information to third parties unless one of the following circumstances applies:</p>
+                <ul>
+                    <li>To comply with the law. We may share information in response to a request for information if we believe disclosure is in accordance, or required by, any applicable law, regulation, legal process or governmental request, including, but not limited to, meeting national security or law enforcement requirements. To the extent the law allows it, we will attempt to provide you with prior notice before disclosing your information in response to such a request.</li>
+
+                    <li>In an emergency. We may share information if we believe it’s necessary to prevent imminent and serious bodily harm to a person.</li>
+                </ul>
+            </div>
+            <div class="col-sm-12 col-md-10">
+                <h3>Ads and Analytics Partners</h3>
+
+                <p>We do not partner with third-party advertisers, ad networks, or analytics providers.</p>
+            </div>
+            <div class="col-sm-12 col-md-10">
+                <a name="your-choices"><h3>Your Choices</h3></a>
+
+                <p>As a user of this app, you have choices about how to protect and limit the collection, use and disclosure of information about you.</p>
+
+                <p><i>Accessing and changing your information.</i> You can access and change certain information through your user profile.</p>
+
+                <p><i>Deleting your account.</i> You may email the app creator to delete your account information at any time. See the <a href="#contact">Contact Us</a> section. When you delete your account, you can no longer log in.</p>
+
+                <p><i>Controlling the use of cookies.</i> Most web browsers are set to accept cookies by default. If you prefer, you can usually choose to set your browser to remove or reject cookies. Please note that if you choose to remove or reject cookies, this could affect the availability and functionality of our Services. Also note that by opting-out of cookies, you will disable cookies from all sources, not just those from this site.</p>
+            </div>
+            <div class="col-sm-12 col-md-10">
+                <h3>Other Information</h3>
+
+                <p><i>Information security.</i> We take measures to help protect information about you from loss, theft, misuse and unauthorized access, disclosure, alteration, and destruction. For example, we use HTTPS while information is being transmitted.</p>
+
+                <p><i>Children.</i> The Service is intended for general audiences and is not directed to children under 13. Children under the age of 13 are not allowed to create an account or otherwise use the Services. Additionally, if you are in the EEA, you must be over the age required by the laws of your country to create an account or otherwise use the Services, or we need to have obtained verifiable consent from your parent or legal guardian.</p>
+
+                <p><i>Changes to This Policy.</i> We may change this Privacy Policy from time to time. If we do, we will let you know by revising the date at the top of the policy.</p>
+
+                <p><i>Additional Information for EEA Users.</i> Users in the European Economic Area have the right to request access to, rectification of, or erasure of their personal data. These rights can be exercised using the information provided under “<a href="#your-choices">Your Choices</a>” above or using the contact information provided at the end of this document.</p>
+            </div>
+            <div class="col-sm-12 col-md-10">
+                <a name="contact"><h3>Contact Us</h3></a>
+
+                <p>If you have any questions about this Privacy Policy, please contact us at <a href="mailto:finding.peace.ptsd.project@gmail.com">finding.peace.ptsd.project@gmail.com</a> or <a href="mailto:denise.salazar.1210@gmail.com">denise.salazar.1210@gmail.com</a>.</p>
+            </div>
+        </div>
     </div>
-</body>
+{% endblock %}
