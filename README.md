@@ -5,6 +5,7 @@
 * [Tech Stack](#techstack)
 * [Tests](#tests)
 * [Features](#features)
+* [Demo](#demo)
 * [About the Developer](#aboutTheDeveloper)
 
 ## <a name="summary"></a>Summary
@@ -34,6 +35,10 @@ There are 3 main features.
 2) Practice self-case by listening to relaxing recordings
 
 3) Send Text and Email to friends/family/co-workers regarding your mental health
+
+## <a name="demo"></a>Demo
+
+[![Finding Peace Web App Demo](http://img.youtube.com/vi/znszUOUryxw/0.jpg)](http://www.youtube.com/watch?v=znszUOUryxw)
 
 ## <a name="aboutTheDeveloper"></a>About The Developer
 
