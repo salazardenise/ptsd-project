@@ -39,6 +39,6 @@ six==1.11.0
 SQLAlchemy==1.2.12
 twilio==6.19.0
 uritemplate==3.0.0
-urllib3==1.23
+urllib3==1.26.5
 Werkzeug==0.14.1
 zeep==3.1.0
