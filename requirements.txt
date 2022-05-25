@@ -27,7 +27,7 @@ pkg-resources==0.0.0
 psycopg2==2.7.5
 pyasn1==0.4.4
 pyasn1-modules==0.2.2
-PyJWT==1.6.4
+PyJWT==2.4.0
 PySocks==1.6.8
 pytz==2018.5
 requests==2.20.1
